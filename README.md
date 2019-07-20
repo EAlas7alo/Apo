@@ -1,5 +1,7 @@
 # Apo
 
+Practical work for https://courses.helsinki.fi/fi/aytkt21010/129098202
+
 A journaling app. 
 
 Allows the user to create journal entries with attachments and reminders. 
