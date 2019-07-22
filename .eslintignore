@@ -1,0 +1,14 @@
+node_modules/
+platform_tools/
+assets/
+.git/
+node_modules/**/*
+.expo/*
+npm-debug.*
+*.jks
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+web-report/
