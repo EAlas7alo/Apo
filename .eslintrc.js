@@ -27,6 +27,9 @@ module.exports = {
   rules: {
     semi: 0,
     'react/jsx-filename-extension': [1, { "extensions": [".js", ".jsx"] }],
-    'linebreak-style': ["error", "windows"]
+    'linebreak-style': ["error", "windows"],
+    'arrow-parens': 0,
+    'object-curly-newline': 0,
+    'no-shadow': 0
   },
 };

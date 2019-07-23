@@ -1,25 +1,11 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import {
   FlatList, StyleSheet, Button, View, Text 
 } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import JournalEntry from '../components/JournalEntry'
-
-
-const journalEntries = [
-  {
-    title: 'Read Three-Body Problem',
-    content: 'Three-Body Problem by Cixin Liu',
-  },
-  {
-    title: 'Sold Qt for 200 euros',
-    content: 'Qt stock sold for 200',
-  },
-  {
-    title: 'React Native best Practices',
-    content: 'https://medium.com/react-native-training/best-practices-for-creating-react-native-apps-part-1-66311c746df3'
-  },
-]
 
 const actions = [
   {
@@ -40,9 +26,10 @@ const styles = StyleSheet.create({
   },
 })
 
-const JournalEntriesScreen = (props) => {
+const JournalEntriesScreen = ({ journalEntries, navigation }) => {
+  console.log(journalEntries)
   const onPressItem = (name) => {
-    alert('hi!')
+    navigation.navigate('AddEntryScreen')
   }
 
   return (
@@ -80,4 +67,18 @@ JournalEntriesScreen.navigationOptions = screenProps => ({
     />
   ),
 })
-export default JournalEntriesScreen
+
+JournalEntriesScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  journalEntries: PropTypes.arrayOf(PropTypes.object).isRequired,
+}
+
+const mapStateToProps = state => {
+  return {
+    journalEntries: state.journalEntryReducer,
+  }
+}
+
+export default connect(mapStateToProps, null)(JournalEntriesScreen)
