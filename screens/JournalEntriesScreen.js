@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
-  FlatList, StyleSheet, Button, View, Text 
+  FlatList, StyleSheet, Button, View, TouchableHighlight,
 } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import JournalEntry from '../components/JournalEntry'
@@ -20,9 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   journalEntry: {
-    paddingLeft: 50,
-    paddingRight: 50,
-    paddingTop: 15,
+    padding: 25,
   },
 })
 
@@ -32,18 +30,28 @@ const JournalEntriesScreen = ({ journalEntries, navigation }) => {
     navigation.navigate('AddEntryScreen')
   }
 
+  const onPressEntry = (id) => {
+    console.log(id)
+    navigation.navigate('EntryScreen', { id })
+  }
+
   return (
     <View style={styles.container}>
       <View>
         <FlatList
-          style={styles.journalEntry}
           data={journalEntries}
-          keyExtractor={(item, index) => item.title}
+          keyExtractor={(item, index) => item.id.toString()}
           renderItem={({ item }) => (
-            <JournalEntry
-              title={item.title}
-              content={item.content}
-            />
+            <TouchableHighlight
+              onPress={() => { onPressEntry(item.id) }}
+              underlayColor="gray"
+            >
+              <JournalEntry
+                style={styles.journalEntry}
+                title={item.title}
+                content={item.content}
+              />
+            </TouchableHighlight>
           )}
         />
       </View>
@@ -59,13 +67,6 @@ const JournalEntriesScreen = ({ journalEntries, navigation }) => {
 
 JournalEntriesScreen.navigationOptions = screenProps => ({
   title: 'Entries',
-  headerRight: (
-    <Button
-      onPress={() => alert('Hello!')}
-      title="Tap me!"
-      color="black"
-    />
-  ),
 })
 
 JournalEntriesScreen.propTypes = {

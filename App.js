@@ -1,15 +1,16 @@
 import React from 'react'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { createStore, combineReducers } from 'redux'
-import journalEntryReducer from './reducers/journalEntryReducer'
 import { Provider } from 'react-redux'
+import journalEntryReducer from './reducers/journalEntryReducer'
 import JournalEntriesScreen from './screens/JournalEntriesScreen';
 import AddEntryScreen from './screens/AddEntryScreen'
+import EntryScreen from './screens/EntryScreen'
 
 const MainNavigator = createStackNavigator({
-  //Start: { screen: StartScreen },
   JournalEntries: { screen: JournalEntriesScreen },
   AddEntryScreen: { screen: AddEntryScreen },
+  EntryScreen: { screen: EntryScreen },
   initialRouteName: 'JournalEntries',
 })
 
