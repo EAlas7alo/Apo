@@ -2,12 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
-  FlatList, StyleSheet, Button, View, TouchableHighlight,
+  FlatList, StyleSheet, View, TouchableHighlight,
 } from 'react-native'
+import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
 import JournalEntry from '../components/JournalEntry'
-import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
-import { ALL_ENTRIES } from '../queries/queries'
+import { setJournalEntries } from '../actions/journalEntryActions'
+import { ALL_ENTRIES } from '../queries/queries';
+
 
 const actions = [
   {
@@ -24,30 +26,31 @@ const styles = StyleSheet.create({
   },
   journalEntry: {
     padding: 25,
-    
   },
 })
 
-const JournalEntriesScreen = ({ journalEntries, navigation }) => {
-  console.log(journalEntries)
+const JournalEntriesScreen = ({ navigation }) => {
+  const journalEntries = useQuery(ALL_ENTRIES)
+  const data = journalEntries.data.allEntries
+  console.log(data)
   const onPressItem = (name) => {
     navigation.navigate('AddEntryScreen')
   }
 
-  const onPressEntry = (id) => {
-    console.log(id)
-    navigation.navigate('EntryScreen', { id })
+  const onPressEntry = (entry) => {
+    console.log(entry)
+    navigation.navigate('EntryScreen', { entry })
   }
 
   return (
     <View style={styles.container}>
       <View>
         <FlatList
-          data={journalEntries}
+          data={data}
           keyExtractor={(item, index) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableHighlight
-              onPress={() => { onPressEntry(item.id) }}
+              onPress={() => { onPressEntry(item) }}
               underlayColor="gray"
             >
               <JournalEntry
@@ -77,13 +80,11 @@ JournalEntriesScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
-  journalEntries: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
-const mapStateToProps = state => {
-  return {
-    journalEntries: state.journalEntryReducer,
-  }
+
+const mapDispatchToProps = {
+  setJournalEntries,
 }
 
-export default connect(mapStateToProps, null)(JournalEntriesScreen)
+export default connect(null, mapDispatchToProps)(JournalEntriesScreen)

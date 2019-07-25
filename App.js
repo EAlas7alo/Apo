@@ -1,13 +1,15 @@
 import React from 'react'
-import ApolloClient from 'apollo-boost'
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from "@apollo/react-hooks"
+import { ApolloClient, InMemoryCache } from 'apollo-boost';
+import { createHttpLink } from 'apollo-link-http';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { createStore, combineReducers } from 'redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import journalEntryReducer from './reducers/journalEntryReducer'
-import JournalEntriesScreen from './screens/JournalEntriesScreen';
-import AddEntryScreen from './screens/AddEntryScreen'
-import EntryScreen from './screens/EntryScreen'
+import thunk from 'redux-thunk'
+import journalEntryReducer from './src/reducers/journalEntryReducer'
+import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
+import AddEntryScreen from './src/screens/AddEntryScreen'
+import EntryScreen from './src/screens/EntryScreen'
 
 const MainNavigator = createStackNavigator({
   JournalEntries: { screen: JournalEntriesScreen },
@@ -16,15 +18,31 @@ const MainNavigator = createStackNavigator({
   initialRouteName: 'JournalEntries',
 })
 
+const httpLink = createHttpLink({
+  uri: 'http://192.168.10.97:3000/',
+})
+
+
+const link = httpLink
+
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+  onError: ({ networkError, graphQLErrors }) => {
+    console.log('graphQLErrors', graphQLErrors)
+    console.log('networkError', networkError)
+  } 
+})
+
+
 const rootReducer = combineReducers({
   journalEntryReducer,
 })
 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const AppContainer = createAppContainer(MainNavigator);
-
-const client = new ApolloClient()
 
 const App = () => {
   return (

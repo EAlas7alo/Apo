@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import { View, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { FloatingAction } from 'react-native-floating-action'
+import Icon from 'react-native-vector-icons/Ionicons'
 import { addJournalEntry } from '../actions/journalEntryActions'
 import AddEntryForm from '../components/AddEntryForm'
 import { MaterialHeaderButtons, Item } from '../components/HeaderButtons'
-import Icon from 'react-native-vector-icons/Ionicons'
+
 
 /*
   TODO:

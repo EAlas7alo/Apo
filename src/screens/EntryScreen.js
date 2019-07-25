@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: 'dimgray',
   },
   title: {
     fontSize: 30,
@@ -17,11 +18,8 @@ const styles = StyleSheet.create({
   },
 })
 
-const EntryScreen = ({ navigation, entries }) => {
-  // eslint-disable-next-line no-console
-  console.log(entries)
-  const id = navigation.getParam('id', 0)
-  const entry = entries.find(entry => entry.id === id)
+const EntryScreen = ({ navigation }) => {
+  const entry = navigation.getParam('entry', 0)
   return (
     <View style={styles.container}>
       <View>
@@ -37,7 +35,6 @@ EntryScreen.propTypes = {
   navigation: PropTypes.shape({
     getParam: PropTypes.func.isRequired,
   }).isRequired,
-  entries: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 const mapStateToProps = state => {

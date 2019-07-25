@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text, ViewPropTypes } from 'react-native'
 
 const styles = StyleSheet.create({
   defaults: {
@@ -15,8 +15,13 @@ const MyAppText = ({ text, style, ...props }) => {
   );
 };
 
+MyAppText.defaultProps = {
+  style: null,
+}
+
 MyAppText.propTypes = {
   text: PropTypes.string.isRequired,
+  style: ViewPropTypes.style,
 }
 
 export default MyAppText
