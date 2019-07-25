@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
+import MyAppText from '../components/TextComponents/MyAppText'
 
 const styles = StyleSheet.create({
   container: {
@@ -24,9 +25,9 @@ const EntryScreen = ({ navigation, entries }) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.title}>{entry.title}</Text>
+        <MyAppText style={styles.title} text={entry.title} />
       </View>
-      <Text style={styles.content}>{entry.content}</Text>
+      <MyAppText style={styles.content} text={entry.content} />
     </View>
   );
 };

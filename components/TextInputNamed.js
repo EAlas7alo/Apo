@@ -5,15 +5,14 @@ import { TextInput, StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   textInputNamed: {
     fontSize: 20,
+    color: 'white',
   },
 })
 
-const TextInputNamed = ({ style, value, onChange, name, ...props }) => {
-  console.log(value)
+const TextInputNamed = ({ style, onChange, name, ...props }) => {
   return (
     <TextInput
       style={[styles.textInputNamed, style]}
-      value={value}
       onChangeText={(newValue) => onChange(name, newValue)}
       {...props}
     />

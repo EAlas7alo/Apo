@@ -2,15 +2,30 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { View, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
+import { FloatingAction } from 'react-native-floating-action'
 import { addJournalEntry } from '../actions/journalEntryActions'
 import AddEntryForm from '../components/AddEntryForm'
 import { MaterialHeaderButtons, Item } from '../components/HeaderButtons'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 /*
   TODO:
     Advanced options menu: isEditable
     Attachments
+    Confirmation on back press
 */
+const mainButtonIcon = <Icon name="md-attach" size={30} color="white" />
+const imageIcon = <Icon name="md-image" size={30} color="white" />
+const actions = [
+  {
+    text: 'Add an image',
+    name: 'add_image',
+    icon: imageIcon,
+    position: 1,
+  },
+];
+
+
 const AddEntryScreen = (props) => {
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
@@ -39,14 +54,22 @@ const AddEntryScreen = (props) => {
   const handleBlur = () => {
 
   }
+
   return (
     <View style={{ flex: 1 }}>
       <AddEntryForm
         title={title}
-        url={url}
         textContent={textContent}
         handleChange={handleChange}
         handleBlur={handleBlur}
+      />
+      <FloatingAction
+        showBackground={false}
+        actions={actions}
+        floatingIcon={mainButtonIcon}
+        onPressItem={(name) => {
+          onPressItem(name)
+        }}
       />
     </View>
   );

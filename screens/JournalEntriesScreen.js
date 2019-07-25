@@ -6,6 +6,8 @@ import {
 } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import JournalEntry from '../components/JournalEntry'
+import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
+import { ALL_ENTRIES } from '../queries/queries'
 
 const actions = [
   {
@@ -18,9 +20,11 @@ const actions = [
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'dimgray',
   },
   journalEntry: {
     padding: 25,
+    
   },
 })
 

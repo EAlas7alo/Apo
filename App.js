@@ -1,4 +1,6 @@
 import React from 'react'
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from 'react-apollo';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
@@ -22,12 +24,15 @@ const store = createStore(rootReducer)
 
 const AppContainer = createAppContainer(MainNavigator);
 
+const client = new ApolloClient()
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <AppContainer />
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    </ApolloProvider>
   )
 }
 

@@ -1,27 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button } from 'react-native'
+import { View, ToolbarAndroid, StyleSheet, Button } from 'react-native'
 import TextInputNamed from './TextInputNamed'
 
+
 const styles = StyleSheet.create({
-  entryView: {
+  container: {
     flex: 1,
+    backgroundColor: 'dimgray',
   },
   metaBar: {
     flex: 1,
-    backgroundColor: 'powderblue',
-    justifyContent: 'space-between',
-    paddingTop: 20,
-    paddingBottom: 20,
+    backgroundColor: 'gray',
+    justifyContent: 'center',
+    paddingTop: 5,
   },
   contentBar: {
-    flex: 6,
+    flex: 10,
   },
 })
 
-
-const AddEntryForm = ({ handleChange, handleBlur, handleSubmit, title, url, textContent }) => {
+const AddEntryForm = ({ handleChange, handleBlur, title, textContent }) => {
   return (
     <Formik
       initialValues={{ title: '', url: '', textContent: '' }}
@@ -29,34 +29,27 @@ const AddEntryForm = ({ handleChange, handleBlur, handleSubmit, title, url, text
         alert('adding', values)
       }}
     >
-      <View style={styles.entryView}>
+      <View style={styles.container}>
         <View style={styles.metaBar}>
           <TextInputNamed
+            autoFocus={true}
             placeholder="Enter a title"
-            placeholderTextColor="gray"
+            placeholderTextColor="lightgrey"
             name="title"
             onChange={handleChange}
             onBlur={handleBlur('title')}
             value={title}
           />
-          <TextInputNamed
-            placeholder="Enter a URL"
-            placeholderTextColor="gray"
-            name="url"
-            onChange={handleChange}
-            onBlur={handleBlur('url')}
-            value={url}
-          />
         </View>
         <View style={styles.contentBar}>
           <TextInputNamed
             placeholder="Write your entry here"
-            placeholderTextColor="gray"
+            placeholderTextColor="lightgrey"
             name="textContent"
             onChange={handleChange}
             onBlur={handleBlur('textContent')}
             value={textContent}
-            numberOfLines={6}
+            numberOfLines={1}
             multiline={true}
           />
         </View>
