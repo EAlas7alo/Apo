@@ -6,4 +6,5 @@
 | 22.7  | 4    | UIn tekoa
 | 23.7  | 5    | Redux käyttöön, entryjen lisääminen tulille 
 | 24.7  | 4    | UI:n työstöä
-| yht   | 15   | | 
+| 25.7  | 4    | GraphQL
+| yht   | 19   | | 
