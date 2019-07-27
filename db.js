@@ -19,5 +19,5 @@ module.exports = {
       id: 3,
       date: new Date('2019, 7, 24, 11, 55, 54, 0'),
     },
-  ]
+  ],
 }

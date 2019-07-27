@@ -4,10 +4,12 @@ import { View, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { FloatingAction } from 'react-native-floating-action'
 import Icon from 'react-native-vector-icons/Ionicons'
+import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
+import uuid from 'uuid'
 import { addJournalEntry } from '../actions/journalEntryActions'
 import AddEntryForm from '../components/AddEntryForm'
 import { MaterialHeaderButtons, Item } from '../components/HeaderButtons'
-
+import { CREATE_ENTRY, ALL_ENTRIES } from '../queries/queries'
 
 /*
   TODO:
@@ -15,6 +17,7 @@ import { MaterialHeaderButtons, Item } from '../components/HeaderButtons'
     Attachments
     Confirmation on back press
 */
+
 const mainButtonIcon = <Icon name="md-attach" size={30} color="white" />
 const imageIcon = <Icon name="md-image" size={30} color="white" />
 const actions = [
@@ -32,8 +35,21 @@ const AddEntryScreen = (props) => {
   const [url, setUrl] = useState('')
   const [textContent, setTextContent] = useState('')
 
-  const handleSubmit = () => {
-    props.addJournalEntry({ title, url, content: textContent })
+  const [createEntry] = useMutation(CREATE_ENTRY, {
+    onError: console.log('adding an entry failed'),
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_ENTRIES })
+      dataInStore.allEntries.push(response.data.createEntry)
+      console.log(response.data)
+      store.writeQuery({
+        query: ALL_ENTRIES,
+        data: dataInStore,
+      })
+    },
+  })
+
+  const handleSubmit = async () => {
+    await createEntry({ variables: { title, textContent, date: new Date(), id: uuid.v4() } })
     Keyboard.dismiss()
     props.navigation.goBack()
   }
@@ -90,7 +106,6 @@ AddEntryScreen.navigationOptions = ({ navigation }) => ({
 })
 
 AddEntryScreen.propTypes = {
-  addJournalEntry: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
     setParams: PropTypes.func.isRequired,

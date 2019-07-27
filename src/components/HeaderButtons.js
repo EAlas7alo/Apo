@@ -16,4 +16,4 @@ export const MaterialHeaderButtons = props => {
     />
   );
 };
-export { Item } from 'react-navigation-header-buttons';
+export { Item, HiddenItem } from 'react-navigation-header-buttons';
