@@ -39,4 +39,10 @@ const EDIT_ENTRY_CONTENT = gql`
     } 
   }
 `
-export { ALL_ENTRIES, CREATE_ENTRY, EDIT_ENTRY_CONTENT }
+
+const DELETE_ENTRY = gql`
+  mutation deleteEntry($id: ID!) {
+    removeEntry(id: $id) 
+  }
+`
+export { ALL_ENTRIES, CREATE_ENTRY, EDIT_ENTRY_CONTENT, DELETE_ENTRY }

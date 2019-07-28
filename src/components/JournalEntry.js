@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Image } from 'react-native'
 import MyAppText from './TextComponents/MyAppText'
+import ImageList from './ImageList';
 
 const styles = StyleSheet.create({
   journalTitle: {
@@ -17,8 +18,13 @@ const styles = StyleSheet.create({
 const JournalEntry = ({ title, content, style }) => {
   return (
     <View style={style}>
-      <MyAppText style={styles.journalTitle} text={title} />
-      <MyAppText style={styles.journalEntry} text={content} />
+      <View style={{ paddingBottom: 20 }}>
+        <MyAppText style={styles.journalTitle} text={title} />
+        <MyAppText style={styles.journalEntry} text={content} />
+      </View>
+      <View>
+        <ImageList />
+      </View>
     </View>
   )
 }
