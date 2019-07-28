@@ -8,4 +8,5 @@
 | 24.7  | 4    | UI:n työstöä
 | 25.7  | 4    | GraphQL
 | 26.7  | 3    | GraphQl, entryjen editointi
-| yht   | 22   | | 
+| 27.7  | 3    | kuvien lisääminen testaamista, ikonit
+| yht   | 25   | | 
