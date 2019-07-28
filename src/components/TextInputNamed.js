@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { TextInput } from 'react-native';
+import { TextInput, StyleSheet } from 'react-native';
 
-const TextInputNamed = ({ value, onChange, name, ...props }) => {
+const styles = StyleSheet.create({
+  textInputNamed: {
+    fontSize: 20,
+    color: 'white',
+  },
+})
+
+const TextInputNamed = ({ style, onChange, name, ...props }) => {
   return (
     <TextInput
-      value={value}
+      style={[styles.textInputNamed, style]}
       onChangeText={(newValue) => onChange(name, newValue)}
       {...props}
     />
@@ -13,10 +20,15 @@ const TextInputNamed = ({ value, onChange, name, ...props }) => {
   );
 };
 
+TextInputNamed.defaultProps = {
+  placeholder: '',
+}
+
 TextInputNamed.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
 }
 
 

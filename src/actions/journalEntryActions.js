@@ -1,12 +1,14 @@
 export const ADD_JOURNAL_ENTRY = 'ADD_JOURNAL_ENTRY'
 export const GET_ALL_ENTRIES = 'GET_ALL_ENTRIES'
+export const INIT_ENTRIES = 'INIT_ENTRIES'
+
 
 export const addJournalEntry = (payload) => ({
   type: ADD_JOURNAL_ENTRY,
   payload,
 })
 
-export const getJournalEntries = (payload) => ({
+export const setJournalEntries = (entries) => ({
   type: GET_ALL_ENTRIES,
-  payload,
+  entries,
 })
