@@ -9,4 +9,5 @@
 | 25.7  | 4    | GraphQL
 | 26.7  | 3    | GraphQl, entryjen editointi
 | 27.7  | 3    | kuvien lisääminen testaamista, ikonit
-| yht   | 25   | | 
+| 28.7  | 3    | backend tulille https://github.com/EAlas7alo/Apo-backend
+| yht   | 28   | | 
