@@ -33,7 +33,7 @@ const CREATE_ENTRY = gql`
 
 const EDIT_ENTRY_CONTENT = gql`
   mutation editEntry($id: ID!, $content: String!) {
-    updateEntry(id: $id, content: $content) {
+    editEntry(id: $id, content: $content) {
       title
       content
     } 
@@ -42,7 +42,7 @@ const EDIT_ENTRY_CONTENT = gql`
 
 const DELETE_ENTRY = gql`
   mutation deleteEntry($id: ID!) {
-    removeEntry(id: $id) 
+    deleteEntry(id: $id)
   }
 `
 export { ALL_ENTRIES, CREATE_ENTRY, EDIT_ENTRY_CONTENT, DELETE_ENTRY }

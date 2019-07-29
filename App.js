@@ -19,7 +19,7 @@ const MainNavigator = createStackNavigator({
 })
 
 const httpLink = createHttpLink({
-  uri: 'http://192.168.10.97:3000/',
+  uri: 'http://192.168.10.97:4000/',
 })
 
 
