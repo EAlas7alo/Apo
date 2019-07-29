@@ -59,7 +59,7 @@ const EntryScreen = ({ navigation }) => {
   }
 
   const handleDeletion = async () => {
-    await deleteEntry({ variables: { ...entry, id: entry.id } })
+    await deleteEntry({ variables: { id: entry.id } })
     Keyboard.dismiss()
     setEditMode(false)
     navigation.goBack()
