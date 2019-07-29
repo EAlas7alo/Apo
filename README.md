@@ -18,3 +18,4 @@ Store data in the device and in the server.
 
 ## Implementation
 Front React Native (Android), back Node.js.
+Backend found in https://github.com/EAlas7alo/Apo-backend
