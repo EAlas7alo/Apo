@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import SnackBar from 'react-native-snackbar-component'
-import { View, StyleSheet, Keyboard, Alert } from 'react-native'
+import { View, StyleSheet, Keyboard } from 'react-native'
 import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 import MyAppTextInput from '../components/TextComponents/MyAppTextInput'
 import { MaterialHeaderButtons, Item, HiddenItem } from '../components/HeaderButtons'
@@ -54,7 +54,7 @@ const EntryScreen = ({ navigation }) => {
     Keyboard.dismiss()
   }
 
-  const handleDelete = () => {
+  const handleDeleteConfirm = () => {
     setShowSnackbar(true)
   }
 
@@ -67,7 +67,7 @@ const EntryScreen = ({ navigation }) => {
 
   useEffect(() => {
     console.log('xd')
-    navigation.setParams({ handleEdit, handleCancel, handleSave, handleDelete, editMode })
+    navigation.setParams({ handleEdit, handleCancel, handleSave, handleDeleteConfirm, editMode })
   }, [editMode, modifiedEntry])
 
   const onChangeText = (value) => {
@@ -100,8 +100,8 @@ const EntryScreen = ({ navigation }) => {
         actionText="confirm"
       />
     </View>
-  );
-};
+  )
+}
 
 EntryScreen.navigationOptions = ({ navigation }) => {
   const { params } = navigation.state
@@ -111,7 +111,7 @@ EntryScreen.navigationOptions = ({ navigation }) => {
     headerRight: (
       <MaterialHeaderButtons>
         <Item show={params.editMode} title="edit" onPress={params.handleEdit} iconName="md-brush" />
-        <Item show={params.editMode} title="delete" onPress={params.handleDelete} iconName="md-trash" />
+        <Item show={params.editMode} title="delete" onPress={params.handleDeleteConfirm} iconName="md-trash" />
         <HiddenItem show={!params.editMode} title="cancel" onPress={params.handleCancel} iconName="md-close" />
         <HiddenItem show={!params.editMode} title="save" onPress={params.handleSave} iconName="md-checkmark" />
       </MaterialHeaderButtons>

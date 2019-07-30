@@ -45,4 +45,17 @@ const DELETE_ENTRY = gql`
     deleteEntry(id: $id)
   }
 `
-export { ALL_ENTRIES, CREATE_ENTRY, EDIT_ENTRY_CONTENT, DELETE_ENTRY }
+const UPLOAD_IMAGE = gql`
+  mutation uploadImage($file: Upload!) {
+    uploadImage(file: $file) {
+      filename
+    }
+  }
+`
+
+export {
+  ALL_ENTRIES,
+  CREATE_ENTRY,
+  EDIT_ENTRY_CONTENT,
+  DELETE_ENTRY,
+  UPLOAD_IMAGE }

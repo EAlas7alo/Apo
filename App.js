@@ -1,7 +1,7 @@
 import React from 'react'
-import { ApolloProvider } from "@apollo/react-hooks"
+import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient, InMemoryCache } from 'apollo-boost';
-import { createHttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
@@ -18,7 +18,7 @@ const MainNavigator = createStackNavigator({
   initialRouteName: 'JournalEntries',
 })
 
-const httpLink = createHttpLink({
+const httpLink = createUploadLink({
   uri: 'http://192.168.10.97:4000/',
 })
 
