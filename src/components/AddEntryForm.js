@@ -38,7 +38,8 @@ const styles = StyleSheet.create({
   },
 })
 
-const AddEntryForm = ({ handleChange, handleBlur, title, textContent, images }) => {
+const AddEntryForm = ({ handleChange, handleBlur, title, textContent, images, onPressImage }) => {
+  console.log('images at AddEntryForm', images)
   return (
     <Formik
       initialValues={{ title: '', url: '', textContent: '' }}
@@ -49,7 +50,7 @@ const AddEntryForm = ({ handleChange, handleBlur, title, textContent, images }) 
       <View style={styles.container}>
         <View style={styles.metaBar}>
           <TextInputNamed
-            autoFocus={true}
+            autoFocus
             placeholder="Enter a title"
             placeholderTextColor="lightgrey"
             name="title"
@@ -59,7 +60,7 @@ const AddEntryForm = ({ handleChange, handleBlur, title, textContent, images }) 
           />
         </View>
         <View style={styles.attachmentBar}>
-          <AttachmentBar images={images} />
+          <AttachmentBar onPress={onPressImage} images={images} />
         </View>
         <View style={styles.contentBar}>
           <TextInputNamed
@@ -70,7 +71,7 @@ const AddEntryForm = ({ handleChange, handleBlur, title, textContent, images }) 
             onBlur={handleBlur('textContent')}
             value={textContent}
             numberOfLines={1}
-            multiline={true}
+            multiline
           />
         </View>
       </View>
@@ -78,11 +79,17 @@ const AddEntryForm = ({ handleChange, handleBlur, title, textContent, images }) 
   )
 }
 
+AddEntryForm.defaultProps = {
+  images: null,
+}
+
 AddEntryForm.propTypes = {
   handleChange: PropTypes.func.isRequired,
   handleBlur: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   textContent: PropTypes.string.isRequired,
+  images: PropTypes.arrayOf(PropTypes.string),
+  onPressImage: PropTypes.func.isRequired,
 
 }
 

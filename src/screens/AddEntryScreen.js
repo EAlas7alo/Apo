@@ -4,12 +4,16 @@ import { View, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { FloatingAction } from 'react-native-floating-action'
 import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
+import { ReactNativeFile } from 'apollo-upload-client'
 import { addJournalEntry } from '../actions/journalEntryActions'
 import AddEntryForm from '../components/AddEntryForm'
 import imagePicker from '../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from '../components/HeaderButtons'
 import { CREATE_ENTRY, ALL_ENTRIES, UPLOAD_IMAGE } from '../queries/queries'
 import { imageIcon, mainButtonIcon } from '../constants/Icons'
+import ImageModal from '../components/ImageModal';
+import saveImageToDisk from '../logic/saveImageToDisk';
+
 
 /*
   TODO:
@@ -24,6 +28,7 @@ const actions = [
     name: 'add_image',
     icon: imageIcon,
     position: 1,
+    color: 'white',
   },
 ];
 
@@ -33,13 +38,17 @@ const AddEntryScreen = (props) => {
   const [url, setUrl] = useState('')
   const [textContent, setTextContent] = useState('')
   const [images, setImages] = useState([])
+  const [modalVisible, setModalVisible] = useState(false)
+  const [modalImage, setModalImage] = useState(null)
+
 
   const [createEntry] = useMutation(CREATE_ENTRY, {
     onError: console.log('adding an entry failed'),
     update: (store, response) => {
       const dataInStore = store.readQuery({ query: ALL_ENTRIES })
       dataInStore.allEntries.push(response.data.createEntry)
-      console.log(response.data)
+      console.log('from createEntry', response.data)
+      //console.log(store)
       store.writeQuery({
         query: ALL_ENTRIES,
         data: dataInStore,
@@ -50,14 +59,21 @@ const AddEntryScreen = (props) => {
   const [uploadImage] = useMutation(UPLOAD_IMAGE)
 
   const handleSubmit = async () => {
-    await createEntry({ variables: { title, textContent } })
+    console.log('images: ', images)
+    const entry = await createEntry({ variables: { title, textContent } })
+    console.log(entry)
+    console.log(images)
+    images.forEach(async image => {
+      console.log('iterating images')
+      await saveImageToDisk(image, entry.data.createEntry.id)
+    })
     Keyboard.dismiss()
     props.navigation.goBack()
   }
 
   useEffect(() => {
     props.navigation.setParams({ handleSubmit, title, url, textContent })
-  }, [title, url, textContent])
+  }, [title, url, textContent, images])
 
   const handleChange = (name, text) => {
     if (name === 'title') {
@@ -75,39 +91,25 @@ const AddEntryScreen = (props) => {
 
   const onPressItem = async (name) => {
     if (name === 'add_image') {
+      Keyboard.dismiss()
       const image = await imagePicker()
-      console.log(image)
-      let uri = image.uri
-      let uriParts = uri.split('.');
-      let fileType = uriParts[uriParts.length - 1];
-    
-      let formData = new FormData();
-      formData.append('photo', {
-        uri,
-        name: `photo.${fileType}`,
-        type: `image/${fileType}`,
-      });
+      console.log('from onPressItem', image.uri)
+      //const imageWithMeta = new ReactNativeFile({uri: image.uri, type: 'image/jpg', name: 'name.jpg'})
 
-
-      uploadImage({
-        variables: {
-          file: formData,
-        },
-      }).then(
-        result => {
-          console.log(result)
-        },
-        error => {
-          console.log(error)
-        }
-      )
       setImages(images.concat(image.uri))
     }
+  }
+
+  const onPressImage = (image) => {
+    console.log('onPressImage:', image)
+    setModalImage(image)
+    setModalVisible(true)
   }
 
   return (
     <View style={{ flex: 1 }}>
       <AddEntryForm
+        onPressImage={onPressImage}
         images={images}
         title={title}
         textContent={textContent}
@@ -116,11 +118,20 @@ const AddEntryScreen = (props) => {
       />
       <FloatingAction
         showBackground={false}
+        listenKeyboard
+        dismissKeyboardOnPress
+        color="white"
         actions={actions}
         floatingIcon={mainButtonIcon}
         onPressItem={(name) => {
           onPressItem(name)
         }}
+      />
+      <ImageModal
+        image={modalImage}
+        visible={modalVisible}
+        setVisible={setModalVisible}
+        onRequestClose={console.log('xd')}
       />
     </View>
   );

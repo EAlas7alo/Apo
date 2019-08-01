@@ -9,6 +9,8 @@ import { FloatingAction } from 'react-native-floating-action'
 import JournalEntry from '../components/JournalEntry'
 import { setJournalEntries } from '../actions/journalEntryActions'
 import { ALL_ENTRIES } from '../queries/queries';
+import { addIcon, filingIcon } from '../constants/Icons';
+import findImagesByEntry from '../logic/findImagesByEntry'
 
 
 const actions = [
@@ -16,6 +18,8 @@ const actions = [
     text: 'Add an entry',
     name: 'add_entry',
     position: 1,
+    color: 'white',
+    icon: filingIcon,
   },
 ];
 
@@ -37,9 +41,18 @@ const JournalEntriesScreen = ({ navigation }) => {
     navigation.navigate('AddEntryScreen')
   }
 
-  const onPressEntry = (entry) => {
+  const onPressEntry = async (entry) => {
     console.log(entry)
+    const foundFolder = await findImagesByEntry(entry.id)
+    console.log('found folder for entry?', foundFolder)
     navigation.navigate('EntryScreen', { entry })
+  }
+
+  const findImages = async (id) => {
+    const images = await findImagesByEntry(id)
+    console.log('id:', id)
+    console.log('images:', images)
+    return images
   }
 
   return (
@@ -54,6 +67,7 @@ const JournalEntriesScreen = ({ navigation }) => {
               underlayColor="gray"
             >
               <JournalEntry
+                id={item.id}
                 style={styles.journalEntry}
                 title={item.title}
                 content={item.content}
@@ -63,6 +77,8 @@ const JournalEntriesScreen = ({ navigation }) => {
         />
       </View>
       <FloatingAction
+        color="white"
+        floatingIcon={addIcon}
         actions={actions}
         onPressItem={(name) => {
           onPressItem(name)

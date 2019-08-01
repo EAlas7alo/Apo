@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, FlatList, Image } from 'react-native'
+import { PropTypes } from 'prop-types'
+import findImagesByEntry from '../logic/findImagesByEntry'
 
-const ImageList = (props) => {
-  //const arr = new Array(20).fill(Math.floor(Math.random()))
+const ImageList = ({ id }) => {
+  const [images, setImages] = useState([])
+  console.log('images from imagelist', images)
+  useEffect(() => {
+    findImagesByEntry(id)
+      .then(images => {
+        setImages(images)
+      })
+  }, [])
   const data = [
     {
       key: 1,
@@ -28,21 +37,29 @@ const ImageList = (props) => {
 
   return (
     <View>
+      {images.length > 0 && (
       <FlatList
-        data={data}
-        keyExtractor={(item, index) => item.key.toString()}
-        // eslint-disable-next-line react/jsx-boolean-value
-        horizontal={true}
+        data={images}
+        keyExtractor={(item, index) => item}
+        horizontal
         renderItem={({ item }) => (
           <Image
-            // eslint-disable-next-line global-require
-            source={require('../assets/images/bernierune.jpg')}
+            source={{ uri: item }}
             style={{ width: 50, height: 50 }}
           />
         )}
       />
+      )}
     </View>
   );
 };
+
+ImageList.defaultProps = {
+  images: null,
+}
+
+ImageList.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.string)
+}
 
 export default ImageList

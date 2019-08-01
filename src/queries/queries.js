@@ -16,12 +16,10 @@ const ALL_ENTRIES = gql`
 `
 
 const CREATE_ENTRY = gql`
-  mutation createEntry($title: String!, $textContent: String!, $id: ID!, $date: Date!) {
+  mutation createEntry($title: String!, $textContent: String!) {
     createEntry(
       title: $title,
       content: $textContent,
-      id: $id,
-      date: $date
     ) {
       title
       content
@@ -47,9 +45,7 @@ const DELETE_ENTRY = gql`
 `
 const UPLOAD_IMAGE = gql`
   mutation uploadImage($file: Upload!) {
-    uploadImage(file: $file) {
-      filename
-    }
+    uploadImage(file: $file)
   }
 `
 
