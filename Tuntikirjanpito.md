@@ -11,4 +11,5 @@
 | 27.7  | 3    | kuvien lisäämisen testaamista, ikonit
 | 28.7  | 3    | backend tulille https://github.com/EAlas7alo/Apo-backend
 | 30.7  | 4    | kuvien lisäys fronttiin, tyyliviilausta, backkiin MongoDB sekä kuvien lisäämistä testailtu
-| yht   | 32   | | 
+| 1.8   | 6    | kuvien lisäyksen jatkoa, kuvat tallettumaan laitteen muistiin sekä näkymien muutoksia
+| yht   | 38   | | 
