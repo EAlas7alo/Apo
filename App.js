@@ -10,13 +10,42 @@ import journalEntryReducer from './src/reducers/journalEntryReducer'
 import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
 import AddEntryScreen from './src/screens/AddEntryScreen'
 import EntryScreen from './src/screens/EntryScreen'
+import EntryModal from './src/components/EntryModal'
 
-const MainNavigator = createStackNavigator({
-  JournalEntries: { screen: JournalEntriesScreen },
-  AddEntryScreen: { screen: AddEntryScreen },
-  EntryScreen: { screen: EntryScreen },
-  initialRouteName: 'JournalEntries',
-})
+const MainStack = createStackNavigator(
+  {
+    JournalEntries: {
+      screen: JournalEntriesScreen,
+    },
+    AddEntryScreen: {
+      screen: AddEntryScreen,
+    },
+    EntryScreen: {
+      screen: EntryScreen,
+    },
+  },
+  {
+    initialRouteName: 'JournalEntries',
+    headerMode: 'none',
+  },
+)
+
+const RootStack = createStackNavigator(
+  {
+    Main: {
+      screen: MainStack,
+    },
+    EntryModal: {
+      screen: EntryModal,
+    },
+  },
+  {
+    initialRouteName: 'Main',
+    defaultNavigationOptions: {
+      title: 'Entries',
+    }
+  },
+)
 
 const httpLink = createUploadLink({
   uri: 'http://192.168.10.97:4000/',
@@ -32,7 +61,7 @@ const client = new ApolloClient({
   onError: ({ networkError, graphQLErrors }) => {
     console.log('graphQLErrors', graphQLErrors)
     console.log('networkError', networkError)
-  } 
+  },
 })
 
 
@@ -42,7 +71,7 @@ const rootReducer = combineReducers({
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
-const AppContainer = createAppContainer(MainNavigator);
+const AppContainer = createAppContainer(RootStack);
 
 const App = () => {
   return (

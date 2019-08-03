@@ -7,6 +7,9 @@ import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo
 import MyAppTextInput from '../components/TextComponents/MyAppTextInput'
 import { MaterialHeaderButtons, Item, HiddenItem } from '../components/HeaderButtons'
 import { EDIT_ENTRY_CONTENT, ALL_ENTRIES, DELETE_ENTRY } from '../queries/queries';
+import AttachmentBar from '../components/AttachmentBar';
+import ImageModal from '../components/ImageModal'
+import findImagesByEntry from '../logic/findImagesByEntry';
 
 
 const styles = StyleSheet.create({
@@ -34,6 +37,8 @@ const EntryScreen = ({ navigation }) => {
   const [deleteEntry] = useMutation(DELETE_ENTRY, {
     refetchQueries: [{ query: ALL_ENTRIES }],
   })
+  const [images, setImages] = useState([])
+  const [shownImage, setShownImage] = useState(null)
 
   const handleEdit = () => {
     setEditMode(true)
@@ -66,9 +71,18 @@ const EntryScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-    console.log('xd')
     navigation.setParams({ handleEdit, handleCancel, handleSave, handleDeleteConfirm, editMode })
   }, [editMode, modifiedEntry])
+
+
+  useEffect(() => {
+    const getInitialImages = async () => {
+      const response = await findImagesByEntry(entry.id)
+      console.log('inital images:', response)
+      setImages(response)
+    }
+    getInitialImages()
+  }, [])
 
   const onChangeText = (value) => {
     console.log(value)
@@ -82,17 +96,21 @@ const EntryScreen = ({ navigation }) => {
           style={styles.title}
           text={modifiedEntry.title}
           editable={editMode}
-          onChangeText={(value) => { setModifiedEntry({ ...modifiedEntry, title: value }) }} />
+          onChangeText={(value) => { setModifiedEntry({ ...modifiedEntry, title: value }) }} 
+        />
+      </View>
+      <View>
+        <AttachmentBar images={images} />
+        <ImageModal />
       </View>
       <MyAppTextInput
         style={styles.content}
         text={modifiedEntry.content}
         editable={editMode}
-        multiline={true}
+        multiline
         numberOfLines={1}
         onChangeText={onChangeText}
       />
-      <View />
       <SnackBar
         visible={showSnackbar}
         textMessage="Press the button to confirm"

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
   FlatList, StyleSheet, View, TouchableHighlight,
 } from 'react-native'
+import { NavigationEvents } from 'react-navigation'
 import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
 import JournalEntry from '../components/JournalEntry'
@@ -11,6 +12,7 @@ import { setJournalEntries } from '../actions/journalEntryActions'
 import { ALL_ENTRIES } from '../queries/queries';
 import { addIcon, filingIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
+import EntryModal from '../components/EntryModal';
 
 
 const actions = [
@@ -36,24 +38,26 @@ const styles = StyleSheet.create({
 const JournalEntriesScreen = ({ navigation }) => {
   const journalEntries = useQuery(ALL_ENTRIES)
   const data = journalEntries.data.allEntries
-  console.log(data)
+  const [refreshImages, setRefreshImages] = useState(false)
+
   const onPressItem = (name) => {
-    navigation.navigate('AddEntryScreen')
+    navigation.navigate('EntryModal')
+  }
+
+  const updateImages = () => {
+    console.log('hello')
+    setRefreshImages(true)
   }
 
   const onPressEntry = async (entry) => {
-    console.log(entry)
+    //console.log(entry)
     const foundFolder = await findImagesByEntry(entry.id)
     console.log('found folder for entry?', foundFolder)
-    navigation.navigate('EntryScreen', { entry })
+    setRefreshImages(false)
+    navigation.navigate('EntryModal',
+      { entry: { images: foundFolder, ...entry } })
   }
 
-  const findImages = async (id) => {
-    const images = await findImagesByEntry(id)
-    console.log('id:', id)
-    console.log('images:', images)
-    return images
-  }
 
   return (
     <View style={styles.container}>
@@ -68,6 +72,7 @@ const JournalEntriesScreen = ({ navigation }) => {
             >
               <JournalEntry
                 id={item.id}
+                refresh={refreshImages}
                 style={styles.journalEntry}
                 title={item.title}
                 content={item.content}
@@ -83,6 +88,9 @@ const JournalEntriesScreen = ({ navigation }) => {
         onPressItem={(name) => {
           onPressItem(name)
         }}
+      />
+      <NavigationEvents
+        onWillFocus={updateImages}
       />
     </View>
   );

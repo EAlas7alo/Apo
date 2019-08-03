@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
 })
 
 const AttachmentBar = ({ images, onPress }) => {
-  console.log(images)
+  // console.log('images sent to AttachmentBar: ', images)
+  if (!images) return null
   return (
     <View>
       {images.length > 0
@@ -31,8 +32,12 @@ const AttachmentBar = ({ images, onPress }) => {
   )
 }
 
+AttachmentBar.defaultProps = {
+  images: null,
+}
+
 AttachmentBar.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.string).isRequired,
+  images: PropTypes.arrayOf(PropTypes.string),
   onPress: PropTypes.func.isRequired,
 
 }

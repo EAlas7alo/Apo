@@ -45,10 +45,11 @@ const ImageModal = ({ visible, setVisible, image }) => {
 
 ImageModal.defaultProps = {
   image: null,
+  visible: false,
 }
 
 ImageModal.propTypes = {
-  visible: PropTypes.bool.isRequired,
+  visible: PropTypes.bool,
   setVisible: PropTypes.func.isRequired,
   image: PropTypes.string,
 }

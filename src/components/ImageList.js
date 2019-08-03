@@ -3,15 +3,17 @@ import { View, FlatList, Image } from 'react-native'
 import { PropTypes } from 'prop-types'
 import findImagesByEntry from '../logic/findImagesByEntry'
 
-const ImageList = ({ id }) => {
+const ImageList = ({ id, refresh }) => {
   const [images, setImages] = useState([])
+  console.log('refresh:', refresh)
   console.log('images from imagelist', images)
   useEffect(() => {
     findImagesByEntry(id)
       .then(images => {
         setImages(images)
       })
-  }, [])
+  }, [refresh])
+
   const data = [
     {
       key: 1,
@@ -54,12 +56,9 @@ const ImageList = ({ id }) => {
   );
 };
 
-ImageList.defaultProps = {
-  images: null,
-}
-
 ImageList.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.string)
+  id: PropTypes.string.isRequired,
+  refresh: PropTypes.bool.isRequired,
 }
 
 export default ImageList
