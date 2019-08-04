@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { View, Keyboard, StyleSheet, Dimensions, StatusBar } from 'react-native'
+import { View, Keyboard, StyleSheet, Dimensions } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
-import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
-import AddEntryForm from '../components/AddEntryForm'
+import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks'
+import SnackBar from 'react-native-snackbar-component'
+import AddEntryForm from './AddEntryForm'
 import imagePicker from '../logic/imagePicker'
-import { MaterialHeaderButtons, Item, HiddenItem } from '../components/HeaderButtons'
+import { MaterialHeaderButtons, Item } from './HeaderButtons'
 import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY } from '../queries/queries'
-import { imageIcon, mainButtonIcon } from '../constants/Icons'
+import { imageIcon, mainButtonIcon, checkmarkIcon } from '../constants/Icons'
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../logic/saveImageToDisk';
+import { AndroidBackHandler } from 'react-navigation-backhandler'
 
 /*
   TODO:
-  Statusbar
 
 */
 
@@ -50,7 +51,7 @@ const EntryModal = ({ navigation }) => {
   const [newImages, setNewImages] = useState([])
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
-  const [editMode, setEditMode] = useState(true)
+  const [showSnackBar, setShowSnackBar] = useState(false)
 
   const [createEntry] = useMutation(CREATE_ENTRY, {
     onError: console.log('adding an entry failed'),
@@ -58,7 +59,7 @@ const EntryModal = ({ navigation }) => {
       const dataInStore = store.readQuery({ query: ALL_ENTRIES })
       dataInStore.allEntries.push(response.data.createEntry)
       console.log('from createEntry', response.data)
-      //console.log(store)
+      // console.log(store)
       store.writeQuery({
         query: ALL_ENTRIES,
         data: dataInStore,
@@ -77,14 +78,18 @@ const EntryModal = ({ navigation }) => {
     console.log('images: ', images)
     console.log('isNewEntry', isNewEntry)
 
-    let id = entry.id
+    let id
     console.log('entry', entry)
 
     // eslint-disable-next-line no-unused-expressions
     if (isNewEntry) {
-      id = await createEntry({ variables: { title, textContent } }).data.createEntry.id
+      console.log('object to save: ', title, textContent, images, id)
+      const data = await createEntry({ variables: { title, textContent, images } })
+      console.log(data.data.createEntry)
+      id = data.data.createEntry.id
     } else {
-      await editContent({ variables: { id: entry.id, content: textContent } })
+      id = entry.id
+      await editContent({ variables: { id: entry.id, title, content: textContent, images } })
     }
     console.log(id)
     console.log(images)
@@ -96,16 +101,23 @@ const EntryModal = ({ navigation }) => {
     navigation.goBack()
   }
 
+  const handleDeletion = async () => {
+    await deleteEntry({ variables: { id: entry.id } })
+    Keyboard.dismiss()
+    navigation.goBack()
+  }
+
+  const handleDeleteConfirm = () => {
+    Keyboard.dismiss()
+    setShowSnackBar(true)
+  }
+
   const handleChange = (name, text) => {
     if (name === 'title') {
       setTitle(text)
     } else {
       setTextContent(text)
     }
-  }
-
-  const handleBlur = () => {
-
   }
 
   const onPressItem = async (name) => {
@@ -124,19 +136,23 @@ const EntryModal = ({ navigation }) => {
     setImageModalVisible(true)
   }
 
+  const onBackButtonPress = () => {
+    handleSubmit()
+  }
+
   useEffect(() => {
-    navigation.setParams({ handleSubmit, title, textContent, editMode })
+    navigation.setParams({ handleSubmit, handleDeleteConfirm, title, textContent })
   }, [title, textContent, newImages, entry])
 
   return (
     <View style={styles.modal}>
+      <AndroidBackHandler onBackPress={onBackButtonPress} />
       <AddEntryForm
         onPressImage={onPressImage}
         images={images}
         title={title}
         textContent={textContent}
         handleChange={handleChange}
-        handleBlur={handleBlur}
       />
       <FloatingAction
         showBackground={false}
@@ -155,6 +171,12 @@ const EntryModal = ({ navigation }) => {
         setVisible={setImageModalVisible}
         onRequestClose={console.log('xd')}
       />
+      <SnackBar
+        visible={showSnackBar}
+        textMessage="Press the button to confirm"
+        actionHandler={() => { handleDeletion() }}
+        actionText="confirm"
+      />
     </View>
   );
 };
@@ -164,15 +186,18 @@ EntryModal.navigationOptions = ({ navigation }) => {
   if (!params) {
     return null
   }
-  console.log(params)
   return {
     title: 'New entry',
+    headerBackImage: checkmarkIcon,
+    headerLeftContainerStyle: {
+      paddingLeft: 10,
+    },
+    headerRightContainerStyle: {
+      paddingRight: 10,
+    },
     headerRight: (
       <MaterialHeaderButtons>
-        <HiddenItem title="edit" iconName="md-brush" />
-        <HiddenItem title="delete" iconName="md-trash" />
-        <Item title="cancel" iconName="md-close" />
-        <Item title="save" onPress={params.handleSubmit} iconName="md-checkmark" />
+        <Item title="delete" onPress={params.handleDeleteConfirm} iconName="md-trash" />
       </MaterialHeaderButtons>
     ),
   }
@@ -182,6 +207,7 @@ EntryModal.propTypes = {
   navigation: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
     setParams: PropTypes.func.isRequired,
+    getParam: PropTypes.func.isRequired,
   }).isRequired,
 }
 

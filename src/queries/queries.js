@@ -10,19 +10,22 @@ const ALL_ENTRIES = gql`
     allEntries {
       title
       content
+      images
       id
     }
   }
 `
 
 const CREATE_ENTRY = gql`
-  mutation createEntry($title: String!, $textContent: String!) {
+  mutation createEntry($title: String!, $textContent: String!, $images: [String!]!) {
     createEntry(
       title: $title,
       content: $textContent,
+      images: $images,
     ) {
       title
       content
+      images
       id
       date
     }
@@ -30,10 +33,11 @@ const CREATE_ENTRY = gql`
 `
 
 const EDIT_ENTRY_CONTENT = gql`
-  mutation editEntry($id: ID!, $content: String!) {
-    editEntry(id: $id, content: $content) {
+  mutation editEntry($id: ID!, $title: String!, $content: String!, $images: [String!]!) {
+    editEntry(id: $id, title: $title, content: $content, images: $images) {
       title
       content
+      images
     } 
   }
 `

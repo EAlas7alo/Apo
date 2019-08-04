@@ -38,22 +38,16 @@ const styles = StyleSheet.create({
 const JournalEntriesScreen = ({ navigation }) => {
   const journalEntries = useQuery(ALL_ENTRIES)
   const data = journalEntries.data.allEntries
-  const [refreshImages, setRefreshImages] = useState(false)
+  console.log(data)
 
   const onPressItem = (name) => {
     navigation.navigate('EntryModal')
   }
 
-  const updateImages = () => {
-    console.log('hello')
-    setRefreshImages(true)
-  }
-
   const onPressEntry = async (entry) => {
-    //console.log(entry)
+    // console.log(entry)
     const foundFolder = await findImagesByEntry(entry.id)
     console.log('found folder for entry?', foundFolder)
-    setRefreshImages(false)
     navigation.navigate('EntryModal',
       { entry: { images: foundFolder, ...entry } })
   }
@@ -71,8 +65,7 @@ const JournalEntriesScreen = ({ navigation }) => {
               underlayColor="gray"
             >
               <JournalEntry
-                id={item.id}
-                refresh={refreshImages}
+                images={item.images}
                 style={styles.journalEntry}
                 title={item.title}
                 content={item.content}
@@ -88,9 +81,6 @@ const JournalEntriesScreen = ({ navigation }) => {
         onPressItem={(name) => {
           onPressItem(name)
         }}
-      />
-      <NavigationEvents
-        onWillFocus={updateImages}
       />
     </View>
   );

@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const JournalEntry = ({ title, content, style, id, refresh }) => {
+const JournalEntry = ({ title, content, style, images }) => {
   return (
     <View style={style}>
       <View style={{ paddingBottom: 20 }}>
@@ -23,7 +23,7 @@ const JournalEntry = ({ title, content, style, id, refresh }) => {
         <MyAppText style={styles.journalEntry} text={content} />
       </View>
       <View>
-        <ImageList id={id} refresh={refresh} />
+        <ImageList images={images} />
       </View>
     </View>
   )
