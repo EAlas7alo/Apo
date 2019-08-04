@@ -13,4 +13,5 @@
 | 30.7  | 4    | kuvien lisäys fronttiin, tyyliviilausta, backkiin MongoDB sekä kuvien lisäämistä testailtu
 | 1.8   | 6    | kuvien lisäyksen jatkoa, kuvat tallettumaan laitteen muistiin sekä näkymien muutoksia
 | 3.8   | 6    | refaktorointia + kuvien näkymiä
-| yht   | 44   | | 
+| 4.8   | 3    | UI:n pyörittelyä
+| yht   | 47   | | 
