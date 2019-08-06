@@ -11,6 +11,7 @@ import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
 import AddEntryScreen from './src/screens/AddEntryScreen'
 import EntryScreen from './src/screens/EntryScreen'
 import EntryModal from './src/components/EntryModal'
+import CameraScreen from './src/screens/CameraScreen'
 
 const MainStack = createStackNavigator(
   {
@@ -38,12 +39,15 @@ const RootStack = createStackNavigator(
     EntryModal: {
       screen: EntryModal,
     },
+    CameraScreen: {
+      screen: CameraScreen,
+    },
   },
   {
     initialRouteName: 'Main',
     defaultNavigationOptions: {
       title: 'Entries',
-    }
+    },
   },
 )
 

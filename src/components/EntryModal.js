@@ -4,14 +4,15 @@ import { View, Keyboard, StyleSheet, Dimensions } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import SnackBar from 'react-native-snackbar-component'
+import { AndroidBackHandler } from 'react-navigation-backhandler'
 import AddEntryForm from './AddEntryForm'
 import imagePicker from '../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from './HeaderButtons'
 import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY } from '../queries/queries'
-import { imageIcon, mainButtonIcon, checkmarkIcon } from '../constants/Icons'
+import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../constants/Icons'
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../logic/saveImageToDisk';
-import { AndroidBackHandler } from 'react-navigation-backhandler'
+
 
 /*
   TODO:
@@ -39,6 +40,13 @@ const actions = [
     position: 1,
     color: 'white',
   },
+  {
+    text: 'Take a picture',
+    name: 'take_picture',
+    icon: cameraIcon,
+    position: 2,
+    color: 'white',
+  },
 ];
 
 const EntryModal = ({ navigation }) => {
@@ -58,7 +66,6 @@ const EntryModal = ({ navigation }) => {
     update: (store, response) => {
       const dataInStore = store.readQuery({ query: ALL_ENTRIES })
       dataInStore.allEntries.push(response.data.createEntry)
-      console.log('from createEntry', response.data)
       // console.log(store)
       store.writeQuery({
         query: ALL_ENTRIES,
@@ -75,26 +82,18 @@ const EntryModal = ({ navigation }) => {
   })
 
   const handleSubmit = async () => {
-    console.log('images: ', images)
-    console.log('isNewEntry', isNewEntry)
 
     let id
-    console.log('entry', entry)
 
     // eslint-disable-next-line no-unused-expressions
     if (isNewEntry) {
-      console.log('object to save: ', title, textContent, images, id)
       const data = await createEntry({ variables: { title, textContent, images } })
-      console.log(data.data.createEntry)
       id = data.data.createEntry.id
     } else {
       id = entry.id
       await editContent({ variables: { id: entry.id, title, content: textContent, images } })
     }
-    console.log(id)
-    console.log(images)
     newImages.forEach(async image => {
-      console.log('iterating images')
       await saveImageToDisk(image, id)
     })
     Keyboard.dismiss()
@@ -120,24 +119,32 @@ const EntryModal = ({ navigation }) => {
     }
   }
 
+  const addNewImage = (image) => {
+    setImages(images.concat(image.uri))
+    setNewImages(newImages.concat(image.uri))
+  }
+
   const onPressItem = async (name) => {
+    Keyboard.dismiss()
     if (name === 'add_image') {
-      Keyboard.dismiss()
       const image = await imagePicker()
-      console.log('from onPressItem', image.uri)
-      setImages(images.concat(image.uri))
-      setNewImages(newImages.concat(image.uri))
+      addNewImage(image.uri)
+    } else if (name === 'take_picture') {
+      navigation.navigate('CameraScreen', { headerVisible: null, addNewImage })
     }
   }
 
   const onPressImage = (image) => {
-    console.log('onPressImage:', image)
     setModalImage(image)
     setImageModalVisible(true)
   }
 
   const onBackButtonPress = () => {
-    handleSubmit()
+    if (title === '' && textContent === '' && images.length === 0) {
+      console.log('empty entry, aborting saving')
+    } else {
+      handleSubmit()
+    }
   }
 
   useEffect(() => {
