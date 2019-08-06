@@ -14,4 +14,5 @@
 | 1.8   | 6    | kuvien lisäyksen jatkoa, kuvat tallettumaan laitteen muistiin sekä näkymien muutoksia
 | 3.8   | 6    | refaktorointia + kuvien näkymiä
 | 4.8   | 3    | UI:n pyörittelyä
-| yht   | 47   | | 
+| 6.8   | 5    | Kamerakomponentin säätöä
+| yht   | 52   | | 
