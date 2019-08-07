@@ -15,4 +15,5 @@
 | 3.8   | 6    | refaktorointia + kuvien näkymiä
 | 4.8   | 3    | UI:n pyörittelyä
 | 6.8   | 5    | Kamerakomponentin säätöä
-| yht   | 52   | | 
+| 7.8   | 5    | Kameraa, styled components, bugien fixausta
+| yht   | 57   | | 
