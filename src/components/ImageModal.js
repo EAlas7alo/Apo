@@ -1,44 +1,64 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Text, TouchableHighlight, View, Image, StyleSheet, Dimensions } from 'react-native';
+import styled from 'styled-components/native'
+import { TouchableHighlight, Image, Dimensions } from 'react-native';
 
-const styles = StyleSheet.create({
-  modalView: {
-    margin: 15,
-  },
-  wrapperView: {
-    margin: 50,
-    backgroundColor: '#00000080',
-  },
-  imageView: {
-    backgroundColor: 'snow',
-  },
-  image: {
-    width: Dimensions.get('window').width * 0.8,
-    height: Dimensions.get('window').height * 0.8,
-  },
-})
+const StyledModal = styled.Modal`
+  flex: 1
+  justify-content: center
+  border-color: red
+  border-width: 4px
+`
+const WrapperView = styled.View`
+  flex: 1
+  justify-content: center
+  backgroundColor: black;
+`
+const ImageView = styled.View`
+  justify-content: center
+  background-color: snow
+`
+const StyledImage = styled.Image`
+  width: ${props => props.dimensions.width}
+  height: ${props => props.dimensions.height}
+`
 
 const ImageModal = ({ visible, setVisible, image }) => {
   console.log('imageUri at ImageModal: ', image)
-  return (
-    <Modal
-      transparent
-      style={styles.modalView}
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+  useEffect(() => {
+    if (image === null) return
+    Image.getSize(image, (width, height) => {
+      const maxHeight = Dimensions.get('screen').height
+      const maxWidth = Dimensions.get('screen').width
+      console.log(`max height and width ${maxHeight} ${maxWidth}`)
+
+      const ratio = Math.min(maxWidth / width, maxHeight / height)
+
+      console.log(width, height)
+      setDimensions({ width: width * ratio, height: height * ratio })
+    })
+  }, [image])
+
+  console.log('image dimensions: ', dimensions)
+
+  return ( 
+    <StyledModal
       animationType="fade"
       visible={visible}
     >
-      <View style={styles.wrapperView}>
-        <View style={styles.imageView} transparent={false}>
+      <WrapperView>
+        <ImageView transparent={false}>
           <TouchableHighlight onPress={() => setVisible(false)}>
-            <Image
+            <StyledImage
               source={{ uri: image }}
-              style={styles.image}
+              dimensions={dimensions}
+              resizeMode="cover"
             />
           </TouchableHighlight>
-        </View>
-      </View>
-    </Modal>
+        </ImageView>
+      </WrapperView>
+    </StyledModal>
 
   )
 }

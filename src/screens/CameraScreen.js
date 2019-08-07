@@ -20,22 +20,31 @@ const styles = StyleSheet.create({
     flex: 0.2,
     backgroundColor: 'transparent',
     flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  snapPhotoParent: {
     justifyContent: 'center',
   },
-  button: {
+  snapPhotoButton: {
     borderColor: 'white',
     borderWidth: 4,
     borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
     width: Dimensions.get('window').width * 0.2,
     height: Dimensions.get('window').width * 0.2,
     backgroundColor: 'transparent',
+  },
+  cameraSettingsParent: {
     justifyContent: 'center',
-    alignItems: 'center',
+  },
+  cameraSettingsButtons: {
   },
 })
 
 const CameraScreen = ({ navigation }) => {
   const [hasPermissions, setHasPermissions] = useState(false)
+  const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
+  const [flashIcon, setFlashIcon] = useState('md-flash-off')
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
   const cameraRef = useRef(null)
   console.log(navigation.state)
   useEffect(() => {
@@ -50,13 +59,34 @@ const CameraScreen = ({ navigation }) => {
     console.log('snapPhoto pressed')
     if (cameraRef) {
       console.log('taking photo')
-      const options = { quality: 1, base64: true }
-      const photo = await cameraRef.current.takePictureAsync(options)
-      navigation.state.addNewImage(photo.uri)
-      
+      const options = { quality: 0.2, base64: true }
+      try {
+        const photo = await cameraRef.current.takePictureAsync(options)
+        navigation.state.params.saveImage(photo.uri)
+        navigation.goBack()
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
-  console.log('camera has permissions:', hasPermissions)
+
+  const switchCameraType = () => {
+    setCameraType(
+      cameraType === Camera.Constants.Type.back
+        ? Camera.Constants.Type.front
+        : Camera.Constants.Type.back,
+    )
+  }
+
+  const switchFlash = () => {
+    if (flash === Camera.Constants.FlashMode.on) {
+      setFlash(Camera.Constants.FlashMode.off)
+      setFlashIcon('md-flash-off')
+    } else {
+      setFlash(Camera.Constants.FlashMode.on)
+      setFlashIcon('md-flash')
+    }
+  }
 
   return (
     <View style={styles.mainView}>
@@ -64,11 +94,19 @@ const CameraScreen = ({ navigation }) => {
       <Camera
         style={styles.cameraView}
         ref={cameraRef}
-        type={Camera.Constants.Type.back}
+        type={cameraType}
+        ratio="16:9"
+        flashMode={flash}
       >
         <View style={styles.buttonView}>
-          <TouchableOpacity style={styles.button} onPress={snapPhoto}>
-            <Icon source="md-camera" size={30} color="white" />
+          <TouchableOpacity style={styles.cameraSettingsParent} onPress={switchFlash}>
+            <Icon style={styles.cameraSettingsButtons} name={flashIcon} size={40} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.snapPhotoParent} onPress={snapPhoto}>
+            <View style={styles.snapPhotoButton} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cameraSettingsParent} onPress={switchCameraType}>
+            <Icon style={styles.cameraSettingsButtons} name="md-reverse-camera" size={40} color="white" />
           </TouchableOpacity>
         </View>
       </Camera>

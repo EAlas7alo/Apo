@@ -13,7 +13,6 @@ import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../constan
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../logic/saveImageToDisk';
 
-
 /*
   TODO:
 
@@ -52,7 +51,7 @@ const actions = [
 const EntryModal = ({ navigation }) => {
   const entry = navigation.getParam('entry', null)
   const isNewEntry = !entry
-  console.log('entry', entry)
+  // console.log('entry', entry)
   const [title, setTitle] = useState(entry ? entry.title : '')
   const [textContent, setTextContent] = useState(entry ? entry.content : '')
   const [images, setImages] = useState(entry ? entry.images : [])
@@ -119,18 +118,20 @@ const EntryModal = ({ navigation }) => {
     }
   }
 
-  const addNewImage = (image) => {
-    setImages(images.concat(image.uri))
-    setNewImages(newImages.concat(image.uri))
+  const saveImage = async (imageUri) => {
+    const image = await saveImageToDisk(imageUri)
+    // console.log(image)
+    setImages(images.concat(image))
+    setNewImages(newImages.concat(image))
   }
 
   const onPressItem = async (name) => {
     Keyboard.dismiss()
     if (name === 'add_image') {
-      const image = await imagePicker()
-      addNewImage(image.uri)
+      const chooseImage = await imagePicker()
+      saveImage(chooseImage.uri)
     } else if (name === 'take_picture') {
-      navigation.navigate('CameraScreen', { headerVisible: null, addNewImage })
+      navigation.navigate('CameraScreen', { headerVisible: null, saveImage })
     }
   }
 
@@ -195,6 +196,11 @@ EntryModal.navigationOptions = ({ navigation }) => {
   }
   return {
     title: 'New entry',
+    headerLeft: (
+      <MaterialHeaderButtons>
+        <Item title="save" onPress={params.handleSubmit} iconName="md-checkmark" />
+      </MaterialHeaderButtons>
+    ),
     headerBackImage: checkmarkIcon,
     headerLeftContainerStyle: {
       paddingLeft: 10,

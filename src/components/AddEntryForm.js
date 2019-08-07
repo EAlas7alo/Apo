@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 })
 
 const AddEntryForm = ({ handleChange, title, textContent, images, onPressImage }) => {
-  console.log('images at AddEntryForm', images)
+  // console.log('images at AddEntryForm', images)
   return (
     <Formik
       initialValues={{ title: '', url: '', textContent: '' }}
