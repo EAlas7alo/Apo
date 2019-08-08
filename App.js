@@ -1,6 +1,7 @@
 import React from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
-import { ApolloClient, InMemoryCache } from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createUploadLink } from 'apollo-upload-client'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { createStore, combineReducers, applyMiddleware } from 'redux'
@@ -57,11 +58,11 @@ const httpLink = createUploadLink({
 
 
 const link = httpLink
-
+const cache = new InMemoryCache()
 
 const client = new ApolloClient({
   link,
-  cache: new InMemoryCache(),
+  cache,
   onError: ({ networkError, graphQLErrors }) => {
     console.log('graphQLErrors', graphQLErrors)
     console.log('networkError', networkError)

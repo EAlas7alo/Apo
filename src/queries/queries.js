@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 /*
   Date and ID fields are to be generated server-side when backend
