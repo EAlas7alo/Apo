@@ -1,13 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { View, Text, Image, StyleSheet, FlatList, TouchableHighlight } from 'react-native'
-
-const styles = StyleSheet.create({
-  imageSize: {
-    width: 75,
-    height: 75,
-  },
-})
+import styled from 'styled-components/native'
+import { View, Text, FlatList } from 'react-native'
+import AttachmentView from './AttachmentView'
 
 const AttachmentBar = ({ images, onPress }) => {
   // console.log('images sent to AttachmentBar: ', images)
@@ -21,9 +16,7 @@ const AttachmentBar = ({ images, onPress }) => {
             horizontal
             keyExtractor={(item, index) => item}
             renderItem={({ item }) => (
-              <TouchableHighlight key={item} onPress={() => onPress(item)}>
-                <Image source={{ uri: item }} style={styles.imageSize} />
-              </TouchableHighlight>
+              <AttachmentView key={item} item={item} onPress={onPress} />
             )}
           />
         )

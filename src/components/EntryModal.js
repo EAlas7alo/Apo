@@ -81,7 +81,6 @@ const EntryModal = ({ navigation }) => {
   })
 
   const handleSubmit = async () => {
-
     let id
 
     // eslint-disable-next-line no-unused-expressions
