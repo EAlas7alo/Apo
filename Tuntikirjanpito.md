@@ -17,4 +17,5 @@
 | 6.8   | 5    | Kamerakomponentin säätöä
 | 7.8   | 5    | Kameraa, styled components, bugien fixausta
 | 8.8   | 4    | UI:n työstöä, apollon valmistelua
-| yht   | 61   | | 
+| 9.8   | 3    | Apolloa
+| yht   | 64   | | 
