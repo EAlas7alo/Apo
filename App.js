@@ -4,15 +4,13 @@ import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createUploadLink } from 'apollo-upload-client'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { Provider } from 'react-redux'
-import thunk from 'redux-thunk'
-import journalEntryReducer from './src/reducers/journalEntryReducer'
+import gql from 'graphql-tag';
 import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
 import AddEntryScreen from './src/screens/AddEntryScreen'
 import EntryScreen from './src/screens/EntryScreen'
 import EntryModal from './src/components/EntryModal'
 import CameraScreen from './src/screens/CameraScreen'
+
 
 const MainStack = createStackNavigator(
   {
@@ -67,23 +65,54 @@ const client = new ApolloClient({
     console.log('graphQLErrors', graphQLErrors)
     console.log('networkError', networkError)
   },
+  resolvers: {
+    Query: {
+      getEntry: (_root, variables, { cache, getCacheKey }) => {
+        console.log(variables.id)
+        console.log(cache.data)
+        const id = getCacheKey({ __typename: 'Entry', id: variables.id })
+        const fragment = gql`
+            fragment entry on Entry {
+              title
+              content
+              images
+            }
+        `
+        const entry = cache.readFragment({ fragment, id })
+
+        return entry
+      },
+    },
+    Mutation: {
+      addImage: (_root, variables, { cache, getCacheKey }) => {
+        const id = getCacheKey({ __typename: 'Entry', id: variables.id })
+        const fragment = gql`
+          fragment images on Entry {
+            images
+          }
+        `
+        const entry = cache.readFragment({ fragment, id })
+        const data = { ...entry, images: entry.images.concat(variables.image)}
+        cache.writeData({ id, data })
+        
+        return null
+      },
+    },
+  },
 })
 
-
-const rootReducer = combineReducers({
-  journalEntryReducer,
+cache.writeData({
+  data: {
+    
+  },
 })
-
-const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const AppContainer = createAppContainer(RootStack);
 
 const App = () => {
   return (
     <ApolloProvider client={client}>
-      <Provider store={store}>
-        <AppContainer />
-      </Provider>
+      <AppContainer />
     </ApolloProvider>
   )
 }

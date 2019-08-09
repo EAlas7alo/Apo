@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import {
   FlatList, StyleSheet, View, TouchableHighlight,
 } from 'react-native'
@@ -8,7 +7,6 @@ import { NavigationEvents } from 'react-navigation'
 import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
 import JournalEntry from '../components/JournalEntry'
-import { setJournalEntries } from '../actions/journalEntryActions'
 import { ALL_ENTRIES } from '../queries/queries';
 import { addIcon, filingIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
@@ -65,6 +63,7 @@ const JournalEntriesScreen = ({ navigation }) => {
               underlayColor="gray"
             >
               <JournalEntry
+                id={item.id.toString()}
                 images={item.images}
                 style={styles.journalEntry}
                 title={item.title}
@@ -96,9 +95,4 @@ JournalEntriesScreen.propTypes = {
   }).isRequired,
 }
 
-
-const mapDispatchToProps = {
-  setJournalEntries,
-}
-
-export default connect(null, mapDispatchToProps)(JournalEntriesScreen)
+export default JournalEntriesScreen

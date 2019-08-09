@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const AddEntryForm = ({ handleChange, title, textContent, images, onPressImage }) => {
+const AddEntryForm = ({ handleChange, title, textContent, onPressImage, id }) => {
   // console.log('images at AddEntryForm', images)
   return (
     <Formik
@@ -58,7 +58,7 @@ const AddEntryForm = ({ handleChange, title, textContent, images, onPressImage }
           />
         </View>
         <View style={styles.attachmentBar}>
-          <AttachmentBar onPress={onPressImage} images={images} />
+          <AttachmentBar id={id} onPress={onPressImage} />
         </View>
         <View style={styles.contentBar}>
           <TextInputNamed

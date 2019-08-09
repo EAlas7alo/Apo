@@ -24,6 +24,7 @@ const ListImage = styled.Image`
 const AnimatedListImage = Animated.createAnimatedComponent(ListImage)
 
 const AttachmentView = (props) => {
+
   const [highlighted, setHighlighted] = useState(false)
   const animation = useRef(new Animated.Value(0)).current
 
@@ -49,7 +50,7 @@ const AttachmentView = (props) => {
         highlighted={highlighted}
       >
         <AnimatedListImage
-          source={{ uri: props.item }}
+          source={{ uri: props.item}}
           highlighted={highlighted}
           style={{
             width: dimensions,

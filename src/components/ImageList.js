@@ -2,7 +2,11 @@ import React from 'react';
 import { View, FlatList, Image } from 'react-native'
 import { PropTypes } from 'prop-types'
 
-const ImageList = ({ images }) => {
+
+const ImageList = ({ images, id }) => {
+
+  //const [getImages] = useQuery(GET_IMAGES, { variables: { id } })
+
   return (
     <View>
       {images.length > 0 && (
