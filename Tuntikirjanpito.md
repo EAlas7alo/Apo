@@ -18,4 +18,5 @@
 | 7.8   | 5    | Kameraa, styled components, bugien fixausta
 | 8.8   | 4    | UI:n työstöä, apollon valmistelua
 | 9.8   | 3    | Apolloa
+| 11.8  | 2    | Apollo
 | yht   | 64   | | 
