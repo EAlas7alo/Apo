@@ -78,6 +78,7 @@ const AddEntryForm = ({ handleChange, title, textContent, onPressImage, id }) =>
 
 AddEntryForm.defaultProps = {
   images: null,
+  id: null,
 }
 
 AddEntryForm.propTypes = {
@@ -86,6 +87,7 @@ AddEntryForm.propTypes = {
   textContent: PropTypes.string.isRequired,
   images: PropTypes.arrayOf(PropTypes.string),
   onPressImage: PropTypes.func.isRequired,
+  id: PropTypes.string,
 
 }
 

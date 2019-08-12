@@ -4,7 +4,7 @@ import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createUploadLink } from 'apollo-upload-client'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import gql from 'graphql-tag';
+import { resolvers, typeDefs } from './src/resolvers/resolvers'
 import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
 import AddEntryScreen from './src/screens/AddEntryScreen'
 import EntryScreen from './src/screens/EntryScreen'
@@ -59,51 +59,19 @@ const link = httpLink
 const cache = new InMemoryCache()
 
 const client = new ApolloClient({
-  link,
   cache,
-  onError: ({ networkError, graphQLErrors }) => {
-    console.log('graphQLErrors', graphQLErrors)
-    console.log('networkError', networkError)
+  resolvers,
+  typeDefs,
+  link,
+  formatError: (err) => {
+    console.log(err)
+    return err;
   },
-  resolvers: {
-    Query: {
-      getEntry: (_root, variables, { cache, getCacheKey }) => {
-        console.log(variables.id)
-        console.log(cache.data)
-        const id = getCacheKey({ __typename: 'Entry', id: variables.id })
-        const fragment = gql`
-            fragment entry on Entry {
-              title
-              content
-              images
-            }
-        `
-        const entry = cache.readFragment({ fragment, id })
 
-        return entry
-      },
-    },
-    Mutation: {
-      addImage: (_root, variables, { cache, getCacheKey }) => {
-        const id = getCacheKey({ __typename: 'Entry', id: variables.id })
-        const fragment = gql`
-          fragment images on Entry {
-            images
-          }
-        `
-        const entry = cache.readFragment({ fragment, id })
-        const data = { ...entry, images: entry.images.concat(variables.image)}
-        cache.writeData({ id, data })
-        
-        return null
-      },
-    },
-  },
 })
 
 cache.writeData({
   data: {
-    
   },
 })
 

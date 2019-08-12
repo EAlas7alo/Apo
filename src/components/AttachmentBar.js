@@ -2,24 +2,26 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components/native'
 import { View, Text, FlatList } from 'react-native'
-import AttachmentView from './AttachmentView'
-import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import { useQuery } from '@apollo/react-hooks'
+import AttachmentView from './AttachmentView'
+
 
 const GET_ENTRY = gql`
   query getEntry($id: String!) {
-    getEntry(id: $id) @client {
-      images
+    getEntry(id: $id) @client  {
+      currentImages @client
     }
   }
 `
 
 const AttachmentBar = ({ onPress, id }) => {
-  console.log('id:', id)
-  const { data } = useQuery(GET_ENTRY, { variables: { id } })
+  // console.log('id:', id)
+  const { data, loading } = useQuery(GET_ENTRY, { variables: { id } })
   console.log('query data:', data)
-  if (!data.getEntry) return null
-  const entryImages = data.getEntry.images
+  if (loading) return null
+  console.log(data)
+  const entryImages = data.getEntry.currentImages
 
   return (
     <View>

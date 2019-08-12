@@ -9,7 +9,7 @@ import gql from 'graphql-tag'
 import AddEntryForm from './AddEntryForm'
 import imagePicker from '../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from './HeaderButtons'
-import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY } from '../queries/queries'
+import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY } from '../queries/queries'
 import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../constants/Icons'
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../logic/saveImageToDisk';
@@ -50,19 +50,10 @@ const actions = [
   },
 ];
 
-const GET_ENTRY = gql`
-  query getEntry($id: String!) {
-    getEntry(id: $id) @client {
-      title
-      content
-      images
-    }
-  }
-`
 
-const UPDATE_IMAGES = gql`
-  mutation updateImages($id: String!, $image: String!) {
-    addImage(id: $id, image: $image) @client
+const CURRENT_IMAGES = gql`
+  query currentImages {
+    currentEntryImages @client
   }
 `
 
@@ -73,13 +64,12 @@ const EntryModal = ({ navigation }) => {
   const [title, setTitle] = useState(entry ? entry.title : '')
   const [textContent, setTextContent] = useState(entry ? entry.content : '')
   const [images, setImages] = useState(entry ? entry.images : [])
-  const { data: { getEntry } } = useQuery(GET_ENTRY, { variables: { id: entry.id } })
-  console.log('getEntry', getEntry)
-  const entryImages = getEntry.images
   const [newImages, setNewImages] = useState([])
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
+  // const { data: { currentEntryImages } } = useQuery(CURRENT_IMAGES)
+  // console.log('currentEntryImages:', currentEntryImages)
 
   const [createEntry] = useMutation(CREATE_ENTRY, {
     onError: console.log('adding an entry failed'),
@@ -103,7 +93,6 @@ const EntryModal = ({ navigation }) => {
 
   const handleSubmit = async () => {
     let id
-
     // eslint-disable-next-line no-unused-expressions
     if (isNewEntry) {
       const data = await createEntry({ variables: { title, textContent, images } })
@@ -141,6 +130,7 @@ const EntryModal = ({ navigation }) => {
   const saveImage = async (imageUri) => {
     const image = await saveImageToDisk(imageUri)
     // console.log(image)
+    //await addImage({ variables: { image } })
     setImages(images.concat(image))
     setNewImages(newImages.concat(image))
   }
@@ -176,7 +166,7 @@ const EntryModal = ({ navigation }) => {
     <View style={styles.modal}>
       <AndroidBackHandler onBackPress={onBackButtonPress} />
       <AddEntryForm
-        id={entry.id}
+        id={!isNewEntry ? entry.id : null}
         onPressImage={onPressImage}
         title={title}
         textContent={textContent}

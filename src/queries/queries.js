@@ -33,7 +33,7 @@ const CREATE_ENTRY = gql`
 `
 
 const EDIT_ENTRY_CONTENT = gql`
-  mutation editEntry($id: ID!, $title: String!, $content: String!, $images: [String!]!) {
+  mutation editEntry($id: ID!, $title: String, $content: String, $images: [String!]) {
     editEntry(id: $id, title: $title, content: $content, images: $images) {
       title
       content
@@ -53,9 +53,22 @@ const UPLOAD_IMAGE = gql`
   }
 `
 
+const GET_ENTRY = gql`
+  query getEntry($id: String!) {
+    getEntry(id: $id) {
+      title
+      content
+      images
+      currentImages @client
+    }
+  }
+`
+
 export {
   ALL_ENTRIES,
   CREATE_ENTRY,
   EDIT_ENTRY_CONTENT,
   DELETE_ENTRY,
-  UPLOAD_IMAGE }
+  UPLOAD_IMAGE,
+  GET_ENTRY,
+}
