@@ -19,4 +19,5 @@
 | 8.8   | 4    | UI:n työstöä, apollon valmistelua
 | 9.8   | 3    | Apolloa
 | 11.8  | 2    | Apollo
-| yht   | 66   | | 
+| 12.8  | 4    | Apollo
+| yht   | 70   | | 
