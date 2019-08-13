@@ -6,8 +6,9 @@ import {
 import { NavigationEvents } from 'react-navigation'
 import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
+import gql from 'graphql-tag'
 import JournalEntry from '../components/JournalEntry'
-import { ALL_ENTRIES } from '../queries/queries';
+import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES } from '../queries/queries';
 import { addIcon, filingIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
 import EntryModal from '../components/EntryModal';
@@ -33,10 +34,14 @@ const styles = StyleSheet.create({
   },
 })
 
+
 const JournalEntriesScreen = ({ navigation }) => {
   const journalEntries = useQuery(ALL_ENTRIES)
   const data = journalEntries.data.allEntries
-  console.log(data)
+  const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
+  const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
+    refetchQueries: GET_CURRENT_IMAGES,
+  })
 
   const onPressItem = (name) => {
     navigation.navigate('EntryModal')
@@ -46,6 +51,8 @@ const JournalEntriesScreen = ({ navigation }) => {
     // console.log(entry)
     const foundFolder = await findImagesByEntry(entry.id)
     console.log('found folder for entry?', foundFolder)
+    setCurrentEntry({ variables: { entry } })
+    setCurrentImages({ variables: { images: entry.images } })
     navigation.navigate('EntryModal',
       { entry: { images: foundFolder, ...entry } })
   }

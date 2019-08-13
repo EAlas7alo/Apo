@@ -72,6 +72,8 @@ const client = new ApolloClient({
 
 cache.writeData({
   data: {
+    currentEntry: null,
+    currentImages: [],
   },
 })
 

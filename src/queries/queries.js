@@ -55,12 +55,29 @@ const UPLOAD_IMAGE = gql`
 
 const GET_ENTRY = gql`
   query getEntry($id: String!) {
-    getEntry(id: $id) {
+    getEntry(id: $id) @client {
       title
       content
       images
       currentImages @client
     }
+  }
+`
+const SET_CURRENT_ENTRY = gql`
+  mutation setCurrentEntry($entry: Entry!) {
+    setCurrentEntry(entry: $entry) @client
+  }
+`
+
+const SET_CURRENT_IMAGES = gql`
+  mutation setCurrentImages($images: [String!]!) {
+    setCurrentImages(images: $images) @client
+  }
+`
+
+const GET_CURRENT_IMAGES = gql`
+  query getCurrentImages($id: String!) {
+    currentImages @client
   }
 `
 
@@ -71,4 +88,7 @@ export {
   DELETE_ENTRY,
   UPLOAD_IMAGE,
   GET_ENTRY,
+  SET_CURRENT_ENTRY,
+  SET_CURRENT_IMAGES,
+  GET_CURRENT_IMAGES,
 }

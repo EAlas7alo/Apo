@@ -5,23 +5,15 @@ import { View, Text, FlatList } from 'react-native'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import AttachmentView from './AttachmentView'
+import { GET_CURRENT_IMAGES } from '../queries/queries'
 
-
-const GET_ENTRY = gql`
-  query getEntry($id: String!) {
-    getEntry(id: $id) @client  {
-      currentImages @client
-    }
-  }
-`
-
-const AttachmentBar = ({ onPress, id }) => {
+const AttachmentBar = ({ onPress }) => {
   // console.log('id:', id)
-  const { data, loading } = useQuery(GET_ENTRY, { variables: { id } })
+  const { data, loading } = useQuery(GET_CURRENT_IMAGES)
   console.log('query data:', data)
   if (loading) return null
   console.log(data)
-  const entryImages = data.getEntry.currentImages
+  const entryImages = data.currentImages
 
   return (
     <View>
@@ -32,7 +24,7 @@ const AttachmentBar = ({ onPress, id }) => {
             horizontal
             keyExtractor={(item, index) => item}
             renderItem={({ item }) => (
-              <AttachmentView id={id} key={item} item={item} onPress={onPress} />
+              <AttachmentView key={item} item={item} onPress={onPress} />
             )}
           />
         )
@@ -41,14 +33,8 @@ const AttachmentBar = ({ onPress, id }) => {
   )
 }
 
-AttachmentBar.defaultProps = {
-  images: null,
-}
-
 AttachmentBar.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.string),
   onPress: PropTypes.func.isRequired,
-
 }
 
 export default AttachmentBar

@@ -20,7 +20,7 @@ const saveImageToDisk = async (image) => {
       from: image,
       to: imageUri })
     const imageDir = await FileSystem.readDirectoryAsync(imageFolder)
-    console.log(imageDir)
+    //console.log(imageDir)
     return imageUri
   } catch (error) {
     console.log(error)

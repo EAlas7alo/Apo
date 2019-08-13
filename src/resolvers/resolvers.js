@@ -9,16 +9,7 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Entry: {
-    currentImages: (entry, variables, { cache }) => {
-      console.log('currentImages resolver')
-      console.log('entry', entry)
-      if (!entry.currentImages) {
-        console.log(entry.images)
-        return entry.images
-      }
-      // cache.writeData()
-      // return entry.currentImages
-    },
+
   },
   Query: {
     getEntry: (_root, variables, { cache, getCacheKey }) => {
@@ -44,19 +35,25 @@ export const resolvers = {
     },
   },
   Mutation: {
-    addImage: (_root, variables, { cache, getCacheKey }) => {
-      const id = getCacheKey({ __typename: 'Entry', id: variables.id })
-      const fragment = gql`
-        fragment images on Entry {
-          images
-        }
-      `
-      const entry = cache.readFragment({ fragment, id })
-      const data = { ...entry, currentImages: entry.images.concat(variables.image) }
-      console.log('adding image to cache', data)
-      cache.writeData({ id, data })
+    addImage: (_root, variables, { cache }) => {
+      const { currentImages } = cache.readQuery({
+        query: gql`
+          query getImages {
+            currentImages @client
+          }
+        `,
+      })
+      const newImages = currentImages.concat(variables.image)
+      console.log('adding image to cache', newImages)
+      cache.writeData({ data: { currentImages: newImages } })
 
       return null
+    },
+    setCurrentImages: (_, variables, { cache }) => {
+      cache.writeData({ data: { currentImages: variables.images } })
+    },
+    setCurrentEntry: (_, variables, { cache }) => {
+      cache.writeData({ data: { currentEntry: variables.entry } })
     },
   },
 }

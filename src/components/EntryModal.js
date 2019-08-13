@@ -9,11 +9,10 @@ import gql from 'graphql-tag'
 import AddEntryForm from './AddEntryForm'
 import imagePicker from '../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from './HeaderButtons'
-import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY } from '../queries/queries'
+import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../queries/queries'
 import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../constants/Icons'
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../logic/saveImageToDisk';
-import { createEntry, editContent, deleteEntry } from '../hooks/entry'
 
 /*
   TODO:
@@ -51,25 +50,23 @@ const actions = [
 ];
 
 
-const CURRENT_IMAGES = gql`
-  query currentImages {
-    currentEntryImages @client
+const ADD_IMAGE = gql`
+  mutation addImage($image: String!) {
+    addImage(image: $image) @client
   }
 `
 
 const EntryModal = ({ navigation }) => {
   const entry = navigation.getParam('entry', null)
   const isNewEntry = !entry
-  // console.log('entry', entry)
+  console.log('entry', entry)
   const [title, setTitle] = useState(entry ? entry.title : '')
   const [textContent, setTextContent] = useState(entry ? entry.content : '')
-  const [images, setImages] = useState(entry ? entry.images : [])
-  const [newImages, setNewImages] = useState([])
+  const { data: { currentImages } } = useQuery(GET_CURRENT_IMAGES)
+  console.log('currentImages:', currentImages)
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
-  // const { data: { currentEntryImages } } = useQuery(CURRENT_IMAGES)
-  // console.log('currentEntryImages:', currentEntryImages)
 
   const [createEntry] = useMutation(CREATE_ENTRY, {
     onError: console.log('adding an entry failed'),
@@ -91,19 +88,21 @@ const EntryModal = ({ navigation }) => {
     refetchQueries: [{ query: ALL_ENTRIES }],
   })
 
+  const [addImage] = useMutation(ADD_IMAGE, {
+    refetchQueries: [{ query: GET_ENTRY }],
+  })
+
   const handleSubmit = async () => {
     let id
     // eslint-disable-next-line no-unused-expressions
+
     if (isNewEntry) {
-      const data = await createEntry({ variables: { title, textContent, images } })
+      const data = await createEntry({ variables: { title, textContent, images: currentImages } })
       id = data.data.createEntry.id
     } else {
       id = entry.id
-      await editContent({ variables: { id: entry.id, title, content: textContent, images } })
+      await editContent({ variables: { id: entry.id, title, content: textContent, images: currentImages } })
     }
-    newImages.forEach(async image => {
-      await saveImageToDisk(image, id)
-    })
     Keyboard.dismiss()
     navigation.goBack()
   }
@@ -130,9 +129,9 @@ const EntryModal = ({ navigation }) => {
   const saveImage = async (imageUri) => {
     const image = await saveImageToDisk(imageUri)
     // console.log(image)
-    //await addImage({ variables: { image } })
-    setImages(images.concat(image))
-    setNewImages(newImages.concat(image))
+    await addImage({ variables: { image } })
+    // setImages(images.concat(image))
+    // setNewImages(newImages.concat(image))
   }
 
   const onPressItem = async (name) => {
@@ -160,7 +159,7 @@ const EntryModal = ({ navigation }) => {
 
   useEffect(() => {
     navigation.setParams({ handleSubmit, handleDeleteConfirm, title, textContent })
-  }, [title, textContent, newImages, entry])
+  }, [title, textContent, currentImages, entry])
 
   return (
     <View style={styles.modal}>
