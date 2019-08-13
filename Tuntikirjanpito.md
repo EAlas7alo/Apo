@@ -20,4 +20,5 @@
 | 9.8   | 3    | Apolloa
 | 11.8  | 2    | Apollo
 | 12.8  | 4    | Apollo
-| yht   | 70   | | 
+| 13.8  | 2    | Apollo
+| yht   | 72   | | 
