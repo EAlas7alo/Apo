@@ -74,6 +74,7 @@ cache.writeData({
   data: {
     currentEntry: null,
     currentImages: [],
+    selectedImages: [],
   },
 })
 

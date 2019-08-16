@@ -49,11 +49,30 @@ export const resolvers = {
 
       return null
     },
+    /* All images in entry view */
     setCurrentImages: (_, variables, { cache }) => {
       cache.writeData({ data: { currentImages: variables.images } })
     },
     setCurrentEntry: (_, variables, { cache }) => {
       cache.writeData({ data: { currentEntry: variables.entry } })
+    },
+    /* Highlighted images in entry view */
+    setSelectedImages: (_, variables, { cache }) => {
+      const selectedImagesQuery = gql`
+      {
+        selectedImages @client
+      }
+      `
+      const { selectedImages } = cache.readQuery({
+        query: selectedImagesQuery,
+      })
+      if (selectedImages.includes(variables.image)) {
+        cache.writeData({ data: { selectedImages: selectedImages.filter(image => image !== variables.image) } })
+        return null
+      }
+
+      cache.writeData({ data: { selectedImages: selectedImages.concat(variables.image) } })
+      return null
     },
   },
 }

@@ -80,6 +80,17 @@ const GET_CURRENT_IMAGES = gql`
     currentImages @client
   }
 `
+const GET_SELECTED_IMAGES = gql`
+  query getSelectedImages @client {
+    selectedImages @client
+  }
+`
+const DELETE_IMAGE_FROM_ENTRY = gql`
+  mutation deleteImageFromEntry($entry: Entry!, $image: String!) {
+    deleteImageFromEntry(entry: $entry, image: $image) 
+  }
+`
+
 
 export {
   ALL_ENTRIES,
@@ -91,4 +102,6 @@ export {
   SET_CURRENT_ENTRY,
   SET_CURRENT_IMAGES,
   GET_CURRENT_IMAGES,
+  GET_SELECTED_IMAGES,
+  DELETE_IMAGE_FROM_ENTRY,
 }

@@ -51,8 +51,8 @@ const JournalEntriesScreen = ({ navigation }) => {
     // console.log(entry)
     const foundFolder = await findImagesByEntry(entry.id)
     console.log('found folder for entry?', foundFolder)
-    setCurrentEntry({ variables: { entry } })
-    setCurrentImages({ variables: { images: entry.images } })
+    await setCurrentEntry({ variables: { entry } })
+    await setCurrentImages({ variables: { images: entry.images } })
     navigation.navigate('EntryModal',
       { entry: { images: foundFolder, ...entry } })
   }

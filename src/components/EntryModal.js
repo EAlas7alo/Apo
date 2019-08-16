@@ -128,10 +128,7 @@ const EntryModal = ({ navigation }) => {
 
   const saveImage = async (imageUri) => {
     const image = await saveImageToDisk(imageUri)
-    // console.log(image)
     await addImage({ variables: { image } })
-    // setImages(images.concat(image))
-    // setNewImages(newImages.concat(image))
   }
 
   const onPressItem = async (name) => {
