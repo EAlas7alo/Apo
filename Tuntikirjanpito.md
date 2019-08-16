@@ -21,4 +21,5 @@
 | 11.8  | 2    | Apollo
 | 12.8  | 4    | Apollo
 | 13.8  | 2    | Apollo
-| yht   | 72   | | 
+| 16.8  | 3    | kuvien valinta/poistologiikkaa
+| yht   | 75   | | 
