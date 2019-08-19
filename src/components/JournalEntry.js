@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { StyleSheet, View, Image } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { useQuery } from '@apollo/react-hooks'
 import MyAppText from './TextComponents/MyAppText'
 import ImageList from './ImageList';
+
 
 const styles = StyleSheet.create({
   journalTitle: {
@@ -15,7 +17,8 @@ const styles = StyleSheet.create({
   },
 })
 
-const JournalEntry = ({ title, content, style }) => {
+const JournalEntry = ({ title, content, style, images, id }) => {
+  
   return (
     <View style={style}>
       <View style={{ paddingBottom: 20 }}>
@@ -23,7 +26,7 @@ const JournalEntry = ({ title, content, style }) => {
         <MyAppText style={styles.journalEntry} text={content} />
       </View>
       <View>
-        <ImageList />
+        <ImageList id={id} images={images} />
       </View>
     </View>
   )

@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import {
   FlatList, StyleSheet, View, TouchableHighlight,
 } from 'react-native'
+import { NavigationEvents } from 'react-navigation'
 import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
+import gql from 'graphql-tag'
 import JournalEntry from '../components/JournalEntry'
-import { setJournalEntries } from '../actions/journalEntryActions'
-import { ALL_ENTRIES } from '../queries/queries';
+import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES } from '../queries/queries';
+import { addIcon, filingIcon } from '../constants/Icons';
+import findImagesByEntry from '../logic/findImagesByEntry'
+import EntryModal from '../components/EntryModal';
 
 
 const actions = [
@@ -16,6 +19,8 @@ const actions = [
     text: 'Add an entry',
     name: 'add_entry',
     position: 1,
+    color: 'white',
+    icon: filingIcon,
   },
 ];
 
@@ -29,17 +34,27 @@ const styles = StyleSheet.create({
   },
 })
 
+
 const JournalEntriesScreen = ({ navigation }) => {
   const journalEntries = useQuery(ALL_ENTRIES)
   const data = journalEntries.data.allEntries
-  console.log(data)
+  const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
+  const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
+    refetchQueries: GET_CURRENT_IMAGES,
+  })
+
   const onPressItem = (name) => {
-    navigation.navigate('AddEntryScreen')
+    navigation.navigate('EntryModal')
   }
 
-  const onPressEntry = (entry) => {
-    console.log(entry)
-    navigation.navigate('EntryScreen', { entry })
+  const onPressEntry = async (entry) => {
+    // console.log(entry)
+    const foundFolder = await findImagesByEntry(entry.id)
+    console.log('found folder for entry?', foundFolder)
+    await setCurrentEntry({ variables: { entry } })
+    await setCurrentImages({ variables: { images: entry.images } })
+    navigation.navigate('EntryModal',
+      { entry: { images: foundFolder, ...entry } })
   }
 
   return (
@@ -54,6 +69,8 @@ const JournalEntriesScreen = ({ navigation }) => {
               underlayColor="gray"
             >
               <JournalEntry
+                id={item.id.toString()}
+                images={item.images}
                 style={styles.journalEntry}
                 title={item.title}
                 content={item.content}
@@ -63,6 +80,8 @@ const JournalEntriesScreen = ({ navigation }) => {
         />
       </View>
       <FloatingAction
+        color="white"
+        floatingIcon={addIcon}
         actions={actions}
         onPressItem={(name) => {
           onPressItem(name)
@@ -82,9 +101,4 @@ JournalEntriesScreen.propTypes = {
   }).isRequired,
 }
 
-
-const mapDispatchToProps = {
-  setJournalEntries,
-}
-
-export default connect(null, mapDispatchToProps)(JournalEntriesScreen)
+export default JournalEntriesScreen

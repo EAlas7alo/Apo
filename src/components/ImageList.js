@@ -1,48 +1,37 @@
 import React from 'react';
 import { View, FlatList, Image } from 'react-native'
+import { PropTypes } from 'prop-types'
 
-const ImageList = (props) => {
-  //const arr = new Array(20).fill(Math.floor(Math.random()))
-  const data = [
-    {
-      key: 1,
-      image: '../assets/images/bernierune.jpg',
-    },
-    {
-      key: 2,
-      image: '../assets/images/bernierune.jpg',
-    },
-    {
-      key: 3,
-      image: '../assets/images/bernierune.jpg',
-    },
-    {
-      key: 4,
-      image: '../assets/images/bernierune.jpg',
-    },
-    {
-      key: 5,
-      image: '../assets/images/bernierune.jpg',
-    },
-  ]
+
+const ImageList = ({ images, id }) => {
+
+  //const [getImages] = useQuery(GET_IMAGES, { variables: { id } })
 
   return (
     <View>
+      {images.length > 0 && (
       <FlatList
-        data={data}
-        keyExtractor={(item, index) => item.key.toString()}
-        // eslint-disable-next-line react/jsx-boolean-value
-        horizontal={true}
+        data={images}
+        keyExtractor={(item, index) => item}
+        horizontal
         renderItem={({ item }) => (
           <Image
-            // eslint-disable-next-line global-require
-            source={require('../assets/images/bernierune.jpg')}
+            source={{ uri: item }}
             style={{ width: 50, height: 50 }}
           />
         )}
       />
+      )}
     </View>
   );
 };
+
+ImageList.defaultProps = {
+  images: null,
+}
+
+ImageList.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.string),
+}
 
 export default ImageList
