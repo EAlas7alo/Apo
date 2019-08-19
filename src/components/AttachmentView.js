@@ -7,15 +7,6 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import { GET_SELECTED_IMAGES } from '../queries/queries'
 
-
-const CloseButtonTouchable = styled.TouchableHighlight`
-  border-radius: 50
-  position: absolute
-  top: 0px
-  right: 0px
-  background-color: white
-`
-
 const ImageTouchable = styled.TouchableHighlight`
 
 `
@@ -69,7 +60,7 @@ const AttachmentView = (props) => {
         highlighted={highlighted}
       >
         <AnimatedListImage
-          source={{ uri: props.item}}
+          source={{ uri: props.item }}
           highlighted={highlighted}
           style={{
             width: dimensions,
@@ -77,11 +68,6 @@ const AttachmentView = (props) => {
           }}
         />
       </ImageTouchable>
-      {highlighted && (
-        <CloseButtonTouchable>
-          <Ionicons name="md-close" size={15} />
-        </CloseButtonTouchable>
-      )}
     </View>
   )
 }

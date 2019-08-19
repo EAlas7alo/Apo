@@ -6,6 +6,7 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import AttachmentView from './AttachmentView'
 import { GET_CURRENT_IMAGES } from '../queries/queries'
+import AttachmentBarOptions from './AttachmentBarOptions';
 
 const GET_SELECTED_IMAGES = gql`
   query getSelectedImages @client {
@@ -17,6 +18,7 @@ const AttachmentBar = ({ onPress }) => {
   // console.log('id:', id)
   const { data, loading } = useQuery(GET_CURRENT_IMAGES)
   const { data: { selectedImages } } = useQuery(GET_SELECTED_IMAGES)
+
   console.log('selectedImages:', selectedImages)
   console.log('query data:', data)
   if (loading) return null
@@ -27,14 +29,17 @@ const AttachmentBar = ({ onPress }) => {
     <View>
       {entryImages.length > 0
         ? (
-          <FlatList
-            data={entryImages}
-            horizontal
-            keyExtractor={(item, index) => item}
-            renderItem={({ item }) => (
-              <AttachmentView key={item} item={item} onPress={onPress} />
-            )}
-          />
+          <View>
+            <FlatList
+              data={entryImages}
+              horizontal
+              keyExtractor={(item, index) => item}
+              renderItem={({ item }) => (
+                <AttachmentView key={item} item={item} onPress={onPress} />
+              )}
+            />
+            <AttachmentBarOptions visible={selectedImages.length > 0} />
+          </View>
         )
         : <Text>No attachments</Text> }
     </View>

@@ -93,7 +93,6 @@ const EntryModal = ({ navigation }) => {
   })
 
   const handleSubmit = async () => {
-    let id
     // eslint-disable-next-line no-unused-expressions
 
     if (isNewEntry) {
@@ -186,6 +185,7 @@ const EntryModal = ({ navigation }) => {
         onRequestClose={console.log('xd')}
       />
       <SnackBar
+        autoHidingTime={5000}
         visible={showSnackBar}
         textMessage="Press the button to confirm"
         actionHandler={() => { handleDeletion() }}

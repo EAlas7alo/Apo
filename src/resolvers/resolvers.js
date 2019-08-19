@@ -52,16 +52,18 @@ export const resolvers = {
     /* All images in entry view */
     setCurrentImages: (_, variables, { cache }) => {
       cache.writeData({ data: { currentImages: variables.images } })
+      return null
     },
     setCurrentEntry: (_, variables, { cache }) => {
       cache.writeData({ data: { currentEntry: variables.entry } })
+      return null
     },
     /* Highlighted images in entry view */
     setSelectedImages: (_, variables, { cache }) => {
       const selectedImagesQuery = gql`
-      {
-        selectedImages @client
-      }
+        {
+          selectedImages @client
+        }
       `
       const { selectedImages } = cache.readQuery({
         query: selectedImagesQuery,
@@ -73,6 +75,24 @@ export const resolvers = {
 
       cache.writeData({ data: { selectedImages: selectedImages.concat(variables.image) } })
       return null
+    },
+    deleteSelectedImages: (_, variables, { cache }) => {
+      const selectedImagesQuery = gql`
+      {
+        selectedImages @client
+        currentImages @client
+      }
+      `
+      const { selectedImages, currentImages } = cache.readQuery({
+        query: selectedImagesQuery,
+      })
+
+      cache.writeData({
+        data:
+          { currentImages: currentImages.filter(
+            image => !selectedImages.includes(image),
+          ) },
+      })
     },
   },
 }

@@ -57,7 +57,6 @@ const JournalEntriesScreen = ({ navigation }) => {
       { entry: { images: foundFolder, ...entry } })
   }
 
-
   return (
     <View style={styles.container}>
       <View>
