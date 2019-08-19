@@ -22,4 +22,5 @@
 | 12.8  | 4    | Apollo
 | 13.8  | 2    | Apollo
 | 16.8  | 3    | kuvien valinta/poistologiikkaa
-| yht   | 75   | | 
+| 19.8  | 6    | UI:ta, backend muistutustoteutusta
+| yht   | 81   | | 
