@@ -23,4 +23,5 @@
 | 13.8  | 2    | Apollo
 | 16.8  | 3    | kuvien valinta/poistologiikkaa
 | 19.8  | 6    | UI:ta, backend muistutustoteutusta
-| yht   | 81   | | 
+| 26.8  | 6    | muistutusten toteutusta
+| yht   | 87   | | 
