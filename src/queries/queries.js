@@ -15,6 +15,15 @@ const ALL_ENTRIES = gql`
     }
   }
 `
+const ALL_REMINDERS = gql`
+ {
+   allReminders {
+      content
+      dateExpiry
+      id
+   }
+ }
+`
 
 const CREATE_ENTRY = gql`
   mutation createEntry($title: String!, $textContent: String!, $images: [String!]!) {
@@ -104,4 +113,5 @@ export {
   GET_CURRENT_IMAGES,
   GET_SELECTED_IMAGES,
   DELETE_IMAGE_FROM_ENTRY,
+  ALL_REMINDERS,
 }
