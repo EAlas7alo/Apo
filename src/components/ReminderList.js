@@ -33,7 +33,7 @@ const ReminderList = () => {
   console.log(data)
 
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <ReminderHeader>Reminders</ReminderHeader>
       <FlatList
         data={data.allReminders}

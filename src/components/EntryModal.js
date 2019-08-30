@@ -146,7 +146,7 @@ const EntryModal = ({ navigation }) => {
   }
 
   const onBackButtonPress = () => {
-    if (title === '' && textContent === '' && images.length === 0) {
+    if (title === '' && textContent === '' && currentImages.length === 0) {
       console.log('empty entry, aborting saving')
     } else {
       handleSubmit()
@@ -154,7 +154,7 @@ const EntryModal = ({ navigation }) => {
   }
 
   useEffect(() => {
-    navigation.setParams({ handleSubmit, handleDeleteConfirm, title, textContent })
+    navigation.setParams({ handleSubmit, handleDeleteConfirm, title, textContent, isNewEntry })
   }, [title, textContent, currentImages, entry])
 
   return (
@@ -216,8 +216,11 @@ EntryModal.navigationOptions = ({ navigation }) => {
     },
     headerRight: (
       <MaterialHeaderButtons>
-        <Item title="delete" onPress={params.handleDeleteConfirm} iconName="md-trash" />
+        {!params.isNewEntry &&
+          <Item title="delete" onPress={params.handleDeleteConfirm} iconName="md-trash" />
+        }
       </MaterialHeaderButtons>
+
     ),
   }
 }

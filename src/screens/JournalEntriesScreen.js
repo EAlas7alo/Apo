@@ -46,7 +46,7 @@ const RemindersView = styled.View`
   background-color: gray
   border-color: black
   border-width: 1px
-  flex: 1
+  
   
 `
 
@@ -63,8 +63,9 @@ const JournalEntriesScreen = ({ navigation }) => {
     refetchQueries: GET_CURRENT_IMAGES,
   })
 
-  const onPressItem = (name) => {
+  const onPressItem = async (name) => {
     if (name === 'add_entry') {
+      await setCurrentImages({ variables: { images: [] } })
       navigation.navigate('EntryModal')
     } else if (name === 'add_reminder') {
       navigation.navigate('ReminderModal')
