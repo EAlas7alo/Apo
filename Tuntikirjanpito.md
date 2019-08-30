@@ -24,4 +24,5 @@
 | 16.8  | 3    | kuvien valinta/poistologiikkaa
 | 19.8  | 6    | UI:ta, backend muistutustoteutusta
 | 26.8  | 6    | muistutusten toteutusta
-| yht   | 87   | | 
+| 30.8  | 3    | muistutusten toteutusta + bugifiexjä
+| yht   | 90   | | 
