@@ -25,4 +25,5 @@
 | 19.8  | 6    | UI:ta, backend muistutustoteutusta
 | 26.8  | 6    | muistutusten toteutusta
 | 30.8  | 3    | muistutusten toteutusta + bugifiexjä
-| yht   | 90   | | 
+| 2.9   | 5    | muistutusten toteutusta + refaktorointia
+| yht   | 95   | | 
