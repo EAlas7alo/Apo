@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { TextInput, StyleSheet } from 'react-native';
+import { TextInput, StyleSheet, ViewPropTypes } from 'react-native';
 
 const styles = StyleSheet.create({
   textInputNamed: {
@@ -23,6 +23,7 @@ const TextInputNamed = ({ style, onChange, name, ...props }) => {
 
 TextInputNamed.defaultProps = {
   placeholder: '',
+  style: [],
 }
 
 TextInputNamed.propTypes = {
@@ -30,6 +31,7 @@ TextInputNamed.propTypes = {
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
+  style: ViewPropTypes.style,
 }
 
 

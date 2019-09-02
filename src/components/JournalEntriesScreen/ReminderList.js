@@ -2,7 +2,7 @@ import React from 'react'
 import { View, FlatList } from 'react-native'
 import { useQuery } from '@apollo/react-hooks'
 import styled from 'styled-components'
-import { ALL_REMINDERS } from '../queries/queries'
+import { ALL_REMINDERS } from '../../queries/queries'
 
 
 const ReminderHeader = styled.Text`
@@ -30,14 +30,13 @@ const ReminderText = styled.Text`
 const ReminderList = () => {
   const { data, loading } = useQuery(ALL_REMINDERS)
   if (loading) return null
-  console.log(data)
 
   return (
     <View>
       <ReminderHeader>Reminders</ReminderHeader>
       <FlatList
         data={data.allReminders}
-        keyExtractor={(item, index) => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => {
           return (
             <ReminderView>

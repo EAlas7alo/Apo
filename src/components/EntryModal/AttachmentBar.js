@@ -1,11 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components/native'
 import { View, Text, FlatList } from 'react-native'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import AttachmentView from './AttachmentView'
-import { GET_CURRENT_IMAGES } from '../queries/queries'
+import { GET_CURRENT_IMAGES } from '../../queries/queries'
 import AttachmentBarOptions from './AttachmentBarOptions';
 
 const GET_SELECTED_IMAGES = gql`
@@ -13,7 +12,7 @@ const GET_SELECTED_IMAGES = gql`
     selectedImages @client
   }
 `
-
+console.log('')
 const AttachmentBar = ({ onPress }) => {
   // console.log('id:', id)
   const { data, loading } = useQuery(GET_CURRENT_IMAGES)
@@ -33,7 +32,7 @@ const AttachmentBar = ({ onPress }) => {
             <FlatList
               data={entryImages}
               horizontal
-              keyExtractor={(item, index) => item}
+              keyExtractor={(item) => item}
               renderItem={({ item }) => (
                 <AttachmentView key={item} item={item} onPress={onPress} />
               )}

@@ -1,10 +1,5 @@
 import gql from 'graphql-tag'
 
-/*
-  Date and ID fields are to be generated server-side when backend
-  has been implemented.
-*/
-
 const ALL_ENTRIES = gql`
   {
     allEntries {
@@ -99,7 +94,13 @@ const DELETE_IMAGE_FROM_ENTRY = gql`
     deleteImageFromEntry(entry: $entry, image: $image) 
   }
 `
-
+const CREATE_REMINDER = gql`
+  mutation createReminder($dateExpiry: Date!, $content: String!) {
+    createReminder(dateExpiry: $dateExpiry, content: $content) {
+      dateExpiry
+    }
+  }
+`
 
 export {
   ALL_ENTRIES,
@@ -114,4 +115,5 @@ export {
   GET_SELECTED_IMAGES,
   DELETE_IMAGE_FROM_ENTRY,
   ALL_REMINDERS,
+  CREATE_REMINDER,
 }

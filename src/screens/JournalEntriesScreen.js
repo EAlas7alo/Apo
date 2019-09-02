@@ -1,18 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {
-  FlatList, StyleSheet, View, TouchableHighlight, Text,
+  FlatList, StyleSheet, TouchableHighlight,
 } from 'react-native'
-import { NavigationEvents } from 'react-navigation'
-import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
-import gql from 'graphql-tag'
 import styled from 'styled-components'
-import JournalEntry from '../components/JournalEntry'
+import JournalEntry from '../components/JournalEntriesScreen/JournalEntry'
 import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES, ALL_REMINDERS } from '../queries/queries';
 import { addIcon, filingIcon, reminderIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
-import ReminderList from '../components/ReminderList';
+import ReminderList from '../components/JournalEntriesScreen/ReminderList';
 
 
 const actions = [
@@ -33,21 +31,25 @@ const actions = [
 ];
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'dimgray',
-  },
   journalEntry: {
     padding: 25,
   },
 })
 
+const Container = styled.View`
+  flex: 1
+  background-color: dimgray
+`
+
 const RemindersView = styled.View`
   background-color: gray
   border-color: black
   border-width: 1px
-  
-  
+  flex: 1
+`
+
+const EntriesView = styled.View`
+  flex: 5
 `
 
 const JournalEntriesScreen = ({ navigation }) => {
@@ -83,14 +85,14 @@ const JournalEntriesScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <Container>
       <RemindersView>
         <ReminderList />
       </RemindersView>
-      <View>
+      <EntriesView>
         <FlatList
           data={data}
-          keyExtractor={(item, index) => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableHighlight
               onPress={() => { onPressEntry(item) }}
@@ -106,7 +108,7 @@ const JournalEntriesScreen = ({ navigation }) => {
             </TouchableHighlight>
           )}
         />
-      </View>
+      </EntriesView>
       <FloatingAction
         color="white"
         floatingIcon={addIcon}
@@ -115,13 +117,13 @@ const JournalEntriesScreen = ({ navigation }) => {
           onPressItem(name)
         }}
       />
-    </View>
+    </Container>
   );
 };
 
-JournalEntriesScreen.navigationOptions = screenProps => ({
+JournalEntriesScreen.navigationOptions = {
   title: 'Entries',
-})
+}
 
 JournalEntriesScreen.propTypes = {
   navigation: PropTypes.shape({

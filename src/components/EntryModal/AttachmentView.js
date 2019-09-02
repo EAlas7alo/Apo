@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { View, Animated } from 'react-native'
 import styled from 'styled-components/native'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
-import { GET_SELECTED_IMAGES } from '../queries/queries'
+import { GET_SELECTED_IMAGES } from '../../queries/queries'
 
 const ImageTouchable = styled.TouchableHighlight`
 
@@ -24,7 +23,6 @@ const SET_SELECTED_IMAGES = gql`
 `
 
 const AttachmentView = (props) => {
-
   const [highlighted, setHighlighted] = useState(false)
   const animation = useRef(new Animated.Value(0)).current
 

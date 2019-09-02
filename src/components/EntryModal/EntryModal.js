@@ -7,12 +7,12 @@ import SnackBar from 'react-native-snackbar-component'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import gql from 'graphql-tag'
 import AddEntryForm from './AddEntryForm'
-import imagePicker from '../logic/imagePicker'
-import { MaterialHeaderButtons, Item } from './HeaderButtons'
-import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../queries/queries'
-import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../constants/Icons'
+import imagePicker from '../../logic/imagePicker'
+import { MaterialHeaderButtons, Item } from '../HeaderButtons'
+import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../../queries/queries'
+import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../../constants/Icons'
 import ImageModal from './ImageModal';
-import saveImageToDisk from '../logic/saveImageToDisk';
+import saveImageToDisk from '../../logic/saveImageToDisk';
 
 /*
   TODO:

@@ -3,16 +3,15 @@ import { View, FlatList, Image } from 'react-native'
 import { PropTypes } from 'prop-types'
 
 
-const ImageList = ({ images, id }) => {
-
-  //const [getImages] = useQuery(GET_IMAGES, { variables: { id } })
+const ImageList = ({ images }) => {
+  // const [getImages] = useQuery(GET_IMAGES, { variables: { id } })
 
   return (
     <View>
       {images.length > 0 && (
       <FlatList
         data={images}
-        keyExtractor={(item, index) => item}
+        keyExtractor={(item) => item}
         horizontal
         renderItem={({ item }) => (
           <Image
