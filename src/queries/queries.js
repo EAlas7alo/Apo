@@ -20,6 +20,17 @@ const ALL_REMINDERS = gql`
  }
 `
 
+const ACTIVE_REMINDERS = gql`
+ {
+   activeReminders {
+     content
+     resolved
+     dateExpiry
+     id
+   }
+ }
+`
+
 const CREATE_ENTRY = gql`
   mutation createEntry($title: String!, $textContent: String!, $images: [String!]!) {
     createEntry(
@@ -102,6 +113,12 @@ const CREATE_REMINDER = gql`
   }
 `
 
+const MARK_REMINDER_AS_RESOLVED = gql`
+  mutation markReminderAsResolved($id: ID!) {
+    markReminderAsResolved(id: $id) 
+  }
+`
+
 export {
   ALL_ENTRIES,
   CREATE_ENTRY,
@@ -116,4 +133,6 @@ export {
   DELETE_IMAGE_FROM_ENTRY,
   ALL_REMINDERS,
   CREATE_REMINDER,
+  ACTIVE_REMINDERS,
+  MARK_REMINDER_AS_RESOLVED,
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { View, Keyboard, StyleSheet, Dimensions } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
-import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import SnackBar from 'react-native-snackbar-component'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import gql from 'graphql-tag'
@@ -96,10 +96,8 @@ const EntryModal = ({ navigation }) => {
     // eslint-disable-next-line no-unused-expressions
 
     if (isNewEntry) {
-      const data = await createEntry({ variables: { title, textContent, images: currentImages } })
-      id = data.data.createEntry.id
+      await createEntry({ variables: { title, textContent, images: currentImages } })
     } else {
-      id = entry.id
       await editContent({ variables: { id: entry.id, title, content: textContent, images: currentImages } })
     }
     Keyboard.dismiss()
@@ -230,6 +228,7 @@ EntryModal.propTypes = {
     goBack: PropTypes.func.isRequired,
     setParams: PropTypes.func.isRequired,
     getParam: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
   }).isRequired,
 }
 

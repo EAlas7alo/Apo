@@ -43,13 +43,16 @@ const Container = styled.View`
 
 const RemindersView = styled.View`
   background-color: gray
-  border-color: black
+  border-color: white
   border-width: 1px
-  flex: 1
+  height: 150px
+  overflow: hidden
 `
 
 const EntriesView = styled.View`
-  flex: 5
+  flex: 6
+  border-width: 1px
+  border-color: white
 `
 
 const JournalEntriesScreen = ({ navigation }) => {

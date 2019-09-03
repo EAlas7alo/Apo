@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/react-hooks'
 import TextInputNamed from '../TextComponents/TextInputNamed';
 import { calendarIcon } from '../../constants/Icons'
 import MyAppText from '../TextComponents/MyAppText'
-import { CREATE_REMINDER, ALL_REMINDERS } from '../../queries/queries'
+import { CREATE_REMINDER, ACTIVE_REMINDERS } from '../../queries/queries'
 
 
 const DateButton = styled.TouchableHighlight`
@@ -63,12 +63,12 @@ const SaveText = styled(MyAppText)`
   padding: 5px
 `
 
-const ReminderForm = (props) => {
+const ReminderForm = ({ navigation }) => {
   const [reminderTitle, setReminderTitle] = useState('')
   const [date, setDate] = useState(new Date())
 
   const [createReminder] = useMutation(CREATE_REMINDER, {
-    refetchQueries: [{ query: ALL_REMINDERS }],
+    refetchQueries: [{ query: ACTIVE_REMINDERS }],
   })
 
   const handleTitleChange = (name, text) => {
@@ -99,8 +99,13 @@ const ReminderForm = (props) => {
   }
 
   const handleReminderCreation = async () => {
-    await createReminder({ variables:
+    try {
+      await createReminder({ variables:
         { content: reminderTitle, dateExpiry: date } })
+    } catch (exception) {
+      console.log(exception)
+    }
+    navigation.goBack()
   }
 
   return (
@@ -145,7 +150,9 @@ ReminderForm.defaultProps = {
 }
 
 ReminderForm.propTypes = {
-
+  navigation: PropTypes.shape({
+    goBack: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 export default ReminderForm
