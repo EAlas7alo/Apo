@@ -26,4 +26,5 @@
 | 26.8  | 6    | muistutusten toteutusta
 | 30.8  | 3    | muistutusten toteutusta + bugifiexjä
 | 2.9   | 5    | muistutusten toteutusta + refaktorointia
-| yht   | 95   | | 
+| 3.9   | 3    | muistutuksia, tyylejä
+| yht   | 98   | | 
