@@ -59,11 +59,9 @@ const ADD_IMAGE = gql`
 const EntryModal = ({ navigation }) => {
   const entry = navigation.getParam('entry', null)
   const isNewEntry = !entry
-  console.log('entry', entry)
   const [title, setTitle] = useState(entry ? entry.title : '')
   const [textContent, setTextContent] = useState(entry ? entry.content : '')
   const { data: { currentImages } } = useQuery(GET_CURRENT_IMAGES)
-  console.log('currentImages:', currentImages)
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)

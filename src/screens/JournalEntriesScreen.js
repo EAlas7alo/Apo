@@ -6,11 +6,13 @@ import {
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
 import styled from 'styled-components'
+import Icon from 'react-native-vector-icons/Ionicons'
 import JournalEntry from '../components/JournalEntriesScreen/JournalEntry'
-import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES, ALL_REMINDERS } from '../queries/queries';
+import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES, ACTIVE_REMINDERS } from '../queries/queries';
 import { addIcon, filingIcon, reminderIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
 import ReminderList from '../components/JournalEntriesScreen/ReminderList';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const actions = [
@@ -58,9 +60,9 @@ const EntriesView = styled.View`
 const JournalEntriesScreen = ({ navigation }) => {
   const journalEntries = useQuery(ALL_ENTRIES)
   const data = journalEntries.data.allEntries
-  const reminders = useQuery(ALL_REMINDERS)
+  const reminders = useQuery(ACTIVE_REMINDERS)
   if (!reminders.loading) {
-    console.log(reminders.data)
+    console.log('current reminders: ', reminders.data)
   }
 
   const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
@@ -124,8 +126,15 @@ const JournalEntriesScreen = ({ navigation }) => {
   );
 };
 
-JournalEntriesScreen.navigationOptions = {
-  title: 'Entries',
+JournalEntriesScreen.navigationOptions = ({ navigation }) => {
+  return {
+    title: 'Entries',
+    headerLeft: (
+      <TouchableOpacity>
+        <Icon name="md-menu" size={30} color="white" />
+      </TouchableOpacity>
+    ),
+  }
 }
 
 JournalEntriesScreen.propTypes = {

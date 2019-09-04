@@ -3,19 +3,20 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createUploadLink } from 'apollo-upload-client'
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, createDrawerNavigator, createAppContainer } from 'react-navigation';
 import { resolvers, typeDefs } from './src/resolvers/resolvers'
 import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
 import EntryModal from './src/components/EntryModal/EntryModal'
 import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
+import ReminderScreen from './src/screens/ReminderScreen';
 
 
 const MainStack = createStackNavigator(
   {
     JournalEntries: {
       screen: JournalEntriesScreen,
-    }
+    },
   },
   {
     initialRouteName: 'JournalEntries',
@@ -23,7 +24,7 @@ const MainStack = createStackNavigator(
   },
 )
 
-const RootStack = createStackNavigator(
+const EntryStack = createStackNavigator(
   {
     Main: {
       screen: MainStack,
@@ -52,8 +53,22 @@ const RootStack = createStackNavigator(
   },
 )
 
+const DrawerStack = createStackNavigator(
+  {
+    Entries: {
+      screen: EntryStack,
+    },
+    Reminders: {
+      screen: ReminderScreen,
+    },
+  },
+  {
+    headerMode: 'none',
+  },
+)
+
 const httpLink = createUploadLink({
-  uri: 'http://192.168.10.97:4000/',
+  uri: 'http://192.168.1.62:4000/',
 })
 
 
@@ -80,7 +95,7 @@ cache.writeData({
   },
 })
 
-const AppContainer = createAppContainer(RootStack);
+const AppContainer = createAppContainer(DrawerStack);
 
 const App = () => {
   return (

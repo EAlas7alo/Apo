@@ -46,7 +46,7 @@ const ResolvedButton = styled.TouchableHighlight`
 const ReminderList = () => {
   const { data, loading } = useQuery(ACTIVE_REMINDERS)
   const [markAsResolved] = useMutation(MARK_REMINDER_AS_RESOLVED, {
-    refetchQueries: ACTIVE_REMINDERS,
+    refetchQueries: [{ query: ACTIVE_REMINDERS }],
   })
   if (loading) return null
 
