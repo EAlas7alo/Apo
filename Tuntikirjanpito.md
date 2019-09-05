@@ -27,4 +27,5 @@
 | 30.8  | 3    | muistutusten toteutusta + bugifiexjä
 | 2.9   | 5    | muistutusten toteutusta + refaktorointia
 | 3.9   | 3    | muistutuksia, tyylejä
-| yht   | 98   | | 
+| 5.9   | 4    | reminderscreen, navigointia 
+| yht   | 102   | | 
