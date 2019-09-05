@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   FlatList, StyleSheet, TouchableHighlight,
@@ -13,6 +13,8 @@ import { addIcon, filingIcon, reminderIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
 import ReminderList from '../components/JournalEntriesScreen/ReminderList';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { disableExpoCliLogging } from 'expo/build/logs/Logs';
+import { DrawerActions } from 'react-navigation';
 
 
 const actions = [
@@ -58,6 +60,7 @@ const EntriesView = styled.View`
 `
 
 const JournalEntriesScreen = ({ navigation }) => {
+  console.log(navigation)
   const journalEntries = useQuery(ALL_ENTRIES)
   const data = journalEntries.data.allEntries
   const reminders = useQuery(ACTIVE_REMINDERS)
@@ -69,6 +72,10 @@ const JournalEntriesScreen = ({ navigation }) => {
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
     refetchQueries: GET_CURRENT_IMAGES,
   })
+
+  useEffect(() => {
+    navigation.setParams({ toggleDrawer })
+  },[])
 
   const onPressItem = async (name) => {
     if (name === 'add_entry') {
@@ -87,6 +94,10 @@ const JournalEntriesScreen = ({ navigation }) => {
     await setCurrentImages({ variables: { images: entry.images } })
     navigation.navigate('EntryModal',
       { entry: { images: foundFolder, ...entry } })
+  }
+
+  const toggleDrawer = () => {
+    DrawerActions.toggleDrawer()
   }
 
   return (
@@ -127,10 +138,17 @@ const JournalEntriesScreen = ({ navigation }) => {
 };
 
 JournalEntriesScreen.navigationOptions = ({ navigation }) => {
+  const { params } = navigation.state
+  if (!params) {
+    return null
+  }
   return {
     title: 'Entries',
     headerLeft: (
-      <TouchableOpacity>
+      <TouchableOpacity
+        style={{ paddingLeft: 20 }}
+        onPress={params.toggleDrawer}
+      >
         <Icon name="md-menu" size={30} color="white" />
       </TouchableOpacity>
     ),
@@ -140,6 +158,7 @@ JournalEntriesScreen.navigationOptions = ({ navigation }) => {
 JournalEntriesScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
+    toggleDrawer: PropTypes.func.isRequired,
   }).isRequired,
 }
 

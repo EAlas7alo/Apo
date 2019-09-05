@@ -27,7 +27,7 @@ const MainStack = createStackNavigator(
 const EntryStack = createStackNavigator(
   {
     Main: {
-      screen: MainStack,
+      screen: JournalEntriesScreen,
     },
     EntryModal: {
       screen: EntryModal,
