@@ -1,4 +1,5 @@
 import React from 'react'
+import { SERVER_IP } from 'react-native-dotenv'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -11,19 +12,6 @@ import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
 import ReminderScreen from './src/screens/ReminderScreen';
 
-
-const MainStack = createStackNavigator(
-  {
-    JournalEntries: {
-      screen: JournalEntriesScreen,
-    },
-  },
-  {
-    initialRouteName: 'JournalEntries',
-    headerMode: 'none',
-  },
-)
-
 const EntryStack = createStackNavigator(
   {
     Main: {
@@ -31,9 +19,6 @@ const EntryStack = createStackNavigator(
     },
     EntryModal: {
       screen: EntryModal,
-    },
-    ReminderModal: {
-      screen: ReminderModal,
     },
     CameraScreen: {
       screen: CameraScreen,
@@ -53,13 +38,22 @@ const EntryStack = createStackNavigator(
   },
 )
 
-const DrawerStack = createStackNavigator(
+const ReminderStack = createStackNavigator({
+  RemindersScreen: {
+    screen: ReminderScreen,
+  },
+  ReminderModal: {
+    screen: ReminderModal,
+  },
+})
+
+const DrawerStack = createDrawerNavigator(
   {
     Entries: {
       screen: EntryStack,
     },
     Reminders: {
-      screen: ReminderScreen,
+      screen: ReminderStack,
     },
   },
   {
@@ -67,8 +61,10 @@ const DrawerStack = createStackNavigator(
   },
 )
 
+const serverIP = SERVER_IP
+
 const httpLink = createUploadLink({
-  uri: 'http://192.168.1.62:4000/',
+  uri: serverIP,
 })
 
 

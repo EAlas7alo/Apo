@@ -60,7 +60,6 @@ const EntriesView = styled.View`
 `
 
 const JournalEntriesScreen = ({ navigation }) => {
-  console.log(navigation)
   const journalEntries = useQuery(ALL_ENTRIES)
   const data = journalEntries.data.allEntries
   const reminders = useQuery(ACTIVE_REMINDERS)
@@ -73,9 +72,6 @@ const JournalEntriesScreen = ({ navigation }) => {
     refetchQueries: GET_CURRENT_IMAGES,
   })
 
-  useEffect(() => {
-    navigation.setParams({ toggleDrawer })
-  },[])
 
   const onPressItem = async (name) => {
     if (name === 'add_entry') {
@@ -97,8 +93,12 @@ const JournalEntriesScreen = ({ navigation }) => {
   }
 
   const toggleDrawer = () => {
-    DrawerActions.toggleDrawer()
+    navigation.toggleDrawer()
   }
+
+  useEffect(() => {
+    navigation.setParams({ toggleDrawer })
+  }, [])
 
   return (
     <Container>
@@ -159,6 +159,7 @@ JournalEntriesScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
     toggleDrawer: PropTypes.func.isRequired,
+    setParams: PropTypes.func.isRequired,
   }).isRequired,
 }
 
