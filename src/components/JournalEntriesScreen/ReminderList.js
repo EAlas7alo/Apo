@@ -2,6 +2,7 @@ import React from 'react'
 import { View, FlatList } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import styled from 'styled-components'
+import { Button, ButtonText } from '../StyledComponents'
 import { ACTIVE_REMINDERS, MARK_REMINDER_AS_RESOLVED } from '../../queries/queries'
 
 
@@ -21,26 +22,13 @@ const ReminderView = styled.View`
   margin-bottom: auto
   border-color: black
   border-width: 1px
-  background-color: dimgray
+  background-color: ${props => props.background}
   flex-direction: row
 `
 
 const ReminderText = styled.Text`
   color: white
   font-size: 20
-`
-
-const ResolvedText = styled(ReminderText)`
-  font-size: 15
-  padding-left: 15px
-  padding-right: 15px
-`
-
-const ResolvedButton = styled.TouchableHighlight`
-  border-width: 1px
-  border-color: white
-  margin-right: 15px
-  margin-left: auto
 `
 
 const ReminderList = () => {
@@ -61,15 +49,16 @@ const ReminderList = () => {
       <FlatList
         data={data.activeReminders}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
+          const background = index % 2 > 0 ? 'gray' : 'dimgray'
           return (
-            <ReminderView>
+            <ReminderView background={background}>
               <ReminderText>{item.content}</ReminderText>
-              <ResolvedButton
+              <Button
                 onPress={() => { handleMarkAsResolved(item.id) }}
               >
-                <ResolvedText>Mark as resolved</ResolvedText>
-              </ResolvedButton>
+                <ButtonText>Mark as resolved</ButtonText>
+              </Button>
             </ReminderView>
           )
         }}

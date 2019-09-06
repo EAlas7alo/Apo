@@ -16,6 +16,7 @@ const ALL_REMINDERS = gql`
       content
       dateExpiry
       id
+      resolved
    }
  }
 `

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
-  FlatList, StyleSheet, TouchableHighlight,
+  FlatList, StyleSheet, TouchableHighlight, TouchableOpacity,
 } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
@@ -12,9 +12,7 @@ import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES,
 import { addIcon, filingIcon, reminderIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
 import ReminderList from '../components/JournalEntriesScreen/ReminderList';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { disableExpoCliLogging } from 'expo/build/logs/Logs';
-import { DrawerActions } from 'react-navigation';
+import { Container } from '../components/StyledComponents'
 
 
 const actions = [
@@ -39,11 +37,6 @@ const styles = StyleSheet.create({
     padding: 25,
   },
 })
-
-const Container = styled.View`
-  flex: 1
-  background-color: dimgray
-`
 
 const RemindersView = styled.View`
   background-color: gray

@@ -38,14 +38,26 @@ const EntryStack = createStackNavigator(
   },
 )
 
-const ReminderStack = createStackNavigator({
-  RemindersScreen: {
-    screen: ReminderScreen,
+const ReminderStack = createStackNavigator(
+  {
+    RemindersScreen: {
+      screen: ReminderScreen,
+    },
+    ReminderModal: {
+      screen: ReminderModal,
+    },
   },
-  ReminderModal: {
-    screen: ReminderModal,
+  {
+    defaultNavigationOptions: {
+      headerTitleStyle: {
+        color: 'white',
+      },
+      headerStyle: {
+        backgroundColor: 'dimgray',
+      },
+    },
   },
-})
+)
 
 const DrawerStack = createDrawerNavigator(
   {
@@ -57,6 +69,7 @@ const DrawerStack = createDrawerNavigator(
     },
   },
   {
+    initialRouteName: 'Reminders',
     headerMode: 'none',
   },
 )
