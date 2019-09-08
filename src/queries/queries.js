@@ -114,9 +114,9 @@ const CREATE_REMINDER = gql`
   }
 `
 
-const MARK_REMINDER_AS_RESOLVED = gql`
-  mutation markReminderAsResolved($id: ID!) {
-    markReminderAsResolved(id: $id) 
+const TOGGLE_RESOLVED_STATUS = gql`
+  mutation toggleResolvedStatus($id: ID!) {
+    toggleResolvedStatus(id: $id) 
   }
 `
 
@@ -135,5 +135,5 @@ export {
   ALL_REMINDERS,
   CREATE_REMINDER,
   ACTIVE_REMINDERS,
-  MARK_REMINDER_AS_RESOLVED,
+  TOGGLE_RESOLVED_STATUS,
 }

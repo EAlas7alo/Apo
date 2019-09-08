@@ -1,50 +1,25 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { TouchableOpacity, SectionList, View, Text } from 'react-native'
+import { TouchableOpacity, SectionList } from 'react-native'
 import styled from 'styled-components'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { ALL_REMINDERS } from '../queries/queries'
+import { ALL_REMINDERS, TOGGLE_RESOLVED_STATUS } from '../queries/queries'
 import MyAppText from '../components/TextComponents/MyAppText'
-import { Container, Button, ButtonText } from '../components/StyledComponents'
+import { Container } from '../components/StyledComponents'
+import ListReminder from '../components/ReminderScreen/ListReminder';
 
 const Header = styled(MyAppText)`
   font-size: 20
   border-bottom-width: 1px
   border-bottom-color: white
-  padding-left: 25px
+  padding-left: 28px
   padding-top: 5px
-`
-
-const ReminderText = styled(MyAppText)`
-  padding-left: 20px
-  font-size: 30
-  
-`
-
-const ReminderOpacity = styled.TouchableOpacity`
-  background-color: ${props => props.background}
-`
-
-const ReminderView = styled.View`
-
-`
-
-const DateText = styled(MyAppText)`
-  padding-left: 10px
-`
-
-const ReminderContentView = styled.View`
-  flex-direction: row
-  justify-content: center
-`
-const ButtonsView = styled.View`
-  margin-left: auto
-  padding-right: 20px
 `
 
 const ReminderScreen = ({ navigation }) => {
   const { data: { allReminders }, loading } = useQuery(ALL_REMINDERS)
+  const [toggleResolvedStatus] = useMutation(TOGGLE_RESOLVED_STATUS)
 
   const toggleDrawer = () => {
     navigation.toggleDrawer()
@@ -58,10 +33,6 @@ const ReminderScreen = ({ navigation }) => {
   console.log(allReminders)
   const expiredReminders = allReminders.filter(reminder => reminder.resolved)
   const activeReminders = allReminders.filter(reminder => !reminder.resolved)
-
-  const handleReminderPress = () => {
-
-  }
 
   return (
     <Container>
@@ -77,22 +48,7 @@ const ReminderScreen = ({ navigation }) => {
         renderItem={({ item, index }) => {
           const background = index % 2 > 0 ? 'dimgray' : 'gray'
           return (
-            <ReminderOpacity background={background}>
-              <ReminderView>
-                <ReminderText text={item.content} />
-                <ReminderContentView>
-                  <DateText text={`Expiration: ${new Date(item.dateExpiry).toUTCString()}`} />
-                  <ButtonsView>
-                    <Button>
-                      <ButtonText>xd</ButtonText>
-                    </Button>
-                    <Button>
-                      <ButtonText>dx</ButtonText>
-                    </Button>
-                  </ButtonsView>
-                </ReminderContentView>
-              </ReminderView>
-            </ReminderOpacity>
+            <ListReminder background={background} item={item} />
           )
         }}
       />
