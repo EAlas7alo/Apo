@@ -28,5 +28,6 @@
 | 2.9   | 5    | muistutusten toteutusta + refaktorointia
 | 3.9   | 3    | muistutuksia, tyylejä
 | 5.9   | 4    | reminderscreen, navigointia 
-| 6.9   | 4    |
-| yht   | 106   | | 
+| 6.9   | 4    | reminderscreen
+| 8.9   | 3    | reminderscreen
+| yht   | 109   | | 
