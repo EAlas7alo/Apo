@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { View } from 'react-native'
 import styled from 'styled-components'
+import { useMutation } from '@apollo/react-hooks'
 import MyAppText from '../TextComponents/MyAppText'
 import { Button, ButtonText } from '../StyledComponents'
+import { TOGGLE_RESOLVED_STATUS } from '../../queries/queries';
 
 const ReminderText = styled(MyAppText)`
   padding-left: 20px
@@ -46,9 +47,10 @@ const AlwaysVisibleView = styled.View`
   flex: 1
 `
 
-const ListReminder = ({ background, item }) => {
+const ListReminder = ({ background, item, statusListener }) => {
   const [buttonsVisible, setButtonsVisible] = useState(false)
   const resolvedText = item.resolved ? 'Mark as unresolved' : 'Mark as resolved'
+  const [toggleResolvedStatus] = useMutation(TOGGLE_RESOLVED_STATUS)
 
   const handleReminderPress = () => {
     setButtonsVisible(!buttonsVisible)
@@ -68,7 +70,7 @@ const ListReminder = ({ background, item }) => {
         {buttonsVisible && (
           <ReminderContentView>
             <ButtonsView>
-              <ListReminderButton>
+              <ListReminderButton onPress={() => { statusListener(item.id)}}>
                 <ButtonText>{resolvedText}</ButtonText>
               </ListReminderButton>
               <ListReminderButton>
@@ -88,6 +90,8 @@ ListReminder.propTypes = {
     content: PropTypes.string.isRequired,
     dateExpiry: PropTypes.string.isRequired,
     resolved: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired,
+    statusListener: PropTypes.func.isRequired,
   }).isRequired,
 }
 

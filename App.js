@@ -75,6 +75,7 @@ const DrawerStack = createDrawerNavigator(
 )
 
 const serverIP = SERVER_IP
+console.log(serverIP)
 
 const httpLink = createUploadLink({
   uri: serverIP,

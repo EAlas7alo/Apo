@@ -20,9 +20,13 @@ const Header = styled(MyAppText)`
 const ReminderScreen = ({ navigation }) => {
   const { data: { allReminders }, loading } = useQuery(ALL_REMINDERS)
   const [toggleResolvedStatus] = useMutation(TOGGLE_RESOLVED_STATUS)
-
+  console.log(allReminders)
   const toggleDrawer = () => {
     navigation.toggleDrawer()
+  }
+
+  const toggleReminderStatus = (id) => {
+    toggleResolvedStatus({ variables: { id } })
   }
 
   useEffect(() => {
@@ -48,7 +52,11 @@ const ReminderScreen = ({ navigation }) => {
         renderItem={({ item, index }) => {
           const background = index % 2 > 0 ? 'dimgray' : 'gray'
           return (
-            <ListReminder background={background} item={item} />
+            <ListReminder
+              background={background}
+              item={item}
+              statusListener={toggleReminderStatus}
+            />
           )
         }}
       />
