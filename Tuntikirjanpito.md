@@ -30,4 +30,5 @@
 | 5.9   | 4    | reminderscreen, navigointia 
 | 6.9   | 4    | reminderscreen
 | 8.9   | 3    | reminderscreen
-| yht   | 109   | | 
+| 10.9  | 3    | reminder
+| yht   | 112   | | 
