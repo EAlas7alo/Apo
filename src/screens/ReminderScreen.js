@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'
-import { TouchableOpacity, SectionList } from 'react-native'
+import { TouchableOpacity, SectionList, Picker } from 'react-native'
 import styled from 'styled-components'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { ALL_REMINDERS, TOGGLE_RESOLVED_STATUS } from '../queries/queries'
+import { ALL_REMINDERS, TOGGLE_RESOLVED_STATUS, DELETE_REMINDER } from '../queries/queries'
 import MyAppText from '../components/TextComponents/MyAppText'
 import { Container } from '../components/StyledComponents'
 import ListReminder from '../components/ReminderScreen/ListReminder';
@@ -17,9 +17,19 @@ const Header = styled(MyAppText)`
   padding-top: 5px
 `
 
+const FilterView = styled.View`
+
+`
+
 const ReminderScreen = ({ navigation }) => {
+  const [filter, setFilter] = useState('all')
   const { data: { allReminders }, loading } = useQuery(ALL_REMINDERS)
-  const [toggleResolvedStatus] = useMutation(TOGGLE_RESOLVED_STATUS)
+  const [deleteReminder] = useMutation(DELETE_REMINDER, {
+    refetchQueries: [{ query: ALL_REMINDERS }],
+  })
+  const [toggleResolvedStatus] = useMutation(TOGGLE_RESOLVED_STATUS, {
+    refetchQueries: [{ query: ALL_REMINDERS }],
+  })
   console.log(allReminders)
   const toggleDrawer = () => {
     navigation.toggleDrawer()
@@ -29,23 +39,59 @@ const ReminderScreen = ({ navigation }) => {
     toggleResolvedStatus({ variables: { id } })
   }
 
+  const handleReminderDelete = (id) => {
+    deleteReminder({ variables: { id } })
+  }
+
   useEffect(() => {
     navigation.setParams({ toggleDrawer })
   }, [])
 
   if (loading) return null
   console.log(allReminders)
+
   const expiredReminders = allReminders.filter(reminder => reminder.resolved)
-  const activeReminders = allReminders.filter(reminder => !reminder.resolved)
+  const activeReminders = allReminders.filter(reminder => {
+    if (reminder.resolved) return false
+    if (new Date(reminder.dateExpiry) < new Date()) return true
+  })
+  const activeAndUpcomingReminders = allReminders.filter(reminder => !reminder.resolved)
+
+  const sections = () => {
+    if (filter === 'all') {
+      return [{ title: 'Active and upcoming', data: activeAndUpcomingReminders },
+        { title: 'Resolved', data: expiredReminders }]
+    // eslint-disable-next-line no-else-return
+    } else if (filter === 'active') {
+      return [{ title: 'Active', data: activeReminders }]
+    } else if (filter === 'expired') {
+      return [{ title: 'Resolved', data: expiredReminders }]
+    } else if (filter === 'active_upcoming') {
+      return [{ title: 'Active and upcoming', data: activeAndUpcomingReminders }]
+    }
+    return null
+  }
 
   return (
     <Container>
+      <FilterView>
+        <Picker
+          selectedValue={filter}
+          style={{ color: 'white' }}
+          mode="dropdown"
+          onValueChange={(itemValue, itemIndex) => {
+            setFilter(itemValue)
+          }}
+        >
+          <Picker.Item label="All" value="all" />
+          <Picker.Item label="Active" value="active" />
+          <Picker.Item label="Expired" value="expired" />
+          <Picker.Item label="Active and upcoming" value="active_upcoming" />
+        </Picker>
+      </FilterView>
       <SectionList
         keyExtractor={(item, index) => item.id + index}
-        sections={[
-          { title: 'Active and upcoming', data: activeReminders },
-          { title: 'Resolved', data: expiredReminders },
-        ]}
+        sections={sections()}
         renderSectionHeader={({ section: { title } }) => (
           <Header text={title} />
         )}
@@ -56,6 +102,7 @@ const ReminderScreen = ({ navigation }) => {
               background={background}
               item={item}
               statusListener={toggleReminderStatus}
+              deleteHandler={handleReminderDelete}
             />
           )
         }}

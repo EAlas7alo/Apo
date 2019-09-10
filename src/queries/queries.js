@@ -114,6 +114,12 @@ const CREATE_REMINDER = gql`
   }
 `
 
+const DELETE_REMINDER = gql`
+  mutation deleteReminder($id: ID!) {
+    deleteReminder(id: $id) 
+  }
+`
+
 const TOGGLE_RESOLVED_STATUS = gql`
   mutation toggleResolvedStatus($id: ID!) {
     toggleResolvedStatus(id: $id) 
@@ -134,6 +140,7 @@ export {
   DELETE_IMAGE_FROM_ENTRY,
   ALL_REMINDERS,
   CREATE_REMINDER,
+  DELETE_REMINDER,
   ACTIVE_REMINDERS,
   TOGGLE_RESOLVED_STATUS,
 }

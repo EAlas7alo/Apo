@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useMutation } from '@apollo/react-hooks'
 import MyAppText from '../TextComponents/MyAppText'
 import { Button, ButtonText } from '../StyledComponents'
-import { TOGGLE_RESOLVED_STATUS } from '../../queries/queries';
+import { TOGGLE_RESOLVED_STATUS, ALL_REMINDERS } from '../../queries/queries';
 
 const ReminderText = styled(MyAppText)`
   padding-left: 20px
@@ -47,10 +47,9 @@ const AlwaysVisibleView = styled.View`
   flex: 1
 `
 
-const ListReminder = ({ background, item, statusListener }) => {
+const ListReminder = ({ background, item, statusListener, deleteHandler }) => {
   const [buttonsVisible, setButtonsVisible] = useState(false)
   const resolvedText = item.resolved ? 'Mark as unresolved' : 'Mark as resolved'
-  const [toggleResolvedStatus] = useMutation(TOGGLE_RESOLVED_STATUS)
 
   const handleReminderPress = () => {
     setButtonsVisible(!buttonsVisible)
@@ -70,10 +69,10 @@ const ListReminder = ({ background, item, statusListener }) => {
         {buttonsVisible && (
           <ReminderContentView>
             <ButtonsView>
-              <ListReminderButton onPress={() => { statusListener(item.id)}}>
+              <ListReminderButton onPress={() => { statusListener(item.id) }}>
                 <ButtonText>{resolvedText}</ButtonText>
               </ListReminderButton>
-              <ListReminderButton>
+              <ListReminderButton onPress={() => { deleteHandler(item.id) }}>
                 <ButtonText>Delete reminder</ButtonText>
               </ListReminderButton>
             </ButtonsView>
@@ -91,8 +90,9 @@ ListReminder.propTypes = {
     dateExpiry: PropTypes.string.isRequired,
     resolved: PropTypes.bool.isRequired,
     id: PropTypes.string.isRequired,
-    statusListener: PropTypes.func.isRequired,
   }).isRequired,
+  statusListener: PropTypes.func.isRequired,
+  deleteHandler: PropTypes.func.isRequired,
 }
 
 export default ListReminder
