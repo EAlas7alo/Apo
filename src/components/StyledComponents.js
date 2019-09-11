@@ -20,4 +20,13 @@ const Button = styled.TouchableOpacity`
   background-color: dimgray
 `
 
-export { Container, ButtonText, Button }
+const Header = styled.Text`
+  font-size: 15
+  font-weight: bold
+  color: white
+  padding-left: 15px
+  padding-bottom: 10px
+  padding-top: 10px
+`
+
+export { Container, ButtonText, Button, Header }

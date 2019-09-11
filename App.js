@@ -4,13 +4,15 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createUploadLink } from 'apollo-upload-client'
-import { createStackNavigator, createDrawerNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation-drawer'
 import { resolvers, typeDefs } from './src/resolvers/resolvers'
 import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
 import EntryModal from './src/components/EntryModal/EntryModal'
 import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
 import ReminderScreen from './src/screens/ReminderScreen';
+import Drawer from './src/components/Drawer';
 
 const EntryStack = createStackNavigator(
   {
@@ -71,6 +73,7 @@ const DrawerStack = createDrawerNavigator(
   {
     initialRouteName: 'Reminders',
     headerMode: 'none',
+    contentComponent: Drawer,
   },
 )
 
