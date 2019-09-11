@@ -31,4 +31,5 @@
 | 6.9   | 4    | reminderscreen
 | 8.9   | 3    | reminderscreen
 | 10.9  | 3    | reminder
-| yht   | 112   | | 
+| 11.9  | 3    | säätöä drawernavin kanssa
+| yht   | 115   | | 
