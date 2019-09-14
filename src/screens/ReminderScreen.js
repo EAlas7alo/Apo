@@ -4,10 +4,11 @@ import { TouchableOpacity, SectionList, Picker } from 'react-native'
 import styled from 'styled-components'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { ALL_REMINDERS, TOGGLE_RESOLVED_STATUS, DELETE_REMINDER } from '../queries/queries'
+import { ALL_REMINDERS, TOGGLE_RESOLVED_STATUS, DELETE_REMINDER, ACTIVE_REMINDERS } from '../queries/queries'
 import MyAppText from '../components/TextComponents/MyAppText'
 import { Container } from '../components/StyledComponents'
 import ListReminder from '../components/ReminderScreen/ListReminder';
+import CreateFolderModal from '../components/JournalEntriesScreen/CreateFolderModal';
 
 const Header = styled(MyAppText)`
   font-size: 20
@@ -17,18 +18,24 @@ const Header = styled(MyAppText)`
   padding-top: 5px
 `
 
-const FilterView = styled.View`
+const ReminderScreenContainer = styled(Container)`
+  border-width: 1px
+  border-color: white
+`
 
+const FilterView = styled.View`
+  border-bottom-width: 1px
+  border-color: white
 `
 
 const ReminderScreen = ({ navigation }) => {
   const [filter, setFilter] = useState('all')
   const { data: { allReminders }, loading } = useQuery(ALL_REMINDERS)
   const [deleteReminder] = useMutation(DELETE_REMINDER, {
-    refetchQueries: [{ query: ALL_REMINDERS }],
+    refetchQueries: [{ query: ALL_REMINDERS }, { query: ACTIVE_REMINDERS }],
   })
   const [toggleResolvedStatus] = useMutation(TOGGLE_RESOLVED_STATUS, {
-    refetchQueries: [{ query: ALL_REMINDERS }],
+    refetchQueries: [{ query: ALL_REMINDERS }, { query: ACTIVE_REMINDERS }],
   })
   console.log(allReminders)
   const toggleDrawer = () => {
@@ -73,7 +80,7 @@ const ReminderScreen = ({ navigation }) => {
   }
 
   return (
-    <Container>
+    <ReminderScreenContainer>
       <FilterView>
         <Picker
           selectedValue={filter}
@@ -107,7 +114,8 @@ const ReminderScreen = ({ navigation }) => {
           )
         }}
       />
-    </Container>
+      <CreateFolderModal />
+    </ReminderScreenContainer>
   )
 }
 

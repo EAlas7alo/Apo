@@ -25,6 +25,9 @@ const EntryStack = createStackNavigator(
     CameraScreen: {
       screen: CameraScreen,
     },
+    ReminderModal: {
+      screen: ReminderModal,
+    },
   },
   {
     initialRouteName: 'Main',
@@ -71,7 +74,7 @@ const DrawerStack = createDrawerNavigator(
     },
   },
   {
-    initialRouteName: 'Reminders',
+    initialRouteName: 'Entries',
     headerMode: 'none',
     contentComponent: Drawer,
   },

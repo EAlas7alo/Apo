@@ -3,7 +3,7 @@ import { View, FlatList } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import styled from 'styled-components'
 import { Button, ButtonText } from '../StyledComponents'
-import { ACTIVE_REMINDERS, TOGGLE_RESOLVED_STATUS } from '../../queries/queries'
+import { ACTIVE_REMINDERS, TOGGLE_RESOLVED_STATUS, ALL_REMINDERS } from '../../queries/queries'
 
 
 const ReminderHeader = styled.Text`
@@ -34,7 +34,7 @@ const ReminderText = styled.Text`
 const ReminderList = () => {
   const { data, loading } = useQuery(ACTIVE_REMINDERS)
   const [markAsResolved] = useMutation(TOGGLE_RESOLVED_STATUS, {
-    refetchQueries: [{ query: ACTIVE_REMINDERS }],
+    refetchQueries: [{ query: ACTIVE_REMINDERS }, { query: ALL_REMINDERS }],
   })
   if (loading) return null
 

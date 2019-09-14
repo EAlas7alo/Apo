@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/react-hooks'
 import TextInputNamed from '../TextComponents/TextInputNamed';
 import { calendarIcon } from '../../constants/Icons'
 import MyAppText from '../TextComponents/MyAppText'
-import { CREATE_REMINDER, ACTIVE_REMINDERS } from '../../queries/queries'
+import { CREATE_REMINDER, ACTIVE_REMINDERS, ALL_REMINDERS } from '../../queries/queries'
 
 
 const DateButton = styled.TouchableHighlight`
@@ -68,7 +68,7 @@ const ReminderForm = ({ navigation }) => {
   const [date, setDate] = useState(new Date())
 
   const [createReminder] = useMutation(CREATE_REMINDER, {
-    refetchQueries: [{ query: ACTIVE_REMINDERS }],
+    refetchQueries: [{ query: ACTIVE_REMINDERS }, { query: ALL_REMINDERS }],
   })
 
   const handleTitleChange = (name, text) => {

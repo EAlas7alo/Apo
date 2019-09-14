@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
-  FlatList, StyleSheet, TouchableHighlight, TouchableOpacity,
+  FlatList, TouchableHighlight, TouchableOpacity,
 } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/Ionicons'
-import JournalEntry from '../components/JournalEntriesScreen/JournalEntry'
-import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES, ACTIVE_REMINDERS } from '../queries/queries';
-import { addIcon, filingIcon, reminderIcon } from '../constants/Icons';
+import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES, ACTIVE_REMINDERS, ALL_REMINDERS } from '../queries/queries';
+import { addIcon, filingIcon, reminderIcon, folderIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
 import ReminderList from '../components/JournalEntriesScreen/ReminderList';
 import { Container } from '../components/StyledComponents'
+import CreateFolderModal from '../components/JournalEntriesScreen/CreateFolderModal'
+import ListItem from '../components/JournalEntriesScreen/ListItem'
 
 
 const actions = [
@@ -30,13 +31,14 @@ const actions = [
     color: 'white',
     icon: reminderIcon,
   },
-];
-
-const styles = StyleSheet.create({
-  journalEntry: {
-    padding: 25,
+  {
+    text: 'Add a folder',
+    name: 'add_folder',
+    position: 3,
+    color: 'white',
+    icon: folderIcon,
   },
-})
+];
 
 const RemindersView = styled.View`
   background-color: gray
@@ -53,6 +55,8 @@ const EntriesView = styled.View`
 `
 
 const JournalEntriesScreen = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false)
+
   const journalEntries = useQuery(ALL_ENTRIES)
   const data = journalEntries.data.allEntries
   const reminders = useQuery(ACTIVE_REMINDERS)
@@ -72,6 +76,9 @@ const JournalEntriesScreen = ({ navigation }) => {
       navigation.navigate('EntryModal')
     } else if (name === 'add_reminder') {
       navigation.navigate('ReminderModal')
+    } else if (name === 'add_folder') {
+      // Navigate to folder creation
+      setModalVisible(true)
     }
   }
 
@@ -93,6 +100,27 @@ const JournalEntriesScreen = ({ navigation }) => {
     navigation.setParams({ toggleDrawer })
   }, [])
 
+  // Context folders containing JournalEntries (also Reminders?)
+  // Change item order in this screen
+  // MenuItems which can be folders or entries
+
+  // Folders stored on server
+  // Folder object knows its contents
+  const mockData = [
+    {
+      "__typename": "Entry",
+      "content": "The Alchemy of Finance by George Soros",
+      "id": "5d7a1079db85081c28b4b796",
+      "images": [],
+      "title": "Reading list September 2019",
+      "type": "entry"
+    },
+    {
+      "type": "folder",
+      "id": "5",
+    },
+
+  ]
   return (
     <Container>
       <RemindersView>
@@ -100,19 +128,15 @@ const JournalEntriesScreen = ({ navigation }) => {
       </RemindersView>
       <EntriesView>
         <FlatList
-          data={data}
+          data={mockData}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableHighlight
               onPress={() => { onPressEntry(item) }}
               underlayColor="gray"
             >
-              <JournalEntry
-                id={item.id.toString()}
-                images={item.images}
-                style={styles.journalEntry}
-                title={item.title}
-                content={item.content}
+              <ListItem
+                item={item}
               />
             </TouchableHighlight>
           )}
@@ -126,6 +150,7 @@ const JournalEntriesScreen = ({ navigation }) => {
           onPressItem(name)
         }}
       />
+      <CreateFolderModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
     </Container>
   );
 };

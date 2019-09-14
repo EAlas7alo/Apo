@@ -9,20 +9,29 @@ const DrawerView = styled.SafeAreaView`
   flex: 1
   background-color: dimgray
 `
+const DrawerHeader = styled(Header)`
+  border-bottom-width: 1px
+  border-color: white
+`
 
 const MenuItemsView = styled.View`
   color: white
+  border-bottom-width: 1px
+  border-color: white
 `
 
 const Drawer = (props) => {
-
   return (
     <DrawerView>
-      <Header>
+      <DrawerHeader>
         Menu
-      </Header>
+      </DrawerHeader>
       <MenuItemsView>
-        <DrawerNavigatorItems color="white" {...props} />
+        <DrawerNavigatorItems
+          activeBackgroundColor="dimgray"
+          activeTintColor="white"
+          {...props}
+        />
       </MenuItemsView>
     </DrawerView>
   )

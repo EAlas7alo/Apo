@@ -1,44 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { StyleSheet, View, ViewPropTypes } from 'react-native'
+import styled from 'styled-components'
+import { View } from 'react-native'
 import MyAppText from '../TextComponents/MyAppText'
 import ImageList from './ImageList';
 
+const JournalEntryView = styled.View`
+  padding: 25px
+`
 
-const styles = StyleSheet.create({
-  journalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  journalEntry: {
-    color: 'snow',
-  },
-})
+const JournalTitle = styled(MyAppText)`
+  font-size: 20
+  font-weight: bold
+  color: white
+`
 
-const JournalEntry = ({ title, content, style, images, id }) => {
+const JournalEntryText = styled(MyAppText)`
+  color: snow
+`
+
+const JournalEntry = ({ title, content, images, id }) => {
   return (
-    <View style={style}>
+    <JournalEntryView>
       <View style={{ paddingBottom: 20 }}>
-        <MyAppText style={styles.journalTitle} text={title} />
-        <MyAppText style={styles.journalEntry} text={content} />
+        <JournalTitle text={title} />
+        <JournalEntryText text={content} />
       </View>
       <View>
         <ImageList id={id} images={images} />
       </View>
-    </View>
+    </JournalEntryView>
   )
 }
 
 JournalEntry.defaultProps = {
-  style: [],
   images: [],
 }
 
 JournalEntry.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
-  style: ViewPropTypes.style,
   images: PropTypes.arrayOf(PropTypes.string),
   id: PropTypes.string.isRequired,
 }
