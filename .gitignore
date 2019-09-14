@@ -6,6 +6,8 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
+.env
+.idea
 web-build/
 web-report/
 platform-tools/

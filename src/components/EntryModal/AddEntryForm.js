@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Formik } from 'formik';
 import { View, StyleSheet } from 'react-native'
-import TextInputNamed from './TextInputNamed'
+import TextInputNamed from '../TextComponents/TextInputNamed'
 import AttachmentBar from './AttachmentBar';
 
 const styles = StyleSheet.create({
@@ -77,7 +77,6 @@ const AddEntryForm = ({ handleChange, title, textContent, onPressImage, id }) =>
 }
 
 AddEntryForm.defaultProps = {
-  images: null,
   id: null,
 }
 
@@ -85,7 +84,6 @@ AddEntryForm.propTypes = {
   handleChange: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   textContent: PropTypes.string.isRequired,
-  images: PropTypes.arrayOf(PropTypes.string),
   onPressImage: PropTypes.func.isRequired,
   id: PropTypes.string,
 

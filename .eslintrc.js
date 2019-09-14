@@ -30,6 +30,7 @@ module.exports = {
     'linebreak-style': ["error", "windows"],
     'arrow-parens': 0,
     'object-curly-newline': 0,
-    'no-shadow': 0
+    'no-shadow': 0,
+    'arrow-body-style': 0
   },
 };

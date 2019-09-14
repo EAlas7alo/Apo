@@ -1,39 +1,23 @@
 import React from 'react'
+import { SERVER_IP } from 'react-native-dotenv'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createUploadLink } from 'apollo-upload-client'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation-drawer'
 import { resolvers, typeDefs } from './src/resolvers/resolvers'
 import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
-import AddEntryScreen from './src/screens/AddEntryScreen'
-import EntryScreen from './src/screens/EntryScreen'
-import EntryModal from './src/components/EntryModal'
+import EntryModal from './src/components/EntryModal/EntryModal'
+import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
+import ReminderScreen from './src/screens/ReminderScreen';
+import Drawer from './src/components/Drawer';
 
-
-const MainStack = createStackNavigator(
-  {
-    JournalEntries: {
-      screen: JournalEntriesScreen,
-    },
-    AddEntryScreen: {
-      screen: AddEntryScreen,
-    },
-    EntryScreen: {
-      screen: EntryScreen,
-    },
-  },
-  {
-    initialRouteName: 'JournalEntries',
-    headerMode: 'none',
-  },
-)
-
-const RootStack = createStackNavigator(
+const EntryStack = createStackNavigator(
   {
     Main: {
-      screen: MainStack,
+      screen: JournalEntriesScreen,
     },
     EntryModal: {
       screen: EntryModal,
@@ -41,17 +25,66 @@ const RootStack = createStackNavigator(
     CameraScreen: {
       screen: CameraScreen,
     },
+    ReminderModal: {
+      screen: ReminderModal,
+    },
   },
   {
     initialRouteName: 'Main',
     defaultNavigationOptions: {
       title: 'Entries',
+      headerTitleStyle: {
+        color: 'white',
+      },
+      headerStyle: {
+        backgroundColor: 'dimgray',
+      },
     },
   },
 )
 
+const ReminderStack = createStackNavigator(
+  {
+    RemindersScreen: {
+      screen: ReminderScreen,
+    },
+    ReminderModal: {
+      screen: ReminderModal,
+    },
+  },
+  {
+    defaultNavigationOptions: {
+      headerTitleStyle: {
+        color: 'white',
+      },
+      headerStyle: {
+        backgroundColor: 'dimgray',
+      },
+    },
+  },
+)
+
+const DrawerStack = createDrawerNavigator(
+  {
+    Entries: {
+      screen: EntryStack,
+    },
+    Reminders: {
+      screen: ReminderStack,
+    },
+  },
+  {
+    initialRouteName: 'Entries',
+    headerMode: 'none',
+    contentComponent: Drawer,
+  },
+)
+
+const serverIP = SERVER_IP
+console.log(serverIP)
+
 const httpLink = createUploadLink({
-  uri: 'http://192.168.10.97:4000/',
+  uri: serverIP,
 })
 
 
@@ -78,7 +111,7 @@ cache.writeData({
   },
 })
 
-const AppContainer = createAppContainer(RootStack);
+const AppContainer = createAppContainer(DrawerStack);
 
 const App = () => {
   return (

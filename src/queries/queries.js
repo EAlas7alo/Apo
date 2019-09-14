@@ -1,10 +1,5 @@
 import gql from 'graphql-tag'
 
-/*
-  Date and ID fields are to be generated server-side when backend
-  has been implemented.
-*/
-
 const ALL_ENTRIES = gql`
   {
     allEntries {
@@ -14,6 +9,27 @@ const ALL_ENTRIES = gql`
       id
     }
   }
+`
+const ALL_REMINDERS = gql`
+ {
+   allReminders {
+      content
+      dateExpiry
+      id
+      resolved
+   }
+ }
+`
+
+const ACTIVE_REMINDERS = gql`
+ {
+   activeReminders {
+     content
+     resolved
+     dateExpiry
+     id
+   }
+ }
 `
 
 const CREATE_ENTRY = gql`
@@ -90,7 +106,25 @@ const DELETE_IMAGE_FROM_ENTRY = gql`
     deleteImageFromEntry(entry: $entry, image: $image) 
   }
 `
+const CREATE_REMINDER = gql`
+  mutation createReminder($dateExpiry: Date!, $content: String!) {
+    createReminder(dateExpiry: $dateExpiry, content: $content) {
+      dateExpiry
+    }
+  }
+`
 
+const DELETE_REMINDER = gql`
+  mutation deleteReminder($id: ID!) {
+    deleteReminder(id: $id) 
+  }
+`
+
+const TOGGLE_RESOLVED_STATUS = gql`
+  mutation toggleResolvedStatus($id: ID!) {
+    toggleResolvedStatus(id: $id) 
+  }
+`
 
 export {
   ALL_ENTRIES,
@@ -104,4 +138,9 @@ export {
   GET_CURRENT_IMAGES,
   GET_SELECTED_IMAGES,
   DELETE_IMAGE_FROM_ENTRY,
+  ALL_REMINDERS,
+  CREATE_REMINDER,
+  DELETE_REMINDER,
+  ACTIVE_REMINDERS,
+  TOGGLE_RESOLVED_STATUS,
 }

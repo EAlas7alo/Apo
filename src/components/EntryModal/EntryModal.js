@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { View, Keyboard, StyleSheet, Dimensions } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
-import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import SnackBar from 'react-native-snackbar-component'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import gql from 'graphql-tag'
 import AddEntryForm from './AddEntryForm'
-import imagePicker from '../logic/imagePicker'
-import { MaterialHeaderButtons, Item } from './HeaderButtons'
-import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../queries/queries'
-import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../constants/Icons'
+import imagePicker from '../../logic/imagePicker'
+import { MaterialHeaderButtons, Item } from '../HeaderButtons'
+import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../../queries/queries'
+import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../../constants/Icons'
 import ImageModal from './ImageModal';
-import saveImageToDisk from '../logic/saveImageToDisk';
+import saveImageToDisk from '../../logic/saveImageToDisk';
 
 /*
   TODO:
@@ -59,11 +59,9 @@ const ADD_IMAGE = gql`
 const EntryModal = ({ navigation }) => {
   const entry = navigation.getParam('entry', null)
   const isNewEntry = !entry
-  console.log('entry', entry)
   const [title, setTitle] = useState(entry ? entry.title : '')
   const [textContent, setTextContent] = useState(entry ? entry.content : '')
   const { data: { currentImages } } = useQuery(GET_CURRENT_IMAGES)
-  console.log('currentImages:', currentImages)
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
@@ -96,10 +94,8 @@ const EntryModal = ({ navigation }) => {
     // eslint-disable-next-line no-unused-expressions
 
     if (isNewEntry) {
-      const data = await createEntry({ variables: { title, textContent, images: currentImages } })
-      id = data.data.createEntry.id
+      await createEntry({ variables: { title, textContent, images: currentImages } })
     } else {
-      id = entry.id
       await editContent({ variables: { id: entry.id, title, content: textContent, images: currentImages } })
     }
     Keyboard.dismiss()
@@ -146,7 +142,7 @@ const EntryModal = ({ navigation }) => {
   }
 
   const onBackButtonPress = () => {
-    if (title === '' && textContent === '' && images.length === 0) {
+    if (title === '' && textContent === '' && currentImages.length === 0) {
       console.log('empty entry, aborting saving')
     } else {
       handleSubmit()
@@ -154,7 +150,7 @@ const EntryModal = ({ navigation }) => {
   }
 
   useEffect(() => {
-    navigation.setParams({ handleSubmit, handleDeleteConfirm, title, textContent })
+    navigation.setParams({ handleSubmit, handleDeleteConfirm, title, textContent, isNewEntry })
   }, [title, textContent, currentImages, entry])
 
   return (
@@ -216,8 +212,11 @@ EntryModal.navigationOptions = ({ navigation }) => {
     },
     headerRight: (
       <MaterialHeaderButtons>
-        <Item title="delete" onPress={params.handleDeleteConfirm} iconName="md-trash" />
+        {!params.isNewEntry &&
+          <Item title="delete" onPress={params.handleDeleteConfirm} iconName="md-trash" />
+        }
       </MaterialHeaderButtons>
+
     ),
   }
 }
@@ -227,6 +226,7 @@ EntryModal.propTypes = {
     goBack: PropTypes.func.isRequired,
     setParams: PropTypes.func.isRequired,
     getParam: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
   }).isRequired,
 }
 
