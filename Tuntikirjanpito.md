@@ -33,4 +33,5 @@
 | 10.9  | 3    | reminder
 | 11.9  | 3    | säätöä drawernavin kanssa
 | 14.9  | 4    | kansioita
-| yht   | 119   | | 
+| 16.9  | 2    | kansioita backendiin, refaktorointia
+| yht   | 121   | | 
