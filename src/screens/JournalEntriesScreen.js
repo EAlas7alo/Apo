@@ -7,13 +7,15 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES, ACTIVE_REMINDERS, ALL_REMINDERS } from '../queries/queries';
+import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES, ACTIVE_REMINDERS } from '../queries/queries';
 import { addIcon, filingIcon, reminderIcon, folderIcon } from '../constants/Icons';
 import findImagesByEntry from '../logic/findImagesByEntry'
 import ReminderList from '../components/JournalEntriesScreen/ReminderList';
 import { Container } from '../components/StyledComponents'
 import CreateFolderModal from '../components/JournalEntriesScreen/CreateFolderModal'
 import ListItem from '../components/JournalEntriesScreen/ListItem'
+import { GET_MAIN_FOLDER } from '../queries/Folders'
+import EntryList from '../components/JournalEntriesScreen/EntryList'
 
 
 const actions = [
@@ -56,19 +58,9 @@ const EntriesView = styled.View`
 
 const JournalEntriesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false)
-
-  const journalEntries = useQuery(ALL_ENTRIES)
-  const data = journalEntries.data.allEntries
-  const reminders = useQuery(ACTIVE_REMINDERS)
-  if (!reminders.loading) {
-    console.log('current reminders: ', reminders.data)
-  }
-
-  const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
     refetchQueries: GET_CURRENT_IMAGES,
   })
-
 
   const onPressItem = async (name) => {
     if (name === 'add_entry') {
@@ -80,16 +72,6 @@ const JournalEntriesScreen = ({ navigation }) => {
       // Navigate to folder creation
       setModalVisible(true)
     }
-  }
-
-  const onPressEntry = async (entry) => {
-    // console.log(entry)
-    const foundFolder = await findImagesByEntry(entry.id)
-    console.log('found folder for entry?', foundFolder)
-    await setCurrentEntry({ variables: { entry } })
-    await setCurrentImages({ variables: { images: entry.images } })
-    navigation.navigate('EntryModal',
-      { entry: { images: foundFolder, ...entry } })
   }
 
   const toggleDrawer = () => {
@@ -106,41 +88,13 @@ const JournalEntriesScreen = ({ navigation }) => {
 
   // Folders stored on server
   // Folder object knows its contents
-  const mockData = [
-    {
-      "__typename": "Entry",
-      "content": "The Alchemy of Finance by George Soros",
-      "id": "5d7a1079db85081c28b4b796",
-      "images": [],
-      "title": "Reading list September 2019",
-      "type": "entry"
-    },
-    {
-      "type": "folder",
-      "id": "5",
-    },
-
-  ]
   return (
     <Container>
       <RemindersView>
         <ReminderList />
       </RemindersView>
       <EntriesView>
-        <FlatList
-          data={mockData}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableHighlight
-              onPress={() => { onPressEntry(item) }}
-              underlayColor="gray"
-            >
-              <ListItem
-                item={item}
-              />
-            </TouchableHighlight>
-          )}
-        />
+        <EntryList navigation={navigation} />
       </EntriesView>
       <FloatingAction
         color="white"

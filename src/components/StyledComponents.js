@@ -5,6 +5,11 @@ const Container = styled.View`
   flex: 1
 `
 
+const ApoText = styled.Text`
+  color: white
+  font-size: 15
+`
+
 const ButtonText = styled.Text`
   color: white
   font-size: 15
@@ -29,4 +34,4 @@ const Header = styled.Text`
   padding-top: 10px
 `
 
-export { Container, ButtonText, Button, Header }
+export { Container, ButtonText, Button, Header, ApoText }
