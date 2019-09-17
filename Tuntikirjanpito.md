@@ -34,4 +34,5 @@
 | 11.9  | 3    | säätöä drawernavin kanssa
 | 14.9  | 4    | kansioita
 | 16.9  | 2    | kansioita backendiin, refaktorointia
-| yht   | 121   | | 
+| 17.9  | 3    | kansioita bäkkäriin
+| yht   | 124   | | 
