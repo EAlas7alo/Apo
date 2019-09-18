@@ -35,4 +35,5 @@
 | 14.9  | 4    | kansioita
 | 16.9  | 2    | kansioita backendiin, refaktorointia
 | 17.9  | 3    | kansioita bäkkäriin
-| yht   | 124   | | 
+| 18.9  | 2    | kansioiden mietintää
+| yht   | 126   | | 
