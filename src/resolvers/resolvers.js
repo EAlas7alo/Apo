@@ -13,11 +13,7 @@ export const resolvers = {
   },
   Query: {
     getEntry: (_root, variables, { cache, getCacheKey }) => {
-      console.log(variables.id)
-      console.log(cache.data)
-      console.log('getEntry local resolver called')
       const id = getCacheKey({ __typename: 'Entry', id: variables.id })
-      console.log(id)
       const fragment = gql`
           fragment entry on Entry {
             title
@@ -93,6 +89,11 @@ export const resolvers = {
             image => !selectedImages.includes(image),
           ) },
       })
+    },
+    getCurrentFolder: (_, __, { cache }) => {
+      if (cache.data.currentFolder === null) {
+        
+      }
     },
   },
 }

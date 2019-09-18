@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
 import styled from 'styled-components'
 import { View, TextInput, TouchableHighlight } from 'react-native'
 import Modal from 'react-native-modal'
 import { Button } from '../StyledComponents'
+import { GET_MAIN_FOLDER } from '../../queries/Folders'
+
 
 const ModalView = styled.View`
 
@@ -28,8 +32,21 @@ const ModalTextInput = styled.TextInput`
   padding-left: 10px
 `
 
+const CREATE_FOLDER = gql`
+  mutation createFolder($name: String!) {
+    createFolder(name: $name)
+  }
+`
+
 const CreateFolderModal = ({ modalVisible, setModalVisible }) => {
   const [folderName, setFolderName] = useState('')
+  const [createFolder] = useMutation(CREATE_FOLDER)
+  const { data: mainFolder } = useQuery(GET_MAIN_FOLDER)
+  console.log(mainFolder, ' xd')
+
+  const handleCreateFolder = async () => {
+    await createFolder({ variables: { name: folderName, parentId: mainFolder.id } })
+  }
 
   return (
     <ModalView>
@@ -40,7 +57,7 @@ const CreateFolderModal = ({ modalVisible, setModalVisible }) => {
         <TextBoxView>
           <ModalText>Create a new folder</ModalText>
           <ModalTextInput value={folderName} onChangeText={(value) => { setFolderName(value) }} />
-          <Button>
+          <Button onPress={handleCreateFolder}>
             <ModalText>Create a new folder</ModalText>
           </Button>
         </TextBoxView>

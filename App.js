@@ -106,6 +106,7 @@ const client = new ApolloClient({
 cache.writeData({
   data: {
     currentEntry: null,
+    currentFolder: null,
     currentImages: [],
     selectedImages: [],
   },

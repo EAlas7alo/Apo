@@ -19,6 +19,7 @@ const EntryList = ({ navigation }) => {
 
   const onPressEntry = async (entry) => {
     // console.log(entry)
+    // TODO onPressFolder
     const foundFolder = await findImagesByEntry(entry.id)
     console.log('found folder for entry?', foundFolder)
     await setCurrentEntry({ variables: { entry } })

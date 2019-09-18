@@ -3,10 +3,14 @@ import gql from 'graphql-tag'
 const GET_MAIN_FOLDER = gql`
   {
     mainFolder {
-      content {
-        content
+      entries {
         id
-        
+        content
+      }
+      folders {
+        id
+        entries
+        folders
       }
     }
   }
