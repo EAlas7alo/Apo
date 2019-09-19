@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { View, Text } from 'react-native'
 import JournalEntry from './JournalEntry'
 import { ApoText, Header } from '../StyledComponents'
+import Folder from './Folder'
 
 const FolderText = styled(ApoText)`
   padding-left: 15
@@ -16,14 +17,15 @@ const FolderHeader = styled(ApoText)`
 
 const ListItem = (props) => {
   const { item } = props
-  console.log(item.type)
 
   return (
     <View>
-      {item.type === 'folder' && (
-        <FolderHeader>Folder name here</FolderHeader>
+      {item.__typename === 'Folder' && (
+        <Folder
+          item={item}
+        />
       )}
-      {item.type === 'entry' && (
+      {item.__typename === 'Entry' && (
         <JournalEntry
           id={item.id.toString()}
           images={item.images}
@@ -45,7 +47,7 @@ ListItem.propTypes = {
     images: PropTypes.arrayOf(PropTypes.string),
     title: PropTypes.string,
     content: PropTypes.string,
-    type: PropTypes.string.isRequired,
+    __typename: PropTypes.string.isRequired,
   }).isRequired,
 }
 

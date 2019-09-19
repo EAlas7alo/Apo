@@ -6,12 +6,15 @@ const GET_MAIN_FOLDER = gql`
       entries {
         id
         content
+        title
+        images
       }
       folders {
         id
-        entries
-        folders
+        name
       }
+      itemOrder
+      id
     }
   }
 `

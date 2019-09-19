@@ -95,5 +95,8 @@ export const resolvers = {
         
       }
     },
+    setCurrentFolder: (_, args, { cache }) => {
+
+    },
   },
 }

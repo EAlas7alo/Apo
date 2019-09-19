@@ -31,6 +31,7 @@ module.exports = {
     'arrow-parens': 0,
     'object-curly-newline': 0,
     'no-shadow': 0,
-    'arrow-body-style': 0
+    'arrow-body-style': 0,
+    'no-underscore-dangle': 0
   },
 };

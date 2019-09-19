@@ -8,7 +8,6 @@ import Modal from 'react-native-modal'
 import { Button } from '../StyledComponents'
 import { GET_MAIN_FOLDER } from '../../queries/Folders'
 
-
 const ModalView = styled.View`
 
 `
@@ -33,19 +32,23 @@ const ModalTextInput = styled.TextInput`
 `
 
 const CREATE_FOLDER = gql`
-  mutation createFolder($name: String!) {
-    createFolder(name: $name)
+  mutation createFolder($name: String!, $parentId: ID!) {
+    createFolder(name: $name, parentId: $parentId)
   }
 `
 
-const CreateFolderModal = ({ modalVisible, setModalVisible }) => {
+const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
   const [folderName, setFolderName] = useState('')
   const [createFolder] = useMutation(CREATE_FOLDER)
-  const { data: mainFolder } = useQuery(GET_MAIN_FOLDER)
-  console.log(mainFolder, ' xd')
+  
+  //console.log(mainFolder, ' xd')
 
   const handleCreateFolder = async () => {
+    console.log('id given to createFolder: ', mainFolder.id)
+    console.log(mainFolder)
     await createFolder({ variables: { name: folderName, parentId: mainFolder.id } })
+    setFolderName('')
+    setModalVisible(false)
   }
 
   return (

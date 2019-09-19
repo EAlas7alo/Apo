@@ -58,9 +58,11 @@ const EntriesView = styled.View`
 
 const JournalEntriesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false)
+  const { data: { mainFolder }, loading } = useQuery(GET_MAIN_FOLDER)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
     refetchQueries: GET_CURRENT_IMAGES,
   })
+  
 
   const onPressItem = async (name) => {
     if (name === 'add_entry') {
@@ -88,13 +90,14 @@ const JournalEntriesScreen = ({ navigation }) => {
 
   // Folders stored on server
   // Folder object knows its contents
+  if (loading) return null
   return (
     <Container>
       <RemindersView>
         <ReminderList />
       </RemindersView>
       <EntriesView>
-        <EntryList navigation={navigation} />
+        <EntryList navigation={navigation} mainFolder={mainFolder} />
       </EntriesView>
       <FloatingAction
         color="white"
