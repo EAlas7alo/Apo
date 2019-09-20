@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { GET_ENTRY } from '../queries/queries'
+import { GET_MAIN_FOLDER } from '../queries/Folders'
 
 export const typeDefs = gql`
   extend type Entry {
@@ -25,6 +25,46 @@ export const resolvers = {
         const entry = cache.readFragment({ fragment, id })
         console.log(entry)
         return entry
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    getCurrentFolder: async (_, __, { client, cache }) => {
+      console.log('xd')
+      //console.log(cache.data)
+      try {
+        const { currentFolder } = cache.readQuery({
+          query: gql`
+            query currentFolder {
+              currentFolder @client {
+                id
+                entries {
+                  id
+                  title
+                  content
+                  images
+                }
+                folders {
+                  id
+                  name
+                }
+              }
+            }
+          `,
+        })
+        if (currentFolder.id === 0) {
+          const { data: { mainFolder } } = await client.query({ query: GET_MAIN_FOLDER })
+          console.log('fetching mainfolder from server')
+          //console.log('mainFolder:', mainFolder)
+          cache.writeData({
+            data: {
+              currentFolder: mainFolder,
+            },
+          })
+          return mainFolder
+        }
+        console.log('currentFolder set', currentFolder)
+        return currentFolder
       } catch (error) {
         console.log(error)
       }
@@ -90,13 +130,8 @@ export const resolvers = {
           ) },
       })
     },
-    getCurrentFolder: (_, __, { cache }) => {
-      if (cache.data.currentFolder === null) {
-        
-      }
-    },
     setCurrentFolder: (_, args, { cache }) => {
-
+      cache.writeData({ data: { currentFolder: args.folder } })
     },
   },
 }

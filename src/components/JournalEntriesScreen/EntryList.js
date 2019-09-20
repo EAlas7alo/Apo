@@ -10,24 +10,38 @@ import { GET_MAIN_FOLDER } from '../../queries/Folders'
 
 const SET_CURRENT_FOLDER = gql`
   mutation setCurrentFolder($id: ID) {
-    setCurrentFolder(id: $id)
+    setCurrentFolder(id: $id) @client
+  }
+`
+
+const GET_CURRENT_FOLDER = gql`
+  {
+    getCurrentFolder @client {
+        id
+        entries {
+          title
+          content
+          images
+          id
+        }
+        folders {
+          name
+          id
+        }
+        itemOrder
+      }
   }
 `
 
 const EntryList = ({ navigation }) => {
   const journalEntries = useQuery(ALL_ENTRIES)
   const entries = journalEntries.data.allEntries
-  const { data: { mainFolder }, loading } = useQuery(GET_MAIN_FOLDER)
+  const { data: { getCurrentFolder }, loading, error, data } = useQuery(GET_CURRENT_FOLDER)
   const [setCurrentFolder] = useMutation(SET_CURRENT_FOLDER)
-
   const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
     refetchQueries: GET_CURRENT_IMAGES,
   })
-
-  useEffect(() => {
-    setCurrentFolder({ variables: { id: mainFolder.id } })
-  }, [])
 
   const onPressEntry = async (entry) => {
     const foundFolder = await findImagesByEntry(entry.id)
@@ -48,28 +62,25 @@ const EntryList = ({ navigation }) => {
       onPressFolder(item)
     }
   }
-
-  const getFolderContent = () => {
-    const folderEntries = entries.filter(entry => mainFolder.includes(entry))
-  }
-
-  if (loading) return null
-
+  console.log(getCurrentFolder)
+  console.log(data)
+  if (loading || !getCurrentFolder) return null
+  console.log('getCurrentFolder:', getCurrentFolder)
   const arrangeItems = (folder) => {
-    const data = mainFolder.entries.concat(mainFolder.folders)
+    const data = getCurrentFolder.entries.concat(getCurrentFolder.folders)
     const sortedItems = data.sort((a, b) => {
-      return mainFolder.itemOrder.indexOf(a)
-        - mainFolder.itemOrder.indexOf(b)
+      return getCurrentFolder.itemOrder.indexOf(a)
+        - getCurrentFolder.itemOrder.indexOf(b)
     })
     //console.log(sortedItems)
     return sortedItems
   }
-  const data = arrangeItems()
-  console.log(data)
+  const datax = arrangeItems()
+  // console.log(data)
   return (
     <View>
       <FlatList
-        data={data}
+        data={datax}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableHighlight

@@ -13,6 +13,7 @@ import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
 import ReminderScreen from './src/screens/ReminderScreen';
 import Drawer from './src/components/Drawer';
+import { GET_MAIN_FOLDER } from './src/queries/Folders'
 
 const EntryStack = createStackNavigator(
   {
@@ -89,7 +90,7 @@ const httpLink = createUploadLink({
 
 
 const link = httpLink
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({ dataIdFromObject: object => `${object.__typename}_${object.id}` })
 
 const client = new ApolloClient({
   cache,
@@ -106,7 +107,12 @@ const client = new ApolloClient({
 cache.writeData({
   data: {
     currentEntry: null,
-    currentFolder: null,
+    currentFolder: {
+      __typename: 'Folder',
+      entries: [],
+      folders: [],
+      id: 0,
+    },
     currentImages: [],
     selectedImages: [],
   },

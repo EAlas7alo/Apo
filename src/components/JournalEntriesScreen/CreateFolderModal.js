@@ -40,7 +40,7 @@ const CREATE_FOLDER = gql`
 const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
   const [folderName, setFolderName] = useState('')
   const [createFolder] = useMutation(CREATE_FOLDER)
-  
+
   //console.log(mainFolder, ' xd')
 
   const handleCreateFolder = async () => {
