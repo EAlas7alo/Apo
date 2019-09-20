@@ -37,4 +37,5 @@
 | 17.9  | 3    | kansioita bäkkäriin
 | 18.9  | 2    | kansioiden mietintää
 | 19.9  | 3    | kansioiden UI:ta ja back-front integraatiota
-| yht   | 129   | | 
+| 20.9  | 3    | apollon kanssa taistelua
+| yht   | 132   | | 
