@@ -1,8 +1,27 @@
 import gql from 'graphql-tag'
 
 const GET_MAIN_FOLDER = gql`
-  {
+  query mainFolder {
     mainFolder {
+      entries {
+        id
+        content
+        title
+        images
+      }
+      folders {
+        id
+        name
+      }
+      itemOrder
+      id
+    }
+  }
+`
+
+const ALL_FOLDERS = gql`
+  query allFolders {
+    allFolders {
       entries {
         id
         content
@@ -21,4 +40,5 @@ const GET_MAIN_FOLDER = gql`
 
 export {
   GET_MAIN_FOLDER,
+  ALL_FOLDERS,
 }

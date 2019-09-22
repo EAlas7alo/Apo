@@ -29,7 +29,7 @@ export const resolvers = {
         console.log(error)
       }
     },
-    getCurrentFolder: async (_, __, { client, cache }) => {
+    currentFolder: async (_, __, { client, cache }) => {
       console.log('xd')
       //console.log(cache.data)
       try {
@@ -97,7 +97,7 @@ export const resolvers = {
     /* Highlighted images in entry view */
     setSelectedImages: (_, variables, { cache }) => {
       const selectedImagesQuery = gql`
-        {
+        query selectedImages {
           selectedImages @client
         }
       `
@@ -114,7 +114,7 @@ export const resolvers = {
     },
     deleteSelectedImages: (_, variables, { cache }) => {
       const selectedImagesQuery = gql`
-      {
+      query selectedImages {
         selectedImages @client
         currentImages @client
       }
@@ -129,9 +129,37 @@ export const resolvers = {
             image => !selectedImages.includes(image),
           ) },
       })
+      return null
     },
-    setCurrentFolder: (_, args, { cache }) => {
-      cache.writeData({ data: { currentFolder: args.folder } })
+    setCurrentFolder: async (_, args, { client, cache }) => {
+      try {
+        const { data: { getFolder } } = await client.query({
+          query: gql`
+            query getFolder($id: ID!) {
+              getFolder(id: $id) {
+                name
+                id
+                itemOrder
+                folders {
+                  id
+                  name
+                }
+                entries {
+                  id
+                  title
+                  content
+                  images
+                }
+              }
+            }
+          `,
+          variables: { id: args.id.toString() },
+        })
+        cache.writeData({ data: { currentFolder: getFolder } })
+      } catch (error) {
+        console.log(error)
+      }
+      return null
     },
   },
 }

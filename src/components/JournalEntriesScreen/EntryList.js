@@ -6,7 +6,7 @@ import gql from 'graphql-tag'
 import ListItem from './ListItem'
 import findImagesByEntry from '../../logic/findImagesByEntry'
 import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES } from '../../queries/queries'
-import { GET_MAIN_FOLDER } from '../../queries/Folders'
+import { ALL_FOLDERS } from '../../queries/Folders'
 
 const SET_CURRENT_FOLDER = gql`
   mutation setCurrentFolder($id: ID) {
@@ -16,7 +16,7 @@ const SET_CURRENT_FOLDER = gql`
 
 const GET_CURRENT_FOLDER = gql`
   {
-    getCurrentFolder @client {
+    currentFolder @client {
         id
         entries {
           title
@@ -34,9 +34,8 @@ const GET_CURRENT_FOLDER = gql`
 `
 
 const EntryList = ({ navigation }) => {
-  const journalEntries = useQuery(ALL_ENTRIES)
-  const entries = journalEntries.data.allEntries
-  const { data: { getCurrentFolder }, loading, error, data } = useQuery(GET_CURRENT_FOLDER)
+  const folders = useQuery(ALL_FOLDERS)
+  const { data: { currentFolder }, loading, error, data } = useQuery(GET_CURRENT_FOLDER)
   const [setCurrentFolder] = useMutation(SET_CURRENT_FOLDER)
   const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
@@ -52,7 +51,8 @@ const EntryList = ({ navigation }) => {
   }
 
   const onPressFolder = async (folder) => {
-
+    console.log(folder)
+    await setCurrentFolder({ variables: { id: folder.id } })
   }
 
   const onPressItem = (item) => {
@@ -62,15 +62,15 @@ const EntryList = ({ navigation }) => {
       onPressFolder(item)
     }
   }
-  console.log(getCurrentFolder)
-  console.log(data)
-  if (loading || !getCurrentFolder) return null
-  console.log('getCurrentFolder:', getCurrentFolder)
+  if (loading || !currentFolder) return null
+
+  // console.log('currentFolder:', currentFolder)
+
   const arrangeItems = (folder) => {
-    const data = getCurrentFolder.entries.concat(getCurrentFolder.folders)
+    const data = currentFolder.entries.concat(currentFolder.folders)
     const sortedItems = data.sort((a, b) => {
-      return getCurrentFolder.itemOrder.indexOf(a)
-        - getCurrentFolder.itemOrder.indexOf(b)
+      return currentFolder.itemOrder.indexOf(a)
+        - currentFolder.itemOrder.indexOf(b)
     })
     //console.log(sortedItems)
     return sortedItems

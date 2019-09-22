@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 const ALL_ENTRIES = gql`
-  {
+  query allEntries {
     allEntries {
       title
       content

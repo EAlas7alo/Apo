@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 const ALL_REMINDERS = gql`
- {
+ query allReminders {
    allReminders {
       content
       dateExpiry
@@ -12,7 +12,7 @@ const ALL_REMINDERS = gql`
 `
 
 const ACTIVE_REMINDERS = gql`
- {
+ query activeReminders {
    activeReminders {
      content
      resolved

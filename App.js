@@ -2,8 +2,10 @@ import React from 'react'
 import { SERVER_IP } from 'react-native-dotenv'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client';
+import { ApolloLink } from 'apollo-link'
+import { createHttpLink } from 'apollo-link-http'
+import { onError } from 'apollo-link-error'
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { createUploadLink } from 'apollo-upload-client'
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { resolvers, typeDefs } from './src/resolvers/resolvers'
@@ -84,24 +86,34 @@ const DrawerStack = createDrawerNavigator(
 const serverIP = SERVER_IP
 console.log(serverIP)
 
-const httpLink = createUploadLink({
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log(graphQLErrors)
+    graphQLErrors.map(({ message, locations, path }) => {
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      )
+    })
+  }
+  if (networkError) console.log(`[Network error]: ${networkError}`)
+})
+
+const httpLink = createHttpLink({
   uri: serverIP,
 })
 
-
-const link = httpLink
+const link = ApolloLink.from([
+  errorLink,
+  httpLink,
+])
 const cache = new InMemoryCache({ dataIdFromObject: object => `${object.__typename}_${object.id}` })
 
 const client = new ApolloClient({
+  link,
   cache,
   resolvers,
   typeDefs,
-  link,
-  formatError: (err) => {
-    console.log(err)
-    return err;
-  },
-
+  queryDeduplication: true,
 })
 
 cache.writeData({
