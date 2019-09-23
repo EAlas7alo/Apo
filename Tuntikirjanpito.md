@@ -38,4 +38,5 @@
 | 18.9  | 2    | kansioiden mietintää
 | 19.9  | 3    | kansioiden UI:ta ja back-front integraatiota
 | 20.9  | 3    | apollon kanssa taistelua
-| yht   | 132   | | 
+| 23.9  | 5    | foldereita
+| yht   | 137   | | 
