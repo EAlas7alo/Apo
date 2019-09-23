@@ -15,6 +15,7 @@ const GET_MAIN_FOLDER = gql`
       }
       itemOrder
       id
+      isMainFolder
     }
   }
 `

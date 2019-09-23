@@ -1,8 +1,7 @@
 TODOs:
 
-RESOLVERIEN ERRORLOGGAUS KUNTOON!
+Folderhierarkialle navigaattori
 Drawerin tyylitys
 CreateFolderModal tyylitys
-Imagen lisäämisessä tulee erroreita
 Folderin poisto (rekursiivinen sisällön poisto)
 Entryscreenin esikatselunäkymään raja näytetylle sisällölle

@@ -38,6 +38,7 @@ export const resolvers = {
             query currentFolder {
               currentFolder @client {
                 id
+                isMainFolder
                 entries {
                   id
                   title
@@ -52,6 +53,7 @@ export const resolvers = {
             }
           `,
         })
+        console.log(currentFolder)
         if (currentFolder.id === 0) {
           const { data: { mainFolder } } = await client.query({ query: GET_MAIN_FOLDER })
           console.log('fetching mainfolder from server')
@@ -140,6 +142,7 @@ export const resolvers = {
                 name
                 id
                 itemOrder
+                isMainFolder
                 folders {
                   id
                   name
@@ -155,6 +158,7 @@ export const resolvers = {
           `,
           variables: { id: args.id.toString() },
         })
+        console.log(getFolder.isMainFolder, 'isMainFolder')
         cache.writeData({ data: { currentFolder: getFolder } })
       } catch (error) {
         console.log(error)

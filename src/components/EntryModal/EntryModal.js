@@ -130,7 +130,7 @@ const EntryModal = ({ navigation }) => {
     Keyboard.dismiss()
     if (name === 'add_image') {
       const chooseImage = await imagePicker()
-      saveImage(chooseImage.uri)
+      if (chooseImage) saveImage(chooseImage.uri)
     } else if (name === 'take_picture') {
       navigation.navigate('CameraScreen', { headerVisible: null, saveImage })
     }

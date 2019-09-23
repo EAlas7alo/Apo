@@ -124,6 +124,7 @@ cache.writeData({
       entries: [],
       folders: [],
       id: 0,
+      isMainFolder: false,
     },
     currentImages: [],
     selectedImages: [],
