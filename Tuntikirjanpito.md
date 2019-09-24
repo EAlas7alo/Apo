@@ -39,4 +39,5 @@
 | 19.9  | 3    | kansioiden UI:ta ja back-front integraatiota
 | 20.9  | 3    | apollon kanssa taistelua
 | 23.9  | 5    | foldereita
-| yht   | 137   | | 
+| 24.9  | 3    | bugien fiksausta
+| yht   | 140  | | 
