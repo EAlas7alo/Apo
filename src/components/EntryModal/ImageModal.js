@@ -23,8 +23,7 @@ const StyledImage = styled.Image`
   height: ${props => props.dimensions.height}
 `
 
-const ImageModal = ({ visible, setVisible, image }) => {
-  console.log('imageUri at ImageModal: ', image)
+const ImageModal = ({ visible, setVisible, image, onRequestClose }) => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   useEffect(() => {
     if (image === null) return
@@ -40,12 +39,11 @@ const ImageModal = ({ visible, setVisible, image }) => {
     })
   }, [image])
 
-  console.log('image dimensions: ', dimensions)
-
-  return ( 
+  return (
     <StyledModal
       animationType="fade"
       visible={visible}
+      onRequestClose={onRequestClose}
     >
       <WrapperView>
         <ImageView transparent={false}>
@@ -72,6 +70,7 @@ ImageModal.propTypes = {
   visible: PropTypes.bool,
   setVisible: PropTypes.func.isRequired,
   image: PropTypes.string,
+  onRequestClose: PropTypes.func.isRequired,
 }
 
 export default ImageModal

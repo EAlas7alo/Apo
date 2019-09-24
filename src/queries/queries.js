@@ -33,11 +33,12 @@ const ACTIVE_REMINDERS = gql`
 `
 
 const CREATE_ENTRY = gql`
-  mutation createEntry($title: String!, $textContent: String!, $images: [String!]!) {
+  mutation createEntry($title: String!, $textContent: String!, $images: [String!]!, $folder: ID!) {
     createEntry(
       title: $title,
       content: $textContent,
       images: $images,
+      folder: $folder,
     ) {
       title
       content

@@ -13,11 +13,7 @@ import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY,
 import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../../constants/Icons'
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../../logic/saveImageToDisk';
-
-/*
-  TODO:
-
-*/
+import { GET_CURRENT_FOLDER_ID } from './queries'
 
 const styles = StyleSheet.create({
   modal: {
@@ -59,24 +55,20 @@ const ADD_IMAGE = gql`
 const EntryModal = ({ navigation }) => {
   const entry = navigation.getParam('entry', null)
   const isNewEntry = !entry
+
+  const { data: { currentFolder } } = useQuery(GET_CURRENT_FOLDER_ID)
+
   const [title, setTitle] = useState(entry ? entry.title : '')
   const [textContent, setTextContent] = useState(entry ? entry.content : '')
+
   const { data: { currentImages } } = useQuery(GET_CURRENT_IMAGES)
+
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
 
   const [createEntry] = useMutation(CREATE_ENTRY, {
     onError: console.log('adding an entry failed'),
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_ENTRIES })
-      dataInStore.allEntries.push(response.data.createEntry)
-      // console.log(store)
-      store.writeQuery({
-        query: ALL_ENTRIES,
-        data: dataInStore,
-      })
-    },
   })
 
   const [editContent] = useMutation(EDIT_ENTRY_CONTENT, {
@@ -92,9 +84,9 @@ const EntryModal = ({ navigation }) => {
 
   const handleSubmit = async () => {
     // eslint-disable-next-line no-unused-expressions
-
+    console.log(currentFolder.id)
     if (isNewEntry) {
-      await createEntry({ variables: { title, textContent, images: currentImages } })
+      await createEntry({ variables: { title, textContent, images: currentImages, folder: currentFolder.id } })
     } else {
       await editContent({ variables: { id: entry.id, title, content: textContent, images: currentImages } })
     }
@@ -141,21 +133,22 @@ const EntryModal = ({ navigation }) => {
     setImageModalVisible(true)
   }
 
-  const onBackButtonPress = () => {
+  const onExit = () => {
     if (title === '' && textContent === '' && currentImages.length === 0) {
       console.log('empty entry, aborting saving')
+      navigation.goBack()
     } else {
       handleSubmit()
     }
   }
 
   useEffect(() => {
-    navigation.setParams({ handleSubmit, handleDeleteConfirm, title, textContent, isNewEntry })
+    navigation.setParams({ onExit, handleDeleteConfirm, title, textContent, isNewEntry })
   }, [title, textContent, currentImages, entry])
 
   return (
     <View style={styles.modal}>
-      <AndroidBackHandler onBackPress={onBackButtonPress} />
+      <AndroidBackHandler onBackPress={onExit} />
       <AddEntryForm
         id={!isNewEntry ? entry.id : null}
         onPressImage={onPressImage}
@@ -178,7 +171,7 @@ const EntryModal = ({ navigation }) => {
         image={modalImage}
         visible={imageModalVisible}
         setVisible={setImageModalVisible}
-        onRequestClose={console.log('xd')}
+        onRequestClose={() => { setImageModalVisible(false) }}
       />
       <SnackBar
         autoHidingTime={5000}
@@ -200,7 +193,7 @@ EntryModal.navigationOptions = ({ navigation }) => {
     title: 'New entry',
     headerLeft: (
       <MaterialHeaderButtons>
-        <Item title="save" onPress={params.handleSubmit} iconName="md-checkmark" />
+        <Item title="save" onPress={params.onExit} iconName="md-checkmark" />
       </MaterialHeaderButtons>
     ),
     headerBackImage: checkmarkIcon,

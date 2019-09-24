@@ -107,7 +107,7 @@ const JournalEntriesScreen = ({ navigation }) => {
           onPressItem(name)
         }}
       />
-      <CreateFolderModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+      <CreateFolderModal modalVisible={modalVisible} setModalVisible={setModalVisible} mainFolder={mainFolder} />
     </Container>
   );
 };

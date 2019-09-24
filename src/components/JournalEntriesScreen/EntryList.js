@@ -7,32 +7,7 @@ import ListItem from './ListItem'
 import findImagesByEntry from '../../logic/findImagesByEntry'
 import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES } from '../../queries/queries'
 import { ALL_FOLDERS } from '../../queries/Folders'
-
-const SET_CURRENT_FOLDER = gql`
-  mutation setCurrentFolder($id: ID) {
-    setCurrentFolder(id: $id) @client
-  }
-`
-
-const GET_CURRENT_FOLDER = gql`
-  {
-    currentFolder @client {
-        id
-        isMainFolder
-        entries {
-          title
-          content
-          images
-          id
-        }
-        folders {
-          name
-          id
-        }
-        itemOrder
-      }
-  }
-`
+import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER } from './queries'
 
 const EntryList = ({ navigation }) => {
   const [folderStack, setFolderStack] = useState([])

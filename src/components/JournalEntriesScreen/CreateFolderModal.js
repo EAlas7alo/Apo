@@ -72,6 +72,9 @@ const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
 CreateFolderModal.propTypes = {
   modalVisible: PropTypes.bool.isRequired,
   setModalVisible: PropTypes.func.isRequired,
+  mainFolder: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 export default CreateFolderModal
