@@ -40,4 +40,5 @@
 | 20.9  | 3    | apollon kanssa taistelua
 | 23.9  | 5    | foldereita
 | 24.9  | 3    | bugien fiksausta
-| yht   | 140  | | 
+| 25.9  | 3    | UI:n toiminnallisuuksien työstöä
+| yht   | 143  | | 
