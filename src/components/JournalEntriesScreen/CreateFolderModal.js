@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import styled from 'styled-components'
-import { View, TextInput, TouchableHighlight } from 'react-native'
 import Modal from 'react-native-modal'
 import { Button } from '../StyledComponents'
-import { GET_MAIN_FOLDER } from '../../queries/Folders'
 
 const ModalView = styled.View`
 
@@ -40,8 +38,6 @@ const CREATE_FOLDER = gql`
 const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
   const [folderName, setFolderName] = useState('')
   const [createFolder] = useMutation(CREATE_FOLDER)
-
-  //console.log(mainFolder, ' xd')
 
   const handleCreateFolder = async () => {
     console.log('id given to createFolder: ', mainFolder.id)

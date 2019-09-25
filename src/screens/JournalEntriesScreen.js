@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import {
-  FlatList, TouchableHighlight, TouchableOpacity,
+  TouchableOpacity,
 } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { ALL_ENTRIES, SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES, ACTIVE_REMINDERS } from '../queries/queries';
+import { SET_CURRENT_IMAGES, GET_CURRENT_IMAGES } from '../queries/queries';
 import { addIcon, filingIcon, reminderIcon, folderIcon } from '../constants/Icons';
-import findImagesByEntry from '../logic/findImagesByEntry'
 import ReminderList from '../components/JournalEntriesScreen/ReminderList';
 import { Container } from '../components/StyledComponents'
 import CreateFolderModal from '../components/JournalEntriesScreen/CreateFolderModal'
-import ListItem from '../components/JournalEntriesScreen/ListItem'
 import { GET_MAIN_FOLDER } from '../queries/Folders'
 import EntryList from '../components/JournalEntriesScreen/EntryList'
 
@@ -107,7 +105,11 @@ const JournalEntriesScreen = ({ navigation }) => {
           onPressItem(name)
         }}
       />
-      <CreateFolderModal modalVisible={modalVisible} setModalVisible={setModalVisible} mainFolder={mainFolder} />
+      <CreateFolderModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        mainFolder={mainFolder}
+      />
     </Container>
   );
 };

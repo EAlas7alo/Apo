@@ -67,9 +67,7 @@ const EntryModal = ({ navigation }) => {
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
 
-  const [createEntry] = useMutation(CREATE_ENTRY, {
-    onError: console.log('adding an entry failed'),
-  })
+  const [createEntry] = useMutation(CREATE_ENTRY)
 
   const [editContent] = useMutation(EDIT_ENTRY_CONTENT, {
     refetchQueries: [{ query: ALL_ENTRIES }],
@@ -83,12 +81,24 @@ const EntryModal = ({ navigation }) => {
   })
 
   const handleSubmit = async () => {
-    // eslint-disable-next-line no-unused-expressions
-    console.log(currentFolder.id)
     if (isNewEntry) {
-      await createEntry({ variables: { title, textContent, images: currentImages, folder: currentFolder.id } })
+      await createEntry({
+        variables:
+          { title,
+            textContent,
+            images: currentImages,
+            folder: currentFolder.id,
+          },
+      })
     } else {
-      await editContent({ variables: { id: entry.id, title, content: textContent, images: currentImages } })
+      await editContent({
+        variables:
+        { id: entry.id,
+          title,
+          content: textContent,
+          images: currentImages,
+        },
+      })
     }
     Keyboard.dismiss()
     navigation.goBack()
@@ -135,7 +145,6 @@ const EntryModal = ({ navigation }) => {
 
   const onExit = () => {
     if (title === '' && textContent === '' && currentImages.length === 0) {
-      console.log('empty entry, aborting saving')
       navigation.goBack()
     } else {
       handleSubmit()
@@ -205,9 +214,9 @@ EntryModal.navigationOptions = ({ navigation }) => {
     },
     headerRight: (
       <MaterialHeaderButtons>
-        {!params.isNewEntry &&
+        {!params.isNewEntry && (
           <Item title="delete" onPress={params.handleDeleteConfirm} iconName="md-trash" />
-        }
+        )}
       </MaterialHeaderButtons>
 
     ),

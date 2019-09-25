@@ -1,25 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { View, Text } from 'react-native'
 import JournalEntry from './JournalEntry'
-import { ApoText, Header } from '../StyledComponents'
 import Folder from './Folder'
 
-const FolderText = styled(ApoText)`
-  padding-left: 15
-`
-
-const FolderHeader = styled(ApoText)`
-  font-size: 20
-  padding-left: 15
+const ListItemView = styled.View`
+  background-color: ${props => props.bgColor}
 `
 
 const ListItem = (props) => {
-  const { item } = props
+  const { item, highlighted } = props
+
+  const bgColor = highlighted ? 'darkgray' : 'dimgray'
 
   return (
-    <View>
+    <ListItemView bgColor={bgColor}>
       {item.__typename === 'Folder' && (
         <Folder
           item={item}
@@ -33,7 +28,7 @@ const ListItem = (props) => {
           content={item.content}
         />
       )}
-    </View>
+    </ListItemView>
   )
 }
 
@@ -49,6 +44,7 @@ ListItem.propTypes = {
     content: PropTypes.string,
     __typename: PropTypes.string.isRequired,
   }).isRequired,
+  highlighted: PropTypes.bool.isRequired,
 }
 
 export default ListItem

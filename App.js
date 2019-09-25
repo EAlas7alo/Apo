@@ -128,6 +128,7 @@ cache.writeData({
     },
     currentImages: [],
     selectedImages: [],
+    selectedEntries: [],
   },
 })
 

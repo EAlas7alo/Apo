@@ -8,9 +8,6 @@ export const typeDefs = gql`
 `
 
 export const resolvers = {
-  Entry: {
-
-  },
   Query: {
     getEntry: (_root, variables, { cache, getCacheKey }) => {
       const id = getCacheKey({ __typename: 'Entry', id: variables.id })
@@ -21,55 +18,41 @@ export const resolvers = {
             images
           }
       `
-      try {
-        const entry = cache.readFragment({ fragment, id })
-        console.log(entry)
-        return entry
-      } catch (error) {
-        console.log(error)
-      }
+
+      const entry = cache.readFragment({ fragment, id })
+      return entry
     },
     currentFolder: async (_, __, { client, cache }) => {
-      console.log('xd')
-      //console.log(cache.data)
-      try {
-        const { currentFolder } = cache.readQuery({
-          query: gql`
-            query currentFolder {
-              currentFolder @client {
+      const { currentFolder } = cache.readQuery({
+        query: gql`
+          query currentFolder {
+            currentFolder @client {
+              id
+              isMainFolder
+              entries {
                 id
-                isMainFolder
-                entries {
-                  id
-                  title
-                  content
-                  images
-                }
-                folders {
-                  id
-                  name
-                }
+                title
+                content
+                images
+              }
+              folders {
+                id
+                name
               }
             }
-          `,
+          }
+        `,
+      })
+      if (currentFolder.id === 0) {
+        const { data: { mainFolder } } = await client.query({ query: GET_MAIN_FOLDER })
+        cache.writeData({
+          data: {
+            currentFolder: mainFolder,
+          },
         })
-        console.log(currentFolder)
-        if (currentFolder.id === 0) {
-          const { data: { mainFolder } } = await client.query({ query: GET_MAIN_FOLDER })
-          console.log('fetching mainfolder from server')
-          //console.log('mainFolder:', mainFolder)
-          cache.writeData({
-            data: {
-              currentFolder: mainFolder,
-            },
-          })
-          return mainFolder
-        }
-        console.log('currentFolder set', currentFolder)
-        return currentFolder
-      } catch (error) {
-        console.log(error)
+        return mainFolder
       }
+      return currentFolder
     },
   },
   Mutation: {
@@ -82,7 +65,6 @@ export const resolvers = {
         `,
       })
       const newImages = currentImages.concat(variables.image)
-      console.log('adding image to cache', newImages)
       cache.writeData({ data: { currentImages: newImages } })
 
       return null
@@ -107,7 +89,13 @@ export const resolvers = {
         query: selectedImagesQuery,
       })
       if (selectedImages.includes(variables.image)) {
-        cache.writeData({ data: { selectedImages: selectedImages.filter(image => image !== variables.image) } })
+        cache.writeData({
+          data:
+          {
+            selectedImages:
+              selectedImages.filter(image => image !== variables.image),
+          },
+        })
         return null
       }
 
@@ -134,36 +122,59 @@ export const resolvers = {
       return null
     },
     setCurrentFolder: async (_, args, { client, cache }) => {
-      try {
-        const { data: { getFolder } } = await client.query({
-          query: gql`
-            query getFolder($id: ID!) {
-              getFolder(id: $id) {
-                name
+      const { data: { getFolder } } = await client.query({
+        query: gql`
+          query getFolder($id: ID!) {
+            getFolder(id: $id) {
+              name
+              id
+              itemOrder
+              isMainFolder
+              folders {
                 id
-                itemOrder
-                isMainFolder
-                folders {
-                  id
-                  name
-                }
-                entries {
-                  id
-                  title
-                  content
-                  images
-                }
+                name
+              }
+              entries {
+                id
+                title
+                content
+                images
               }
             }
-          `,
-          variables: { id: args.id.toString() },
-        })
-        console.log(getFolder.isMainFolder, 'isMainFolder')
-        cache.writeData({ data: { currentFolder: getFolder } })
-      } catch (error) {
-        console.log(error)
-      }
+          }
+        `,
+        variables: { id: args.id.toString() },
+      })
+      cache.writeData({ data: { currentFolder: getFolder } })
       return null
+    },
+    setSelectedEntries: async (_, args, { cache }) => {
+      const { selectedEntries } = cache.readQuery({
+        query: gql`
+        {
+          selectedEntries @client
+        }`,
+      })
+      if (selectedEntries.includes(args.entry)) {
+        cache.writeData({
+          data: {
+            selectedEntries: selectedEntries.filter(entry => entry !== args.entry),
+          },
+        })
+      } else {
+        cache.writeData({
+          data: {
+            selectedEntries: selectedEntries.concat(args.entry),
+          },
+        })
+      }
+    },
+    clearSelectedEntries: async (_, args, { cache }) => {
+      cache.writeData({
+        data: {
+          selectedEntries: [],
+        },
+      })
     },
   },
 }

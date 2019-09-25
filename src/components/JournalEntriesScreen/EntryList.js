@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { View, FlatList, TouchableHighlight, BackHandler } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import ListItem from './ListItem'
 import findImagesByEntry from '../../logic/findImagesByEntry'
 import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES } from '../../queries/queries'
-import { ALL_FOLDERS } from '../../queries/Folders'
-import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER } from './queries'
+import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER, GET_SELECTED_ENTRIES, SET_SELECTED_ENTRIES } from './queries'
+import EntryOptionsPopUp from './EntryOptionsPopUp'
 
 const EntryList = ({ navigation }) => {
   const [folderStack, setFolderStack] = useState([])
-  const folders = useQuery(ALL_FOLDERS)
-  const { data: { currentFolder }, loading, error, data } = useQuery(GET_CURRENT_FOLDER)
+  const [multiSelect, setMultiSelect] = useState(false)
+  const { data: { selectedEntries } } = useQuery(GET_SELECTED_ENTRIES)
+  const { data: { currentFolder }, loading } = useQuery(GET_CURRENT_FOLDER)
   const [setCurrentFolder] = useMutation(SET_CURRENT_FOLDER)
   const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
     refetchQueries: GET_CURRENT_IMAGES,
   })
+  const [setSelectedEntries] = useMutation(SET_SELECTED_ENTRIES)
 
   BackHandler.addEventListener('hardwareBackPress', async () => {
-    console.log(currentFolder)
     if (!currentFolder.isMainFolder) {
       const previousFolderId = folderStack[folderStack.length - 1]
       setFolderStack(folderStack.filter(folderId => folderId !== previousFolderId.toString()))
@@ -44,38 +44,50 @@ const EntryList = ({ navigation }) => {
   }
 
   const onPressItem = (item) => {
-    if (item.__typename === 'Entry') {
+    if (multiSelect) {
+      setSelectedEntries({ variables: { entry: item.id } })
+    } else if (item.__typename === 'Entry') {
       onPressEntry(item)
     } else {
       onPressFolder(item)
     }
   }
 
+  const onLongPressItem = (item) => {
+    if (!multiSelect) {
+      setMultiSelect(true)
+      setSelectedEntries({ variables: { entry: item.id } })
+    }
+  }
+
   if (loading || !currentFolder) return null
 
-  const arrangeItems = (folder) => {
+  const arrangeItems = () => {
     const data = currentFolder.entries.concat(currentFolder.folders)
     const sortedItems = data.sort((a, b) => {
       return currentFolder.itemOrder.indexOf(a)
         - currentFolder.itemOrder.indexOf(b)
     })
-    //console.log(sortedItems)
+    // console.log(sortedItems)
     return sortedItems
   }
   const datax = arrangeItems()
   // console.log(data)
   return (
     <View>
+      <EntryOptionsPopUp visible={multiSelect} setMultiSelect={setMultiSelect} />
       <FlatList
         data={datax}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableHighlight
             onPress={() => { onPressItem(item) }}
+            onLongPress={() => { onLongPressItem(item) }}
             underlayColor="gray"
           >
             <ListItem
               item={item}
+              highlighted={selectedEntries.includes(item.id)}
             />
           </TouchableHighlight>
         )}
