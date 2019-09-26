@@ -41,4 +41,5 @@
 | 23.9  | 5    | foldereita
 | 24.9  | 3    | bugien fiksausta
 | 25.9  | 3    | UI:n toiminnallisuuksien työstöä
-| yht   | 143  | | 
+| 26.9  | 2    | Cachen säätöä uusilla queryilla
+| yht   | 145  | | 
