@@ -12,16 +12,12 @@ const GET_SELECTED_IMAGES = gql`
     selectedImages @client
   }
 `
-console.log('')
 const AttachmentBar = ({ onPress }) => {
   // console.log('id:', id)
   const { data, loading } = useQuery(GET_CURRENT_IMAGES)
   const { data: { selectedImages } } = useQuery(GET_SELECTED_IMAGES)
 
-  console.log('selectedImages:', selectedImages)
-  console.log('query data:', data)
   if (loading) return null
-  console.log(data)
   const entryImages = data.currentImages
 
   return (

@@ -23,27 +23,30 @@ export const resolvers = {
       return entry
     },
     currentFolder: async (_, __, { client, cache }) => {
-      const { currentFolder } = cache.readQuery({
-        query: gql`
-          query currentFolder {
-            currentFolder @client {
-              id
-              isMainFolder
-              entries {
+      try {
+        const { currentFolder } = cache.readQuery({
+          query: gql`
+            query currentFolder {
+              currentFolder @client {
                 id
-                title
-                content
-                images
-              }
-              folders {
-                id
-                name
+                isMainFolder
+                itemOrder
+                entries {
+                  id
+                  title
+                  content
+                  images
+                }
+                folders {
+                  id
+                  name
+                }
               }
             }
-          }
-        `,
-      })
-      if (currentFolder.id === 0) {
+          `,
+        })
+        return currentFolder
+      } catch (error) {
         const { data: { mainFolder } } = await client.query({ query: GET_MAIN_FOLDER })
         cache.writeData({
           data: {
@@ -52,7 +55,6 @@ export const resolvers = {
         })
         return mainFolder
       }
-      return currentFolder
     },
   },
   Mutation: {

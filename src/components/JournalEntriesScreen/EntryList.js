@@ -15,9 +15,7 @@ const EntryList = ({ navigation }) => {
   const { data: { currentFolder }, loading } = useQuery(GET_CURRENT_FOLDER)
   const [setCurrentFolder] = useMutation(SET_CURRENT_FOLDER)
   const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
-  const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
-    refetchQueries: GET_CURRENT_IMAGES,
-  })
+  const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES)
   const [setSelectedEntries] = useMutation(SET_SELECTED_ENTRIES)
 
   BackHandler.addEventListener('hardwareBackPress', async () => {
@@ -73,24 +71,26 @@ const EntryList = ({ navigation }) => {
   }
   const datax = arrangeItems()
   // console.log(data)
+
+  const renderItem = ({ item }) => (
+    <TouchableHighlight
+      onPress={() => { onPressItem(item) }}
+      onLongPress={() => { onLongPressItem(item) }}
+      underlayColor="gray"
+    >
+      <ListItem
+        item={item}
+        highlighted={selectedEntries.includes(item.id)}
+      />
+    </TouchableHighlight>
+  )
   return (
     <View>
       <EntryOptionsPopUp visible={multiSelect} setMultiSelect={setMultiSelect} />
       <FlatList
         data={datax}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableHighlight
-            onPress={() => { onPressItem(item) }}
-            onLongPress={() => { onLongPressItem(item) }}
-            underlayColor="gray"
-          >
-            <ListItem
-              item={item}
-              highlighted={selectedEntries.includes(item.id)}
-            />
-          </TouchableHighlight>
-        )}
+        renderItem={renderItem}
       />
     </View>
   )

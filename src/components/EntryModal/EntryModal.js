@@ -9,11 +9,12 @@ import gql from 'graphql-tag'
 import AddEntryForm from './AddEntryForm'
 import imagePicker from '../../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from '../HeaderButtons'
-import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../../queries/queries'
+import { CREATE_ENTRY, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../../queries/queries'
 import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../../constants/Icons'
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../../logic/saveImageToDisk';
 import { GET_CURRENT_FOLDER_ID } from './queries'
+import { GET_CURRENT_FOLDER } from '../JournalEntriesScreen/queries';
 
 const styles = StyleSheet.create({
   modal: {
@@ -67,13 +68,36 @@ const EntryModal = ({ navigation }) => {
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
 
-  const [createEntry] = useMutation(CREATE_ENTRY)
-
-  const [editContent] = useMutation(EDIT_ENTRY_CONTENT, {
-    refetchQueries: [{ query: ALL_ENTRIES }],
+  const [createEntry] = useMutation(CREATE_ENTRY, {
+    update(cache, { data: { createEntry } }) {
+      const { currentFolder } = cache.readQuery({ query: GET_CURRENT_FOLDER });
+      cache.writeQuery({
+        query: GET_CURRENT_FOLDER,
+        data:
+          { currentFolder:
+            { ...currentFolder,
+              entries: currentFolder.entries.concat([createEntry]),
+            },
+          },
+      })
+    },
   })
+
+  const [editContent] = useMutation(EDIT_ENTRY_CONTENT)
+
   const [deleteEntry] = useMutation(DELETE_ENTRY, {
-    refetchQueries: [{ query: ALL_ENTRIES }],
+    update(cache, { data: { deleteEntry } }) {
+      const { currentFolder } = cache.readQuery({ query: GET_CURRENT_FOLDER });
+      cache.writeQuery({
+        query: GET_CURRENT_FOLDER,
+        data:
+          { currentFolder:
+            { ...currentFolder,
+              entries: currentFolder.entries.filter(entry => entry.id !== deleteEntry),
+            },
+          },
+      })
+    },
   })
 
   const [addImage] = useMutation(ADD_IMAGE, {
@@ -105,7 +129,7 @@ const EntryModal = ({ navigation }) => {
   }
 
   const handleDeletion = async () => {
-    await deleteEntry({ variables: { id: entry.id } })
+    await deleteEntry({ variables: { id: entry.id, folder: currentFolder.id } })
     Keyboard.dismiss()
     navigation.goBack()
   }

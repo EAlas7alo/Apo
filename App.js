@@ -15,7 +15,6 @@ import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
 import ReminderScreen from './src/screens/ReminderScreen';
 import Drawer from './src/components/Drawer';
-import { GET_MAIN_FOLDER } from './src/queries/Folders'
 
 const EntryStack = createStackNavigator(
   {
@@ -84,7 +83,6 @@ const DrawerStack = createDrawerNavigator(
 )
 
 const serverIP = SERVER_IP
-console.log(serverIP)
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -106,6 +104,7 @@ const link = ApolloLink.from([
   errorLink,
   httpLink,
 ])
+
 const cache = new InMemoryCache({ dataIdFromObject: object => `${object.__typename}_${object.id}` })
 
 const client = new ApolloClient({
@@ -119,13 +118,6 @@ const client = new ApolloClient({
 cache.writeData({
   data: {
     currentEntry: null,
-    currentFolder: {
-      __typename: 'Folder',
-      entries: [],
-      folders: [],
-      id: 0,
-      isMainFolder: false,
-    },
     currentImages: [],
     selectedImages: [],
     selectedEntries: [],

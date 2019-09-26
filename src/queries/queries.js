@@ -52,6 +52,7 @@ const CREATE_ENTRY = gql`
 const EDIT_ENTRY_CONTENT = gql`
   mutation editEntry($id: ID!, $title: String, $content: String, $images: [String!]) {
     editEntry(id: $id, title: $title, content: $content, images: $images) {
+      id
       title
       content
       images
@@ -60,8 +61,8 @@ const EDIT_ENTRY_CONTENT = gql`
 `
 
 const DELETE_ENTRY = gql`
-  mutation deleteEntry($id: ID!) {
-    deleteEntry(id: $id)
+  mutation deleteEntry($id: ID!, $folder: ID!) {
+    deleteEntry(id: $id, folder: $folder)
   }
 `
 const UPLOAD_IMAGE = gql`

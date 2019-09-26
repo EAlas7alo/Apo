@@ -9,3 +9,5 @@ CreateFolderModal ei päivitä listaa
 Folderin sisällön lisäys alakansioissa ei toimi vielä
 Drawerin tyylitys
 CreateFolderModal tyylitys
+
+Mahdollinen bugi, joka ylikirjoittaa olemassaolevan entryn sisällön

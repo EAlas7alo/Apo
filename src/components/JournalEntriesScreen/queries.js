@@ -5,6 +5,7 @@ const GET_CURRENT_FOLDER = gql`
     currentFolder @client {
         id
         isMainFolder
+        itemOrder
         entries {
           title
           content
@@ -15,7 +16,6 @@ const GET_CURRENT_FOLDER = gql`
           name
           id
         }
-        itemOrder
       }
   }
 `
