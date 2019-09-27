@@ -117,9 +117,9 @@ export const resolvers = {
 
       cache.writeData({
         data:
-          { currentImages: currentImages.filter(
-            image => !selectedImages.includes(image),
-          ) },
+          { currentImages: currentImages.filter(image => !selectedImages.includes(image)),
+            selectedImages: [],
+          },
       })
       return null
     },

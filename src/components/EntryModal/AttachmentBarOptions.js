@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { useMutation } from '@apollo/react-hooks'
 
 const OptionsView = styled.View`
-  background-color: ${props => (props.visible ? 'red' : 'snow')}
+  background-color: snow
   padding: 2px
   justify-content: flex-start
   align-items: center
@@ -40,7 +40,7 @@ const AttachmentBarOptions = ({ visible }) => {
   }
 
   return (
-    <OptionsView visible={visible}>
+    <OptionsView>
       {visible && (
       <DeleteButton onPress={onDeletePress}>
         <OptionsText>Delete selected</OptionsText>

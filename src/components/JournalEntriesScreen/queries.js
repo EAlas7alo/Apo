@@ -44,10 +44,24 @@ const CLEAR_SELECTED_ENTRIES = gql`
   }
 `
 
+const DELETE_FOLDER = gql`
+  mutation deleteFolder($id: ID!) {
+    deleteFolder(id: $id)
+  }
+`
+
+const DELETE_ENTRIES = gql`
+  mutation deleteEntries($idList: [ID]!) {
+    deleteEntries(idList: $idList)
+  }
+`
+
 export {
   GET_CURRENT_FOLDER,
   SET_CURRENT_FOLDER,
   GET_SELECTED_ENTRIES,
   SET_SELECTED_ENTRIES,
   CLEAR_SELECTED_ENTRIES,
+  DELETE_FOLDER,
+  DELETE_ENTRIES,
 }

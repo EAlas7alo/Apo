@@ -13,7 +13,6 @@ const GET_SELECTED_IMAGES = gql`
   }
 `
 const AttachmentBar = ({ onPress }) => {
-  // console.log('id:', id)
   const { data, loading } = useQuery(GET_CURRENT_IMAGES)
   const { data: { selectedImages } } = useQuery(GET_SELECTED_IMAGES)
 

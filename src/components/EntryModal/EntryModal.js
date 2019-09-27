@@ -203,7 +203,7 @@ const EntryModal = ({ navigation }) => {
       <ImageModal
         image={modalImage}
         visible={imageModalVisible}
-        setVisible={setImageModalVisible}
+        setVisible={() => { setImageModalVisible(false) }}
         onRequestClose={() => { setImageModalVisible(false) }}
       />
       <SnackBar

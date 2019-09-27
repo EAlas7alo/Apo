@@ -84,9 +84,14 @@ const EntryList = ({ navigation }) => {
       />
     </TouchableHighlight>
   )
+
   return (
     <View>
-      <EntryOptionsPopUp visible={multiSelect} setMultiSelect={setMultiSelect} />
+      <EntryOptionsPopUp
+        visible={multiSelect}
+        setMultiSelect={setMultiSelect}
+        folder={currentFolder.id}
+      />
       <FlatList
         data={datax}
         keyExtractor={(item) => item.id.toString()}

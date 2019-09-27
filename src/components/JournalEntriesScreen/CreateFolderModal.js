@@ -5,6 +5,7 @@ import gql from 'graphql-tag'
 import styled from 'styled-components'
 import Modal from 'react-native-modal'
 import { Button } from '../StyledComponents'
+import { GET_CURRENT_FOLDER } from './queries'
 
 const ModalView = styled.View`
 
@@ -31,17 +32,34 @@ const ModalTextInput = styled.TextInput`
 
 const CREATE_FOLDER = gql`
   mutation createFolder($name: String!, $parentId: ID!) {
-    createFolder(name: $name, parentId: $parentId)
+    createFolder(name: $name, parentId: $parentId) {
+      id
+      name
+    }
   }
 `
 
 const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
   const [folderName, setFolderName] = useState('')
-  const [createFolder] = useMutation(CREATE_FOLDER)
+  const [createFolder] = useMutation(CREATE_FOLDER, {
+    update(cache, { data: { createFolder } }) {
+      const { currentFolder } = cache.readQuery({ query: GET_CURRENT_FOLDER })
+      console.log(createFolder)
+      cache.writeQuery({
+        query: GET_CURRENT_FOLDER,
+        data:
+          {
+            currentFolder: {
+              ...currentFolder,
+              folders: currentFolder.folders.concat([createFolder]),
+              itemOrder: currentFolder.itemOrder.concat(createFolder.id),
+            },
+          },
+      })
+    },
+  })
 
   const handleCreateFolder = async () => {
-    console.log('id given to createFolder: ', mainFolder.id)
-    console.log(mainFolder)
     await createFolder({ variables: { name: folderName, parentId: mainFolder.id } })
     setFolderName('')
     setModalVisible(false)
