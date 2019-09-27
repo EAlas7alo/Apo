@@ -42,4 +42,5 @@
 | 24.9  | 3    | bugien fiksausta
 | 25.9  | 3    | UI:n toiminnallisuuksien työstöä
 | 26.9  | 2    | Cachen säätöä uusilla queryilla
-| yht   | 145  | | 
+| 27.9  | 5    | imagemodalin menu, cachea, poistologiikkaa
+| yht   | 150  | | 
