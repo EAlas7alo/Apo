@@ -54,7 +54,6 @@ const ReminderScreen = ({ navigation }) => {
   }, [])
 
   if (loading) return null
-  console.log(allReminders)
 
   const expiredReminders = allReminders.filter(reminder => reminder.resolved)
   const activeReminders = allReminders.filter(reminder => {

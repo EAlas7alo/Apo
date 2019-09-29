@@ -16,11 +16,23 @@ const TextBoxView = styled.View`
   justify-content: center
   border-width: 1px
   border-color: white
-  background-color: black
+  background-color: dimgray
 `
 
 const ModalText = styled.Text`
   color: white
+`
+const SubmitText = styled(ModalText)`
+  padding: 5px
+`
+
+const ModalHeader = styled(ModalText)`
+  font-weight: bold
+  padding-left: 10px
+`
+
+const SubmitFolderButton = styled(Button)`
+  margin-top: 10px
 `
 
 const ModalTextInput = styled.TextInput`
@@ -28,6 +40,7 @@ const ModalTextInput = styled.TextInput`
   border-width: 1px
   border-color: white
   padding-left: 10px
+  background-color: black
 `
 
 const CREATE_FOLDER = gql`
@@ -44,7 +57,6 @@ const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
   const [createFolder] = useMutation(CREATE_FOLDER, {
     update(cache, { data: { createFolder } }) {
       const { currentFolder } = cache.readQuery({ query: GET_CURRENT_FOLDER })
-      console.log(createFolder)
       cache.writeQuery({
         query: GET_CURRENT_FOLDER,
         data:
@@ -60,7 +72,13 @@ const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
   })
 
   const handleCreateFolder = async () => {
+    if (!folderName.length > 0) return null
     await createFolder({ variables: { name: folderName, parentId: mainFolder.id } })
+    setFolderName('')
+    setModalVisible(false)
+  }
+
+  const toggleModal = () => {
     setFolderName('')
     setModalVisible(false)
   }
@@ -68,15 +86,18 @@ const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
   return (
     <ModalView>
       <Modal
+        animationIn="slideInUp"
         isVisible={modalVisible}
-        onBackdropPress={() => { setModalVisible(false) }}
+        onBackdropPress={toggleModal}
+        onRequestClose={toggleModal}
+        backdropTransitionOutTiming={0}
       >
         <TextBoxView>
-          <ModalText>Create a new folder</ModalText>
+          <ModalHeader>Create a new folder</ModalHeader>
           <ModalTextInput value={folderName} onChangeText={(value) => { setFolderName(value) }} />
-          <Button onPress={handleCreateFolder}>
-            <ModalText>Create a new folder</ModalText>
-          </Button>
+          <SubmitFolderButton onPress={handleCreateFolder}>
+            <SubmitText>Submit</SubmitText>
+          </SubmitFolderButton>
         </TextBoxView>
       </Modal>
     </ModalView>

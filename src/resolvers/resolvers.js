@@ -171,12 +171,34 @@ export const resolvers = {
         })
       }
     },
-    clearSelectedEntries: async (_, args, { cache }) => {
+    clearSelectedItems: async (_, args, { cache }) => {
       cache.writeData({
         data: {
           selectedEntries: [],
+          selectedFolders: [],
         },
       })
+    },
+    setSelectedFolders: async (_, args, { cache }) => {
+      const { selectedFolders } = cache.readQuery({
+        query: gql`
+        {
+          selectedFolders @client
+        }`,
+      })
+      if (selectedFolders.includes(args.folder)) {
+        cache.writeData({
+          data: {
+            selectedFolders: selectedFolders.filter(folder => folder !== args.folder),
+          },
+        })
+      } else {
+        cache.writeData({
+          data: {
+            selectedFolders: selectedFolders.concat(args.folder),
+          },
+        })
+      }
     },
   },
 }

@@ -4,19 +4,20 @@ import { View, FlatList, TouchableHighlight, BackHandler } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import ListItem from './ListItem'
 import findImagesByEntry from '../../logic/findImagesByEntry'
-import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES, GET_CURRENT_IMAGES } from '../../queries/queries'
-import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER, GET_SELECTED_ENTRIES, SET_SELECTED_ENTRIES } from './queries'
+import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES } from '../../queries/queries'
+import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER, SET_SELECTED_ENTRIES, SET_SELECTED_FOLDERS } from './queries'
 import EntryOptionsPopUp from './EntryOptionsPopUp'
 
 const EntryList = ({ navigation }) => {
   const [folderStack, setFolderStack] = useState([])
   const [multiSelect, setMultiSelect] = useState(false)
-  const { data: { selectedEntries } } = useQuery(GET_SELECTED_ENTRIES)
+  const [selectedItems, setSelecteditems] = useState([])
   const { data: { currentFolder }, loading } = useQuery(GET_CURRENT_FOLDER)
   const [setCurrentFolder] = useMutation(SET_CURRENT_FOLDER)
   const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES)
   const [setSelectedEntries] = useMutation(SET_SELECTED_ENTRIES)
+  const [setSelectedFolders] = useMutation(SET_SELECTED_FOLDERS)
 
   BackHandler.addEventListener('hardwareBackPress', async () => {
     if (!currentFolder.isMainFolder) {
@@ -42,8 +43,21 @@ const EntryList = ({ navigation }) => {
   }
 
   const onPressItem = (item) => {
+    const handleSelection = () => {
+      if (selectedItems.includes(item.id)) {
+        setSelecteditems(selectedItems.filter(sItem => sItem !== item.id))
+      } else {
+        setSelecteditems(selectedItems.concat(item.id))
+      }
+    }
+
     if (multiSelect) {
-      setSelectedEntries({ variables: { entry: item.id } })
+      if (item.__typename === 'Entry') {
+        setSelectedEntries({ variables: { entry: item.id } })
+      } else {
+        setSelectedFolders({ variables: { folder: item.id } })
+      }
+      handleSelection()
     } else if (item.__typename === 'Entry') {
       onPressEntry(item)
     } else {
@@ -54,7 +68,12 @@ const EntryList = ({ navigation }) => {
   const onLongPressItem = (item) => {
     if (!multiSelect) {
       setMultiSelect(true)
-      setSelectedEntries({ variables: { entry: item.id } })
+      if (item.__typename === 'Entry') {
+        setSelectedEntries({ variables: { entry: item.id } })
+      } else {
+        setSelectedFolders({ variables: { folder: item.id } })
+      }
+      setSelecteditems(selectedItems.concat(item.id))
     }
   }
 
@@ -66,24 +85,32 @@ const EntryList = ({ navigation }) => {
       return currentFolder.itemOrder.indexOf(a)
         - currentFolder.itemOrder.indexOf(b)
     })
-    // console.log(sortedItems)
     return sortedItems
   }
   const datax = arrangeItems()
-  // console.log(data)
 
-  const renderItem = ({ item }) => (
-    <TouchableHighlight
-      onPress={() => { onPressItem(item) }}
-      onLongPress={() => { onLongPressItem(item) }}
-      underlayColor="gray"
-    >
-      <ListItem
-        item={item}
-        highlighted={selectedEntries.includes(item.id)}
-      />
-    </TouchableHighlight>
-  )
+  const renderItem = ({ item }) => {
+    const isHighlighted = () => {
+      if (selectedItems.includes(item.id)) {
+        return true
+      }
+      return false
+    }
+
+    const highlighted = isHighlighted()
+    return (
+      <TouchableHighlight
+        onPress={() => { onPressItem(item) }}
+        onLongPress={() => { onLongPressItem(item) }}
+        underlayColor="gray"
+      >
+        <ListItem
+          item={item}
+          highlighted={highlighted}
+        />
+      </TouchableHighlight>
+    )
+  }
 
   return (
     <View>

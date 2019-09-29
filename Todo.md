@@ -1,5 +1,6 @@
 TODOs:
 
+Reminderin lisäys tyylitys
 Folderin poisto (rekursiivinen sisällön poisto)
 Folderin sisällön lisäys alakansioissa ei toimi vielä
 Drawerin tyylitys

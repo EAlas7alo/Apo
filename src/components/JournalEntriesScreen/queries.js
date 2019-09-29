@@ -38,9 +38,9 @@ const SET_SELECTED_ENTRIES = gql`
   }
 `
 
-const CLEAR_SELECTED_ENTRIES = gql`
-  mutation clearSelectedEntries {
-    clearSelectedEntries @client
+const CLEAR_SELECTED_ITEMS = gql`
+  mutation clearSelectedItems {
+    clearSelectedItems @client
   }
 `
 
@@ -55,13 +55,34 @@ const DELETE_ENTRIES = gql`
     deleteEntries(idList: $idList)
   }
 `
+const GET_SELECTED_FOLDERS = gql`
+  {
+    selectedFolders @client
+  }
+`
+
+const SET_SELECTED_FOLDERS = gql`
+  mutation setSelectedFolders($folder: String) {
+    setSelectedFolders(folder: $folder) @client
+  }
+`
+
+const DELETE_MANY_ITEMS = gql`
+  mutation deleteManyItems($entries: [ID]!, $folder: ID!, $folders: [ID]!) {
+    deleteManyFolders(idList: $folders)
+    deleteEntries(idList: $entries, folder: $folder)
+  }
+`
 
 export {
   GET_CURRENT_FOLDER,
   SET_CURRENT_FOLDER,
   GET_SELECTED_ENTRIES,
   SET_SELECTED_ENTRIES,
-  CLEAR_SELECTED_ENTRIES,
+  CLEAR_SELECTED_ITEMS,
   DELETE_FOLDER,
   DELETE_ENTRIES,
+  GET_SELECTED_FOLDERS,
+  SET_SELECTED_FOLDERS,
+  DELETE_MANY_ITEMS,
 }

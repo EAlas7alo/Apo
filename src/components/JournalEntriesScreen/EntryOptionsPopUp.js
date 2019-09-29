@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { CLEAR_SELECTED_ENTRIES, DELETE_FOLDER, GET_SELECTED_ENTRIES, DELETE_ENTRIES, GET_CURRENT_FOLDER } from './queries'
+import { CLEAR_SELECTED_ITEMS, DELETE_FOLDER, GET_SELECTED_ENTRIES, DELETE_MANY_ITEMS, GET_CURRENT_FOLDER, GET_SELECTED_FOLDERS } from './queries'
 
 const PopUpMenuView = styled.View`
   right: 50px
@@ -12,26 +12,35 @@ const PopUpMenuView = styled.View`
   flex-direction: row
   z-index: 1
 `
+
 const PopUpButton = styled.TouchableHighlight`
   padding: 5px 10px 0px
 `
 
 const EntryOptionsPopUp = (props) => {
   const { data: { selectedEntries } } = useQuery(GET_SELECTED_ENTRIES)
+  const { data: { selectedFolders } } = useQuery(GET_SELECTED_FOLDERS)
   const { data: { currentFolder } } = useQuery(GET_CURRENT_FOLDER)
-  const [clearSelectedEntries] = useMutation(CLEAR_SELECTED_ENTRIES)
+  const [clearSelectedItems] = useMutation(CLEAR_SELECTED_ITEMS)
   const [deleteFolder] = useMutation(DELETE_FOLDER)
-  const [deleteEntries] = useMutation(DELETE_ENTRIES, {
+  const [deleteManyItems] = useMutation(DELETE_MANY_ITEMS, {
     refetchQueries: [{ query: GET_CURRENT_FOLDER }],
   })
 
   const handleMultiSelectClose = () => {
-    clearSelectedEntries()
+    clearSelectedItems()
     props.setMultiSelect(false)
   }
 
   const handleDelete = async () => {
-    deleteEntries({ variables: { idList: selectedEntries, folder: props.folder } })
+    console.log(selectedFolders)
+    deleteManyItems({
+      variables:
+      { entries: selectedEntries || [],
+        folder: props.folder,
+        folders: selectedFolders || [],
+      },
+    })
   }
 
   return props.visible && (
