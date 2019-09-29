@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
 const ALL_ENTRIES = gql`
-  {
+  query allEntries {
     allEntries {
       title
       content
@@ -11,7 +11,7 @@ const ALL_ENTRIES = gql`
   }
 `
 const ALL_REMINDERS = gql`
- {
+ query allReminders {
    allReminders {
       content
       dateExpiry
@@ -22,7 +22,7 @@ const ALL_REMINDERS = gql`
 `
 
 const ACTIVE_REMINDERS = gql`
- {
+ query activeReminders {
    activeReminders {
      content
      resolved
@@ -33,11 +33,12 @@ const ACTIVE_REMINDERS = gql`
 `
 
 const CREATE_ENTRY = gql`
-  mutation createEntry($title: String!, $textContent: String!, $images: [String!]!) {
+  mutation createEntry($title: String!, $textContent: String!, $images: [String!]!, $folder: ID!) {
     createEntry(
       title: $title,
       content: $textContent,
       images: $images,
+      folder: $folder,
     ) {
       title
       content
@@ -51,6 +52,7 @@ const CREATE_ENTRY = gql`
 const EDIT_ENTRY_CONTENT = gql`
   mutation editEntry($id: ID!, $title: String, $content: String, $images: [String!]) {
     editEntry(id: $id, title: $title, content: $content, images: $images) {
+      id
       title
       content
       images
@@ -59,8 +61,8 @@ const EDIT_ENTRY_CONTENT = gql`
 `
 
 const DELETE_ENTRY = gql`
-  mutation deleteEntry($id: ID!) {
-    deleteEntry(id: $id)
+  mutation deleteEntry($id: ID!, $folder: ID!) {
+    deleteEntry(id: $id, folder: $folder)
   }
 `
 const UPLOAD_IMAGE = gql`

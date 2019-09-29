@@ -1,20 +1,26 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { View, Text } from 'react-native'
 import JournalEntry from './JournalEntry'
+import Folder from './Folder'
+
+const ListItemView = styled.View`
+  background-color: ${props => props.bgColor}
+`
 
 const ListItem = (props) => {
-  const { item } = props
-  console.log(item.type)
+  const { item, highlighted } = props
 
+  const bgColor = highlighted ? 'darkgray' : 'dimgray'
 
   return (
-    <View>
-      {item.type === 'folder' && (
-        <Text>Folder name here</Text>
+    <ListItemView bgColor={bgColor}>
+      {item.__typename === 'Folder' && (
+        <Folder
+          item={item}
+        />
       )}
-      {item.type === 'entry' && (
+      {item.__typename === 'Entry' && (
         <JournalEntry
           id={item.id.toString()}
           images={item.images}
@@ -22,7 +28,7 @@ const ListItem = (props) => {
           content={item.content}
         />
       )}
-    </View>
+    </ListItemView>
   )
 }
 
@@ -36,8 +42,9 @@ ListItem.propTypes = {
     images: PropTypes.arrayOf(PropTypes.string),
     title: PropTypes.string,
     content: PropTypes.string,
-    type: PropTypes.string.isRequired,
+    __typename: PropTypes.string.isRequired,
   }).isRequired,
+  highlighted: PropTypes.bool.isRequired,
 }
 
 export default ListItem

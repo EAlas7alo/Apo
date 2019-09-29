@@ -1,5 +1,5 @@
 import gql from 'graphql-tag'
-import { GET_ENTRY } from '../queries/queries'
+import { GET_MAIN_FOLDER } from '../queries/Folders'
 
 export const typeDefs = gql`
   extend type Entry {
@@ -8,16 +8,9 @@ export const typeDefs = gql`
 `
 
 export const resolvers = {
-  Entry: {
-
-  },
   Query: {
     getEntry: (_root, variables, { cache, getCacheKey }) => {
-      console.log(variables.id)
-      console.log(cache.data)
-      console.log('getEntry local resolver called')
       const id = getCacheKey({ __typename: 'Entry', id: variables.id })
-      console.log(id)
       const fragment = gql`
           fragment entry on Entry {
             title
@@ -25,12 +18,42 @@ export const resolvers = {
             images
           }
       `
+
+      const entry = cache.readFragment({ fragment, id })
+      return entry
+    },
+    currentFolder: async (_, __, { client, cache }) => {
       try {
-        const entry = cache.readFragment({ fragment, id })
-        console.log(entry)
-        return entry
+        const { currentFolder } = cache.readQuery({
+          query: gql`
+            query currentFolder {
+              currentFolder @client {
+                id
+                isMainFolder
+                itemOrder
+                entries {
+                  id
+                  title
+                  content
+                  images
+                }
+                folders {
+                  id
+                  name
+                }
+              }
+            }
+          `,
+        })
+        return currentFolder
       } catch (error) {
-        console.log(error)
+        const { data: { mainFolder } } = await client.query({ query: GET_MAIN_FOLDER })
+        cache.writeData({
+          data: {
+            currentFolder: mainFolder,
+          },
+        })
+        return mainFolder
       }
     },
   },
@@ -44,7 +67,6 @@ export const resolvers = {
         `,
       })
       const newImages = currentImages.concat(variables.image)
-      console.log('adding image to cache', newImages)
       cache.writeData({ data: { currentImages: newImages } })
 
       return null
@@ -61,7 +83,7 @@ export const resolvers = {
     /* Highlighted images in entry view */
     setSelectedImages: (_, variables, { cache }) => {
       const selectedImagesQuery = gql`
-        {
+        query selectedImages {
           selectedImages @client
         }
       `
@@ -69,7 +91,13 @@ export const resolvers = {
         query: selectedImagesQuery,
       })
       if (selectedImages.includes(variables.image)) {
-        cache.writeData({ data: { selectedImages: selectedImages.filter(image => image !== variables.image) } })
+        cache.writeData({
+          data:
+          {
+            selectedImages:
+              selectedImages.filter(image => image !== variables.image),
+          },
+        })
         return null
       }
 
@@ -78,7 +106,7 @@ export const resolvers = {
     },
     deleteSelectedImages: (_, variables, { cache }) => {
       const selectedImagesQuery = gql`
-      {
+      query selectedImages {
         selectedImages @client
         currentImages @client
       }
@@ -89,10 +117,88 @@ export const resolvers = {
 
       cache.writeData({
         data:
-          { currentImages: currentImages.filter(
-            image => !selectedImages.includes(image),
-          ) },
+          { currentImages: currentImages.filter(image => !selectedImages.includes(image)),
+            selectedImages: [],
+          },
       })
+      return null
+    },
+    setCurrentFolder: async (_, args, { client, cache }) => {
+      const { data: { getFolder } } = await client.query({
+        query: gql`
+          query getFolder($id: ID!) {
+            getFolder(id: $id) {
+              name
+              id
+              itemOrder
+              isMainFolder
+              folders {
+                id
+                name
+              }
+              entries {
+                id
+                title
+                content
+                images
+              }
+            }
+          }
+        `,
+        variables: { id: args.id.toString() },
+      })
+      cache.writeData({ data: { currentFolder: getFolder } })
+      return null
+    },
+    setSelectedEntries: async (_, args, { cache }) => {
+      const { selectedEntries } = cache.readQuery({
+        query: gql`
+        {
+          selectedEntries @client
+        }`,
+      })
+      if (selectedEntries.includes(args.entry)) {
+        cache.writeData({
+          data: {
+            selectedEntries: selectedEntries.filter(entry => entry !== args.entry),
+          },
+        })
+      } else {
+        cache.writeData({
+          data: {
+            selectedEntries: selectedEntries.concat(args.entry),
+          },
+        })
+      }
+    },
+    clearSelectedItems: async (_, args, { cache }) => {
+      cache.writeData({
+        data: {
+          selectedEntries: [],
+          selectedFolders: [],
+        },
+      })
+    },
+    setSelectedFolders: async (_, args, { cache }) => {
+      const { selectedFolders } = cache.readQuery({
+        query: gql`
+        {
+          selectedFolders @client
+        }`,
+      })
+      if (selectedFolders.includes(args.folder)) {
+        cache.writeData({
+          data: {
+            selectedFolders: selectedFolders.filter(folder => folder !== args.folder),
+          },
+        })
+      } else {
+        cache.writeData({
+          data: {
+            selectedFolders: selectedFolders.concat(args.folder),
+          },
+        })
+      }
     },
   },
 }

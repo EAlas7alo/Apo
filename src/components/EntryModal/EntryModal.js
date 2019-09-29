@@ -9,15 +9,12 @@ import gql from 'graphql-tag'
 import AddEntryForm from './AddEntryForm'
 import imagePicker from '../../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from '../HeaderButtons'
-import { CREATE_ENTRY, ALL_ENTRIES, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../../queries/queries'
+import { CREATE_ENTRY, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_IMAGES } from '../../queries/queries'
 import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../../constants/Icons'
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../../logic/saveImageToDisk';
-
-/*
-  TODO:
-
-*/
+import { GET_CURRENT_FOLDER_ID } from './queries'
+import { GET_CURRENT_FOLDER } from '../JournalEntriesScreen/queries';
 
 const styles = StyleSheet.create({
   modal: {
@@ -59,31 +56,48 @@ const ADD_IMAGE = gql`
 const EntryModal = ({ navigation }) => {
   const entry = navigation.getParam('entry', null)
   const isNewEntry = !entry
+
+  const { data: { currentFolder } } = useQuery(GET_CURRENT_FOLDER_ID)
+
   const [title, setTitle] = useState(entry ? entry.title : '')
   const [textContent, setTextContent] = useState(entry ? entry.content : '')
+
   const { data: { currentImages } } = useQuery(GET_CURRENT_IMAGES)
+
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
 
   const [createEntry] = useMutation(CREATE_ENTRY, {
-    onError: console.log('adding an entry failed'),
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_ENTRIES })
-      dataInStore.allEntries.push(response.data.createEntry)
-      // console.log(store)
-      store.writeQuery({
-        query: ALL_ENTRIES,
-        data: dataInStore,
+    update(cache, { data: { createEntry } }) {
+      const { currentFolder } = cache.readQuery({ query: GET_CURRENT_FOLDER });
+      cache.writeQuery({
+        query: GET_CURRENT_FOLDER,
+        data:
+          { currentFolder:
+            { ...currentFolder,
+              entries: currentFolder.entries.concat([createEntry]),
+            },
+          },
       })
     },
   })
 
-  const [editContent] = useMutation(EDIT_ENTRY_CONTENT, {
-    refetchQueries: [{ query: ALL_ENTRIES }],
-  })
+  const [editContent] = useMutation(EDIT_ENTRY_CONTENT)
+
   const [deleteEntry] = useMutation(DELETE_ENTRY, {
-    refetchQueries: [{ query: ALL_ENTRIES }],
+    update(cache, { data: { deleteEntry } }) {
+      const { currentFolder } = cache.readQuery({ query: GET_CURRENT_FOLDER });
+      cache.writeQuery({
+        query: GET_CURRENT_FOLDER,
+        data:
+          { currentFolder:
+            { ...currentFolder,
+              entries: currentFolder.entries.filter(entry => entry.id !== deleteEntry),
+            },
+          },
+      })
+    },
   })
 
   const [addImage] = useMutation(ADD_IMAGE, {
@@ -91,19 +105,31 @@ const EntryModal = ({ navigation }) => {
   })
 
   const handleSubmit = async () => {
-    // eslint-disable-next-line no-unused-expressions
-
     if (isNewEntry) {
-      await createEntry({ variables: { title, textContent, images: currentImages } })
+      await createEntry({
+        variables:
+          { title,
+            textContent,
+            images: currentImages,
+            folder: currentFolder.id,
+          },
+      })
     } else {
-      await editContent({ variables: { id: entry.id, title, content: textContent, images: currentImages } })
+      await editContent({
+        variables:
+        { id: entry.id,
+          title,
+          content: textContent,
+          images: currentImages,
+        },
+      })
     }
     Keyboard.dismiss()
     navigation.goBack()
   }
 
   const handleDeletion = async () => {
-    await deleteEntry({ variables: { id: entry.id } })
+    await deleteEntry({ variables: { id: entry.id, folder: currentFolder.id } })
     Keyboard.dismiss()
     navigation.goBack()
   }
@@ -130,7 +156,7 @@ const EntryModal = ({ navigation }) => {
     Keyboard.dismiss()
     if (name === 'add_image') {
       const chooseImage = await imagePicker()
-      saveImage(chooseImage.uri)
+      if (chooseImage) saveImage(chooseImage.uri)
     } else if (name === 'take_picture') {
       navigation.navigate('CameraScreen', { headerVisible: null, saveImage })
     }
@@ -141,21 +167,21 @@ const EntryModal = ({ navigation }) => {
     setImageModalVisible(true)
   }
 
-  const onBackButtonPress = () => {
+  const onExit = () => {
     if (title === '' && textContent === '' && currentImages.length === 0) {
-      console.log('empty entry, aborting saving')
+      navigation.goBack()
     } else {
       handleSubmit()
     }
   }
 
   useEffect(() => {
-    navigation.setParams({ handleSubmit, handleDeleteConfirm, title, textContent, isNewEntry })
+    navigation.setParams({ onExit, handleDeleteConfirm, title, textContent, isNewEntry })
   }, [title, textContent, currentImages, entry])
 
   return (
     <View style={styles.modal}>
-      <AndroidBackHandler onBackPress={onBackButtonPress} />
+      <AndroidBackHandler onBackPress={onExit} />
       <AddEntryForm
         id={!isNewEntry ? entry.id : null}
         onPressImage={onPressImage}
@@ -177,8 +203,8 @@ const EntryModal = ({ navigation }) => {
       <ImageModal
         image={modalImage}
         visible={imageModalVisible}
-        setVisible={setImageModalVisible}
-        onRequestClose={console.log('xd')}
+        setVisible={() => { setImageModalVisible(false) }}
+        onRequestClose={() => { setImageModalVisible(false) }}
       />
       <SnackBar
         autoHidingTime={5000}
@@ -200,7 +226,7 @@ EntryModal.navigationOptions = ({ navigation }) => {
     title: 'New entry',
     headerLeft: (
       <MaterialHeaderButtons>
-        <Item title="save" onPress={params.handleSubmit} iconName="md-checkmark" />
+        <Item title="save" onPress={params.onExit} iconName="md-checkmark" />
       </MaterialHeaderButtons>
     ),
     headerBackImage: checkmarkIcon,
@@ -212,9 +238,9 @@ EntryModal.navigationOptions = ({ navigation }) => {
     },
     headerRight: (
       <MaterialHeaderButtons>
-        {!params.isNewEntry &&
+        {!params.isNewEntry && (
           <Item title="delete" onPress={params.handleDeleteConfirm} iconName="md-trash" />
-        }
+        )}
       </MaterialHeaderButtons>
 
     ),

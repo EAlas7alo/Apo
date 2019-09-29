@@ -37,7 +37,6 @@ const ReminderScreen = ({ navigation }) => {
   const [toggleResolvedStatus] = useMutation(TOGGLE_RESOLVED_STATUS, {
     refetchQueries: [{ query: ALL_REMINDERS }, { query: ACTIVE_REMINDERS }],
   })
-  console.log(allReminders)
   const toggleDrawer = () => {
     navigation.toggleDrawer()
   }
@@ -55,7 +54,6 @@ const ReminderScreen = ({ navigation }) => {
   }, [])
 
   if (loading) return null
-  console.log(allReminders)
 
   const expiredReminders = allReminders.filter(reminder => reminder.resolved)
   const activeReminders = allReminders.filter(reminder => {
@@ -114,7 +112,6 @@ const ReminderScreen = ({ navigation }) => {
           )
         }}
       />
-      <CreateFolderModal />
     </ReminderScreenContainer>
   )
 }
