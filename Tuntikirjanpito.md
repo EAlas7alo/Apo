@@ -44,4 +44,5 @@
 | 26.9  | 2    | Cachen säätöä uusilla queryilla
 | 27.9  | 5    | imagemodalin menu, cachea, poistologiikkaa
 | 29.9  | 2    | deleteManyFolders/Entries
-| yht   | 152  | | 
+| 30.9  | 3    | deleteManyFolders/Entries, bugeja
+| yht   | 155  | | 
