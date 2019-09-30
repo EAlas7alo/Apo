@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import styled from 'styled-components'
 import Modal from 'react-native-modal'
@@ -52,8 +52,9 @@ const CREATE_FOLDER = gql`
   }
 `
 
-const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
+const CreateFolderModal = ({ modalVisible, setModalVisible }) => {
   const [folderName, setFolderName] = useState('')
+  const { data: { currentFolder } } = useQuery(GET_CURRENT_FOLDER)
   const [createFolder] = useMutation(CREATE_FOLDER, {
     update(cache, { data: { createFolder } }) {
       const { currentFolder } = cache.readQuery({ query: GET_CURRENT_FOLDER })
@@ -73,7 +74,7 @@ const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
 
   const handleCreateFolder = async () => {
     if (!folderName.length > 0) return null
-    await createFolder({ variables: { name: folderName, parentId: mainFolder.id } })
+    await createFolder({ variables: { name: folderName, parentId: currentFolder.id } })
     setFolderName('')
     setModalVisible(false)
   }
@@ -107,9 +108,6 @@ const CreateFolderModal = ({ modalVisible, setModalVisible, mainFolder }) => {
 CreateFolderModal.propTypes = {
   modalVisible: PropTypes.bool.isRequired,
   setModalVisible: PropTypes.func.isRequired,
-  mainFolder: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-  }).isRequired,
 }
 
 export default CreateFolderModal

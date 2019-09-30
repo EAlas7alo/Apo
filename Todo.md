@@ -1,8 +1,10 @@
 TODOs:
 
+
+EntryModal backbutton toimii väärin, kutsuu entrylistin backhandleria
+DeleteManyFolders ei päivitä cachea
+Cache bugaa entryn ja kansion lisäämisen kanssa, vanha currentFolder-tieto todnäk
 Reminderin lisäys tyylitys
-Folderin poisto (rekursiivinen sisällön poisto)
-Folderin sisällön lisäys alakansioissa ei toimi vielä
 Drawerin tyylitys
 CreateFolderModal tyylitys
 

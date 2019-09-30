@@ -2,13 +2,15 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { View, FlatList, TouchableHighlight, BackHandler } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
+import { withNavigationFocus } from 'react-navigation'
 import ListItem from './ListItem'
 import findImagesByEntry from '../../logic/findImagesByEntry'
 import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES } from '../../queries/queries'
 import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER, SET_SELECTED_ENTRIES, SET_SELECTED_FOLDERS } from './queries'
 import EntryOptionsPopUp from './EntryOptionsPopUp'
 
-const EntryList = ({ navigation }) => {
+
+const EntryList = ({ navigation, isFocused }) => {
   const [folderStack, setFolderStack] = useState([])
   const [multiSelect, setMultiSelect] = useState(false)
   const [selectedItems, setSelecteditems] = useState([])
@@ -20,7 +22,8 @@ const EntryList = ({ navigation }) => {
   const [setSelectedFolders] = useMutation(SET_SELECTED_FOLDERS)
 
   BackHandler.addEventListener('hardwareBackPress', async () => {
-    if (!currentFolder.isMainFolder) {
+    console.log('entrylist backhandler called')
+    if (!currentFolder.isMainFolder && isFocused) {
       const previousFolderId = folderStack[folderStack.length - 1]
       setFolderStack(folderStack.filter(folderId => folderId !== previousFolderId.toString()))
       await setCurrentFolder({ variables: { id: previousFolderId } })
@@ -128,10 +131,12 @@ const EntryList = ({ navigation }) => {
   )
 }
 
+
 EntryList.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
+    isFocused: PropTypes.func.isRequired,
   }).isRequired,
 }
 
-export default EntryList
+export default withNavigationFocus(EntryList)

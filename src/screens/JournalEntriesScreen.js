@@ -38,7 +38,7 @@ const actions = [
     color: 'white',
     icon: folderIcon,
   },
-];
+]
 
 const RemindersView = styled.View`
   background-color: gray
@@ -60,7 +60,6 @@ const JournalEntriesScreen = ({ navigation }) => {
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
     refetchQueries: GET_CURRENT_IMAGES,
   })
-
 
   const onPressItem = async (name) => {
     if (name === 'add_entry') {

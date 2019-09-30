@@ -105,6 +105,7 @@ const EntryModal = ({ navigation }) => {
   })
 
   const handleSubmit = async () => {
+    console.log(currentFolder)
     if (isNewEntry) {
       await createEntry({
         variables:
@@ -124,6 +125,7 @@ const EntryModal = ({ navigation }) => {
         },
       })
     }
+    console.log(currentFolder)
     Keyboard.dismiss()
     navigation.goBack()
   }
@@ -168,8 +170,9 @@ const EntryModal = ({ navigation }) => {
   }
 
   const onExit = () => {
+    console.log('onexit called')
     if (title === '' && textContent === '' && currentImages.length === 0) {
-      navigation.goBack()
+      return false
     } else {
       handleSubmit()
     }
@@ -177,7 +180,7 @@ const EntryModal = ({ navigation }) => {
 
   useEffect(() => {
     navigation.setParams({ onExit, handleDeleteConfirm, title, textContent, isNewEntry })
-  }, [title, textContent, currentImages, entry])
+  }, [title, textContent, currentImages, entry, currentFolder])
 
   return (
     <View style={styles.modal}>
