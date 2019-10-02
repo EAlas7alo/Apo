@@ -45,4 +45,5 @@
 | 27.9  | 5    | imagemodalin menu, cachea, poistologiikkaa
 | 29.9  | 2    | deleteManyFolders/Entries
 | 30.9  | 3    | deleteManyFolders/Entries, bugeja
-| yht   | 155  | | 
+| 2.10  | 3    | Backhandlerin korjaus, oma toteutus 
+| yht   | 158  | | 
