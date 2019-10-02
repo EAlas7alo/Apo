@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { View, FlatList, TouchableHighlight, BackHandler } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { withNavigationFocus } from 'react-navigation'
+import { AndroidBackHandler } from 'react-navigation-backhandler'
 import ListItem from './ListItem'
 import findImagesByEntry from '../../logic/findImagesByEntry'
 import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES } from '../../queries/queries'
@@ -10,9 +11,10 @@ import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER, SET_SELECTED_ENTRIES, SET_SELEC
 import EntryOptionsPopUp from './EntryOptionsPopUp'
 
 
-const EntryList = ({ navigation, isFocused }) => {
+const EntryList = ({ navigation, fabActive, isFocused }) => {
   const [folderStack, setFolderStack] = useState([])
   const [multiSelect, setMultiSelect] = useState(false)
+
   const [selectedItems, setSelecteditems] = useState([])
   const { data: { currentFolder }, loading } = useQuery(GET_CURRENT_FOLDER)
   const [setCurrentFolder] = useMutation(SET_CURRENT_FOLDER)
@@ -21,16 +23,32 @@ const EntryList = ({ navigation, isFocused }) => {
   const [setSelectedEntries] = useMutation(SET_SELECTED_ENTRIES)
   const [setSelectedFolders] = useMutation(SET_SELECTED_FOLDERS)
 
-  BackHandler.addEventListener('hardwareBackPress', async () => {
-    console.log('entrylist backhandler called')
-    if (!currentFolder.isMainFolder && isFocused) {
+  const isMainFolder = loading ? true : currentFolder.isMainFolder
+
+  const handleBackPress = async () => {
+    if (loading) return false
+    if (!currentFolder.isMainFolder && isFocused && !fabActive) {
       const previousFolderId = folderStack[folderStack.length - 1]
       setFolderStack(folderStack.filter(folderId => folderId !== previousFolderId.toString()))
       await setCurrentFolder({ variables: { id: previousFolderId } })
       return true
+    // eslint-disable-next-line no-else-return
+    } else if (fabActive) {
+      // No behavior for back button when FAB is open
+      return true
     }
+    BackHandler.exitApp()
     return false
-  })
+  }
+
+  useEffect(() => {
+    if (!isFocused) {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress )
+    } else {
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+    }
+  }, [isFocused, loading, isMainFolder, fabActive])
+
 
   const onPressEntry = async (entry) => {
     const foundFolder = await findImagesByEntry(entry.id)
@@ -135,8 +153,9 @@ const EntryList = ({ navigation, isFocused }) => {
 EntryList.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
-    isFocused: PropTypes.func.isRequired,
   }).isRequired,
+  isFocused: PropTypes.bool.isRequired,
+  fabActive: PropTypes.bool.isRequired,
 }
 
 export default withNavigationFocus(EntryList)

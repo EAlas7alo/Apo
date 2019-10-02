@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { View, Keyboard, StyleSheet, Dimensions } from 'react-native'
+import { View, Keyboard, StyleSheet, Dimensions, BackHandler } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import SnackBar from 'react-native-snackbar-component'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import gql from 'graphql-tag'
+import { withNavigationFocus } from 'react-navigation'
 import AddEntryForm from './AddEntryForm'
 import imagePicker from '../../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from '../HeaderButtons'
@@ -53,7 +54,7 @@ const ADD_IMAGE = gql`
   }
 `
 
-const EntryModal = ({ navigation }) => {
+const EntryModal = ({ navigation, isFocused }) => {
   const entry = navigation.getParam('entry', null)
   const isNewEntry = !entry
 
@@ -67,6 +68,7 @@ const EntryModal = ({ navigation }) => {
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
+  const [fabActive, setFabActive] = useState(false)
 
   const [createEntry] = useMutation(CREATE_ENTRY, {
     update(cache, { data: { createEntry } }) {
@@ -105,7 +107,6 @@ const EntryModal = ({ navigation }) => {
   })
 
   const handleSubmit = async () => {
-    console.log(currentFolder)
     if (isNewEntry) {
       await createEntry({
         variables:
@@ -125,7 +126,6 @@ const EntryModal = ({ navigation }) => {
         },
       })
     }
-    console.log(currentFolder)
     Keyboard.dismiss()
     navigation.goBack()
   }
@@ -171,13 +171,14 @@ const EntryModal = ({ navigation }) => {
 
   const onExit = () => {
     console.log('onexit called')
+    if (fabActive) return true
     if (title === '' && textContent === '' && currentImages.length === 0) {
       return false
-    } else {
-      handleSubmit()
     }
+    handleSubmit()
+    return true
   }
-
+  
   useEffect(() => {
     navigation.setParams({ onExit, handleDeleteConfirm, title, textContent, isNewEntry })
   }, [title, textContent, currentImages, entry, currentFolder])
@@ -202,6 +203,7 @@ const EntryModal = ({ navigation }) => {
         onPressItem={(name) => {
           onPressItem(name)
         }}
+        onPressMain={() => { setFabActive(!fabActive) }}
       />
       <ImageModal
         image={modalImage}
@@ -217,8 +219,8 @@ const EntryModal = ({ navigation }) => {
         actionText="confirm"
       />
     </View>
-  );
-};
+  )
+}
 
 EntryModal.navigationOptions = ({ navigation }) => {
   const { params } = navigation.state
@@ -260,4 +262,4 @@ EntryModal.propTypes = {
 }
 
 
-export default EntryModal
+export default withNavigationFocus(EntryModal)

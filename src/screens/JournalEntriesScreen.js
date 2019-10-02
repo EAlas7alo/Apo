@@ -56,6 +56,7 @@ const EntriesView = styled.View`
 
 const JournalEntriesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false)
+  const [fabActive, setFabActive] = useState(false)
   const { data: { mainFolder }, loading } = useQuery(GET_MAIN_FOLDER)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
     refetchQueries: GET_CURRENT_IMAGES,
@@ -81,12 +82,7 @@ const JournalEntriesScreen = ({ navigation }) => {
     navigation.setParams({ toggleDrawer })
   }, [])
 
-  // Context folders containing JournalEntries (also Reminders?)
   // Change item order in this screen
-  // MenuItems which can be folders or entries
-
-  // Folders stored on server
-  // Folder object knows its contents
   if (loading) return null
   return (
     <Container>
@@ -94,7 +90,7 @@ const JournalEntriesScreen = ({ navigation }) => {
         <ReminderList />
       </RemindersView>
       <EntriesView>
-        <EntryList navigation={navigation} mainFolder={mainFolder} />
+        <EntryList navigation={navigation} fabActive={fabActive} />
       </EntriesView>
       <FloatingAction
         color="white"
@@ -103,6 +99,7 @@ const JournalEntriesScreen = ({ navigation }) => {
         onPressItem={(name) => {
           onPressItem(name)
         }}
+        onPressMain={() => { setFabActive(!fabActive) }}
       />
       <CreateFolderModal
         modalVisible={modalVisible}
@@ -110,8 +107,8 @@ const JournalEntriesScreen = ({ navigation }) => {
         mainFolder={mainFolder}
       />
     </Container>
-  );
-};
+  )
+}
 
 JournalEntriesScreen.navigationOptions = ({ navigation }) => {
   const { params } = navigation.state
