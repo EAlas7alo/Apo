@@ -46,4 +46,5 @@
 | 29.9  | 2    | deleteManyFolders/Entries
 | 30.9  | 3    | deleteManyFolders/Entries, bugeja
 | 2.10  | 3    | Backhandlerin korjaus, oma toteutus 
-| yht   | 158  | | 
+| 3.10  | 1    | bugifixejä
+| yht   | 159  | | 
