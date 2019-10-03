@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useQuery, useMutation } from '@apollo/react-hooks'
@@ -18,6 +18,7 @@ const PopUpButton = styled.TouchableHighlight`
 `
 
 const EntryOptionsPopUp = (props) => {
+  const [visible, setVisible] = useState(props.visible)
   const { data: { selectedEntries } } = useQuery(GET_SELECTED_ENTRIES)
   const { data: { selectedFolders } } = useQuery(GET_SELECTED_FOLDERS)
   const { data: { currentFolder } } = useQuery(GET_CURRENT_FOLDER)
@@ -38,9 +39,14 @@ const EntryOptionsPopUp = (props) => {
     },
   })
 
+  useEffect(() => {
+    setVisible(props.visible)
+  }, [props.visible])
+
   const handleMultiSelectClose = () => {
     clearSelectedItems()
     props.setMultiSelect(false)
+    setVisible(false)
   }
 
   const handleDelete = async () => {
@@ -54,7 +60,7 @@ const EntryOptionsPopUp = (props) => {
     handleMultiSelectClose()
   }
 
-  return props.visible && (
+  return visible && (
     <PopUpMenuView>
       <PopUpButton onPress={handleDelete}>
         <Icon name="md-trash" size={40} />

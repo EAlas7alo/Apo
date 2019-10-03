@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { DrawerNavigatorItems } from 'react-navigation-drawer'
-import { Header, Button, ButtonText } from './StyledComponents'
+import { Header } from './StyledComponents'
 
 const DrawerView = styled.SafeAreaView`
   padding-top: 50px

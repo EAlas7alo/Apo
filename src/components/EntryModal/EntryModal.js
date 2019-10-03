@@ -162,6 +162,7 @@ const EntryModal = ({ navigation, isFocused }) => {
     } else if (name === 'take_picture') {
       navigation.navigate('CameraScreen', { headerVisible: null, saveImage })
     }
+    setFabActive(false)
   }
 
   const onPressImage = (image) => {
@@ -170,7 +171,7 @@ const EntryModal = ({ navigation, isFocused }) => {
   }
 
   const onExit = () => {
-    console.log('onexit called')
+    console.log('onexit called', fabActive)
     if (fabActive) return true
     if (title === '' && textContent === '' && currentImages.length === 0) {
       return false
@@ -178,14 +179,21 @@ const EntryModal = ({ navigation, isFocused }) => {
     handleSubmit()
     return true
   }
-  
+
   useEffect(() => {
     navigation.setParams({ onExit, handleDeleteConfirm, title, textContent, isNewEntry })
   }, [title, textContent, currentImages, entry, currentFolder])
 
+  useEffect(() => {
+    if (isFocused) {
+      BackHandler.addEventListener('hardwareBackPress', onExit)
+    } else {
+      BackHandler.removeEventListener('hardwareBackPress', onExit)
+    }
+  }, [isFocused])
+
   return (
     <View style={styles.modal}>
-      <AndroidBackHandler onBackPress={onExit} />
       <AddEntryForm
         id={!isNewEntry ? entry.id : null}
         onPressImage={onPressImage}

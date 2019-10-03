@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { View, TouchableOpacity, StyleSheet, Text, Dimensions } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions, BackHandler } from 'react-native'
 import * as Permissions from 'expo-permissions'
 import { Camera } from 'expo-camera'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { cameraIcon as CameraIcon } from '../constants/Icons'
+import { withNavigationFocus } from 'react-navigation'
 
 const styles = StyleSheet.create({
   mainView: {
@@ -40,13 +40,18 @@ const styles = StyleSheet.create({
   },
 })
 
-const CameraScreen = ({ navigation }) => {
+const CameraScreen = ({ navigation, isFocused }) => {
   const [hasPermissions, setHasPermissions] = useState(false)
   const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
   const [flashIcon, setFlashIcon] = useState('md-flash-off')
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
   const cameraRef = useRef(null)
-  console.log(navigation.state)
+
+  BackHandler.addEventListener('hardwareBackPress', () => {
+    navigation.goBack()
+    return true
+  })
+
   useEffect(() => {
     const permissions = async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA)
@@ -55,10 +60,21 @@ const CameraScreen = ({ navigation }) => {
     permissions()
   }, [])
 
+  const handleBackPress = () => {
+    navigation.goBack()
+    return true
+  }
+
+  useEffect(() => {
+    if (isFocused) {
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+    } else {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
+    }
+  }, [isFocused])
+
   const snapPhoto = async () => {
-    console.log('snapPhoto pressed')
     if (cameraRef) {
-      console.log('taking photo')
       const options = { quality: 0.2, base64: true }
       try {
         const photo = await cameraRef.current.takePictureAsync(options)
@@ -125,8 +141,14 @@ CameraScreen.navigationOptions = ({ navigation }) => {
 
 CameraScreen.propTypes = {
   navigation: PropTypes.shape({
-
+    goBack: PropTypes.func.isRequired,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        saveImage: PropTypes.func.isRequired,
+      }),
+    }),
   }).isRequired,
+  isFocused: PropTypes.bool.isRequired,
 }
 
-export default CameraScreen
+export default withNavigationFocus(CameraScreen)

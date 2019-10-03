@@ -11,12 +11,13 @@ const OptionsView = styled.View`
   align-items: center
   margin-top: 5px
   border-radius: 10
+  background-color: dimgray
 `
 
 const DeleteButton = styled.TouchableHighlight`
   border-width: 1px
   border-color: white
-  background-color: red
+  background-color: dimgray
   border-radius: 10
   padding: 5px 5px 5px 5px
 `

@@ -1,5 +1,6 @@
 TODOs:
 
+Itemien järjestyksen muutos
 Reminderin lisäys tyylitys
 Drawerin tyylitys
 CreateFolderModal tyylitys
