@@ -47,4 +47,5 @@
 | 30.9  | 3    | deleteManyFolders/Entries, bugeja
 | 2.10  | 3    | Backhandlerin korjaus, oma toteutus 
 | 3.10  | 1    | bugifixejä
-| yht   | 159  | | 
+| 4.10  | 2    | autentikaatio alkuun
+| yht   | 161  | | 
