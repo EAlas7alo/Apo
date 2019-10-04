@@ -174,12 +174,13 @@ const EntryModal = ({ navigation, isFocused }) => {
     console.log('onexit called', fabActive)
     if (fabActive) return true
     if (title === '' && textContent === '' && currentImages.length === 0) {
+      console.log('wat')
       return false
     }
+    console.log('handlesubmit')
     handleSubmit()
     return true
   }
-
   useEffect(() => {
     navigation.setParams({ onExit, handleDeleteConfirm, title, textContent, isNewEntry })
   }, [title, textContent, currentImages, entry, currentFolder])
@@ -190,7 +191,7 @@ const EntryModal = ({ navigation, isFocused }) => {
     } else {
       BackHandler.removeEventListener('hardwareBackPress', onExit)
     }
-  }, [isFocused])
+  }, [isFocused, title, textContent, currentImages])
 
   return (
     <View style={styles.modal}>
@@ -233,10 +234,12 @@ const EntryModal = ({ navigation, isFocused }) => {
 EntryModal.navigationOptions = ({ navigation }) => {
   const { params } = navigation.state
   if (!params) {
-    return null
+    return {
+      title: 'View entry',
+    }
   }
   return {
-    title: 'New entry',
+    title: 'View entry',
     headerLeft: (
       <MaterialHeaderButtons>
         <Item title="save" onPress={params.onExit} iconName="md-checkmark" />

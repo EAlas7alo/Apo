@@ -6,7 +6,7 @@ import { ApolloLink } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { onError } from 'apollo-link-error'
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { resolvers, typeDefs } from './src/resolvers/resolvers'
 import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
@@ -15,6 +15,8 @@ import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
 import ReminderScreen from './src/screens/ReminderScreen';
 import Drawer from './src/components/Drawer';
+import SignInScreen from './src/screens/SignInScreen';
+import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 
 const EntryStack = createStackNavigator(
   {
@@ -82,6 +84,31 @@ const DrawerStack = createDrawerNavigator(
   },
 )
 
+const AuthStack = createStackNavigator(
+  {
+    AuthLoading: {
+      screen: AuthLoadingScreen,
+    },
+    SignIn: {
+      screen: SignInScreen,
+    },
+  },
+  {
+    initialRouteName: 'AuthLoading',
+    headerMode: 'none',
+  },
+)
+
+const MainNavigator = createSwitchNavigator(
+  {
+    App: DrawerStack,
+    Auth: AuthStack,
+  },
+  {
+    initialRouteName: 'Auth',
+  },
+)
+
 const serverIP = SERVER_IP
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -125,7 +152,7 @@ cache.writeData({
   },
 })
 
-const AppContainer = createAppContainer(DrawerStack);
+const AppContainer = createAppContainer(MainNavigator);
 
 const App = () => {
   return (
