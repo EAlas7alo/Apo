@@ -1,7 +1,7 @@
 TODOs:
 
 Tärkeät:
-Käyttäjätoiminto -> loginscreen, auth backendiin, 
+Käyttäjätoiminto -> loginscreen, auth backendiin, logout draweriin
 StartScreen
 
 Jos aikaa jää:

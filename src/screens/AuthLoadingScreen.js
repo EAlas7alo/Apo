@@ -18,6 +18,7 @@ const AuthLoadingScreen = ({ navigation }) => {
     const fetchToken = async () => {
       const userToken = await AsyncStorage.getItem('userToken')
       navigation.navigate(userToken ? 'App' : 'SignIn')
+      console.log(userToken)
     }
     fetchToken()
   }, [])

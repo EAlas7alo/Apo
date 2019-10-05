@@ -1,8 +1,9 @@
 import React from 'react'
+import { AsyncStorage } from 'react-native'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { DrawerNavigatorItems } from 'react-navigation-drawer'
-import { Header } from './StyledComponents'
+import { Header, ApoText } from './StyledComponents'
 
 const DrawerView = styled.SafeAreaView`
   padding-top: 50px
@@ -19,8 +20,27 @@ const MenuItemsView = styled.View`
   border-bottom-width: 1px
   border-color: white
 `
+const LogoutButton = styled.TouchableOpacity`
+  margin-top: 10px
+`
+
+const LogOutText = styled(ApoText)`
+  padding-left: 18px
+`
 
 const Drawer = (props) => {
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.setItem('userToken', null)
+      console.log('xD')
+    } catch (error) {
+      console.log(error)
+    }
+
+    props.navigation.navigate('SignIn')
+  }
+
   return (
     <DrawerView>
       <DrawerHeader>
@@ -32,7 +52,15 @@ const Drawer = (props) => {
           activeTintColor="white"
           {...props}
         />
+
       </MenuItemsView>
+      <LogoutButton
+        onPress={handleLogout}
+      >
+        <LogOutText>
+          Logout
+        </LogOutText>
+      </LogoutButton>
     </DrawerView>
   )
 }

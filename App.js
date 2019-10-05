@@ -15,7 +15,7 @@ import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
 import ReminderScreen from './src/screens/ReminderScreen';
 import Drawer from './src/components/Drawer';
-import SignInScreen from './src/screens/SignInScreen';
+import SignInScreen from './src/components/SignInScreen/SignInScreen';
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 
 const EntryStack = createStackNavigator(
