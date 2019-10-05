@@ -48,4 +48,5 @@
 | 2.10  | 3    | Backhandlerin korjaus, oma toteutus 
 | 3.10  | 1    | bugifixejä
 | 4.10  | 2    | autentikaatio alkuun
-| yht   | 161  | | 
+| 5.10  | 2    | auth jatkuu
+| yht   | 163  | | 
