@@ -5,7 +5,9 @@ import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { onError } from 'apollo-link-error'
+import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { AsyncStorage } from 'react-native'
 import { createStackNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { resolvers, typeDefs } from './src/resolvers/resolvers'
@@ -127,8 +129,20 @@ const httpLink = createHttpLink({
   uri: serverIP,
 })
 
+const authLink = setContext(async (_, { headers }) => {
+  const token = await AsyncStorage.getItem('userToken');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  }
+});
+
+
 const link = ApolloLink.from([
   errorLink,
+  authLink,
   httpLink,
 ])
 

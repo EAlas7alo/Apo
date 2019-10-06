@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { DrawerNavigatorItems } from 'react-navigation-drawer'
 import { Header, ApoText } from './StyledComponents'
+import { useApolloClient } from '@apollo/react-hooks'
 
 const DrawerView = styled.SafeAreaView`
   padding-top: 50px
@@ -31,13 +32,16 @@ const LogOutText = styled(ApoText)`
 const Drawer = (props) => {
 
   const handleLogout = async () => {
+    const client = useApolloClient()
+    console.log('xd')
     try {
-      await AsyncStorage.setItem('userToken', null)
+      await AsyncStorage.removeItem('userToken')
+      client.resetStore()
       console.log('xD')
     } catch (error) {
       console.log(error)
     }
-
+    console.log('xd')
     props.navigation.navigate('SignIn')
   }
 
@@ -67,7 +71,7 @@ const Drawer = (props) => {
 
 Drawer.propTypes = {
   navigation: PropTypes.shape({
-
+    navigate: PropTypes.func.isRequired,
   }).isRequired,
 }
 

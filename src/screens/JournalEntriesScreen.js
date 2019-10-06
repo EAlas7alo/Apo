@@ -69,7 +69,6 @@ const JournalEntriesScreen = ({ navigation }) => {
     } else if (name === 'add_reminder') {
       navigation.navigate('ReminderModal')
     } else if (name === 'add_folder') {
-      // Navigate to folder creation
       setModalVisible(true)
     }
   }
