@@ -49,4 +49,5 @@
 | 3.10  | 1    | bugifixejä
 | 4.10  | 2    | autentikaatio alkuun
 | 5.10  | 2    | auth jatkuu
-| yht   | 163  | | 
+| 6.10  | 2    | auth jtk
+| yht   | 165  | | 
