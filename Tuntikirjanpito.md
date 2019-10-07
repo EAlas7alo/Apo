@@ -50,4 +50,5 @@
 | 4.10  | 2    | autentikaatio alkuun
 | 5.10  | 2    | auth jatkuu
 | 6.10  | 2    | auth jtk
-| yht   | 165  | | 
+| 7.10  | 2    | auth jtk
+| yht   | 167  | | 
