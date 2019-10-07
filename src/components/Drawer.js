@@ -1,10 +1,11 @@
 import React from 'react'
 import { AsyncStorage } from 'react-native'
 import PropTypes from 'prop-types'
+import { useApolloClient } from '@apollo/react-hooks'
 import styled from 'styled-components'
 import { DrawerNavigatorItems } from 'react-navigation-drawer'
 import { Header, ApoText } from './StyledComponents'
-import { useApolloClient } from '@apollo/react-hooks'
+
 
 const DrawerView = styled.SafeAreaView`
   padding-top: 50px
@@ -30,18 +31,15 @@ const LogOutText = styled(ApoText)`
 `
 
 const Drawer = (props) => {
-
+  const client = useApolloClient()
   const handleLogout = async () => {
-    const client = useApolloClient()
-    console.log('xd')
     try {
       await AsyncStorage.removeItem('userToken')
       client.resetStore()
-      console.log('xD')
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log(error)
     }
-    console.log('xd')
     props.navigation.navigate('SignIn')
   }
 

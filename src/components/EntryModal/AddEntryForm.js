@@ -43,7 +43,6 @@ const AddEntryForm = ({ handleChange, title, textContent, onPressImage, id }) =>
     <Formik
       initialValues={{ title: '', url: '', textContent: '' }}
       onSubmit={(values) => {
-        alert('adding', values)
       }}
     >
       <View style={styles.container}>

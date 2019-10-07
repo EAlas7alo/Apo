@@ -2,9 +2,6 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { ActivityIndicator,
   AsyncStorage,
-  StatusBar,
-  StyleSheet,
-  View,
 } from 'react-native'
 import styled from 'styled-components'
 
@@ -13,7 +10,6 @@ const ActivityIndicatorView = styled.View`
 `
 
 const AuthLoadingScreen = ({ navigation }) => {
-
   useEffect(() => {
     const fetchToken = async () => {
       const userToken = await AsyncStorage.getItem('userToken')
