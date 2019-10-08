@@ -51,4 +51,5 @@
 | 5.10  | 2    | auth jatkuu
 | 6.10  | 2    | auth jtk
 | 7.10  | 2    | auth jtk
-| yht   | 167  | | 
+| 8.10  | 2    | auth ja signinscreen
+| yht   | 169  | | 
