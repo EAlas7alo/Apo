@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { View, FlatList, TouchableHighlight, BackHandler } from 'react-native'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { withNavigationFocus } from 'react-navigation'
-import { AndroidBackHandler } from 'react-navigation-backhandler'
 import ListItem from './ListItem'
 import findImagesByEntry from '../../logic/findImagesByEntry'
 import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES } from '../../queries/queries'
@@ -43,7 +42,7 @@ const EntryList = ({ navigation, fabActive, isFocused }) => {
 
   useEffect(() => {
     if (!isFocused) {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress )
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
     } else {
       BackHandler.addEventListener('hardwareBackPress', handleBackPress)
     }

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation } from '@apollo/react-hooks'
-import { ActivityIndicator, AsyncStorage } from 'react-native'
+import { AsyncStorage } from 'react-native'
 import { Formik } from 'formik'
+import { SwitchActions } from 'react-navigation'
 import styled from 'styled-components'
 import { Container } from '../StyledComponents'
 import { LOGIN } from './queries'
@@ -43,29 +44,43 @@ const LoginButton = styled.TouchableOpacity`
   border-color: white
   border-radius: 25
 `
-const OptionsText = styled.Text`
-  color: snow
+const InfoText = styled.Text`
+  color: yellow
+  align-self: center
 `
 
 const SignInScreen = ({ navigation }) => {
   const [loggingIn, setLoggingIn] = useState(false)
-  const [token, setToken] = useState(null)
   const [login] = useMutation(LOGIN)
+  const [infoField, setInfoField] = useState('')
 
   const handleLogin = async (username, password) => {
     setLoggingIn(true)
-    const { data: { login: { value } } } = await login({ variables: { username, password } })
-    console.log(token)
-    if (value) {
-      await AsyncStorage.setItem('userToken', value)
+    try {
+      const { data: { login: { value } } } = await login({ variables: { username, password } })
+      if (value) {
+        try {
+          await AsyncStorage.setItem('userToken', value)
+        } catch (error) {
+          console.log(error)
+        }
+        console.log('reached and of asyncstorage.setItem')
+        setLoggingIn(false)
+        navigation.dispatch(SwitchActions.jumpTo({ routeName: 'App' }))
+      }
+    } catch (error) {
+      setLoggingIn(false)
+      setInfoField('Wrong username or password')
+      setTimeout(() => {
+        setInfoField('')
+      }, 5000)
     }
-    setLoggingIn(false)
   }
 
   return (
     <SignInScreenView>
       <Formik
-        initialValues={{ username: '', password: ''}}
+        initialValues={{ username: '', password: '' }}
         validate={values => {
           let errors = {}
           if (!values.username) {
@@ -90,6 +105,9 @@ const SignInScreen = ({ navigation }) => {
             <ApoHeader>
               Apo
             </ApoHeader>
+            <InfoText>
+              {infoField}
+            </InfoText>
             <SignInInput
               name="username"
               placeholder="Username"
@@ -99,6 +117,7 @@ const SignInScreen = ({ navigation }) => {
             />
             <SignInInput
               name="password"
+              secureTextEntry
               placeholder="Password"
               placeholderTextColor="lightgrey"
               value={values.password}
@@ -120,7 +139,7 @@ const SignInScreen = ({ navigation }) => {
 
 SignInScreen.propTypes = {
   navigation: PropTypes.shape({
-
+    dispatch: PropTypes.func.isRequired,
   }).isRequired,
 }
 
