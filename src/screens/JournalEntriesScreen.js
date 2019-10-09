@@ -58,9 +58,7 @@ const JournalEntriesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [fabActive, setFabActive] = useState(false)
   const { data: { mainFolder }, loading } = useQuery(GET_MAIN_FOLDER)
-  const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES, {
-    refetchQueries: GET_CURRENT_IMAGES,
-  })
+  const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES)
 
   const onPressItem = async (name) => {
     if (name === 'add_entry') {
@@ -71,6 +69,7 @@ const JournalEntriesScreen = ({ navigation }) => {
     } else if (name === 'add_folder') {
       setModalVisible(true)
     }
+    setFabActive(false)
   }
 
   const toggleDrawer = () => {

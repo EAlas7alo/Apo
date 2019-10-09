@@ -46,6 +46,7 @@ const CREATE_ENTRY = gql`
       id
       date
     }
+    clearSelectedImages @client 
   }
 `
 
@@ -56,7 +57,8 @@ const EDIT_ENTRY_CONTENT = gql`
       title
       content
       images
-    } 
+    }
+    clearSelectedImages @client 
   }
 `
 

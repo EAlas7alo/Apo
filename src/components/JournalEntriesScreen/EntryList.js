@@ -6,7 +6,7 @@ import { withNavigationFocus } from 'react-navigation'
 import ListItem from './ListItem'
 import findImagesByEntry from '../../logic/findImagesByEntry'
 import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES } from '../../queries/queries'
-import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER, SET_SELECTED_ENTRIES, SET_SELECTED_FOLDERS } from './queries'
+import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER, SET_SELECTED_ENTRIES, SET_SELECTED_FOLDERS, GET_SELECTED_ENTRIES, GET_SELECTED_FOLDERS } from './queries'
 import EntryOptionsPopUp from './EntryOptionsPopUp'
 
 
@@ -14,7 +14,8 @@ const EntryList = ({ navigation, fabActive, isFocused }) => {
   const [folderStack, setFolderStack] = useState([])
   const [multiSelect, setMultiSelect] = useState(false)
 
-  const [selectedItems, setSelecteditems] = useState([])
+  const { data: { selectedEntries } } = useQuery(GET_SELECTED_ENTRIES)
+  const { data: { selectedFolders } } = useQuery(GET_SELECTED_FOLDERS)
   const { data: { currentFolder }, loading } = useQuery(GET_CURRENT_FOLDER)
   const [setCurrentFolder] = useMutation(SET_CURRENT_FOLDER)
   const [setCurrentEntry] = useMutation(SET_CURRENT_ENTRY)
@@ -63,21 +64,12 @@ const EntryList = ({ navigation, fabActive, isFocused }) => {
   }
 
   const onPressItem = (item) => {
-    const handleSelection = () => {
-      if (selectedItems.includes(item.id)) {
-        setSelecteditems(selectedItems.filter(sItem => sItem !== item.id))
-      } else {
-        setSelecteditems(selectedItems.concat(item.id))
-      }
-    }
-
     if (multiSelect) {
       if (item.__typename === 'Entry') {
         setSelectedEntries({ variables: { entry: item.id } })
       } else {
         setSelectedFolders({ variables: { folder: item.id } })
       }
-      handleSelection()
     } else if (item.__typename === 'Entry') {
       onPressEntry(item)
     } else {
@@ -93,7 +85,6 @@ const EntryList = ({ navigation, fabActive, isFocused }) => {
       } else {
         setSelectedFolders({ variables: { folder: item.id } })
       }
-      setSelecteditems(selectedItems.concat(item.id))
     }
   }
 
@@ -111,7 +102,7 @@ const EntryList = ({ navigation, fabActive, isFocused }) => {
 
   const renderItem = ({ item }) => {
     const isHighlighted = () => {
-      if (selectedItems.includes(item.id)) {
+      if (selectedEntries.includes(item.id) || selectedFolders.includes(item.id)) {
         return true
       }
       return false
@@ -131,6 +122,13 @@ const EntryList = ({ navigation, fabActive, isFocused }) => {
       </TouchableHighlight>
     )
   }
+
+  renderItem.propTypes = {
+    item: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }).isRequired,
+  }
+
 
   return (
     <View>
@@ -156,5 +154,6 @@ EntryList.propTypes = {
   isFocused: PropTypes.bool.isRequired,
   fabActive: PropTypes.bool.isRequired,
 }
+
 
 export default withNavigationFocus(EntryList)

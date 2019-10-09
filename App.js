@@ -19,6 +19,7 @@ import ReminderScreen from './src/screens/ReminderScreen';
 import Drawer from './src/components/Drawer';
 import SignInScreen from './src/components/SignInScreen/SignInScreen';
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
+import RegistrationScreen from './src/components/RegistrationScreen/RegistrationScreen';
 
 const EntryStack = createStackNavigator(
   {
@@ -94,6 +95,9 @@ const AuthStack = createStackNavigator(
     SignIn: {
       screen: SignInScreen,
     },
+    Signup: {
+      screen: RegistrationScreen,
+    },
   },
   {
     initialRouteName: 'AuthLoading',
@@ -154,16 +158,6 @@ const client = new ApolloClient({
   resolvers,
   typeDefs,
   queryDeduplication: true,
-})
-
-cache.writeData({
-  data: {
-    currentEntry: null,
-    currentImages: [],
-    selectedImages: [],
-    selectedEntries: [],
-    selectedFolders: [],
-  },
 })
 
 const AppContainer = createAppContainer(MainNavigator);

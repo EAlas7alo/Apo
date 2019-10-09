@@ -4,7 +4,6 @@ import { View, Keyboard, StyleSheet, Dimensions, BackHandler } from 'react-nativ
 import { FloatingAction } from 'react-native-floating-action'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import SnackBar from 'react-native-snackbar-component'
-import { AndroidBackHandler } from 'react-navigation-backhandler'
 import gql from 'graphql-tag'
 import { withNavigationFocus } from 'react-navigation'
 import AddEntryForm from './AddEntryForm'
@@ -45,7 +44,7 @@ const actions = [
     position: 2,
     color: 'white',
   },
-];
+]
 
 
 const ADD_IMAGE = gql`
@@ -171,13 +170,11 @@ const EntryModal = ({ navigation, isFocused }) => {
   }
 
   const onExit = () => {
-    console.log('onexit called', fabActive)
+    console.log('onexit')
     if (fabActive) return true
     if (title === '' && textContent === '' && currentImages.length === 0) {
-      console.log('wat')
       return false
     }
-    console.log('handlesubmit')
     handleSubmit()
     return true
   }
@@ -270,6 +267,7 @@ EntryModal.propTypes = {
     getParam: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
   }).isRequired,
+  isFocused: PropTypes.bool.isRequired,
 }
 
 

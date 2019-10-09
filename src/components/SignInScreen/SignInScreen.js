@@ -43,10 +43,25 @@ const LoginButton = styled.TouchableOpacity`
   border-width: 1px
   border-color: white
   border-radius: 25
+  background-color: slategray
 `
 const InfoText = styled.Text`
   color: yellow
   align-self: center
+`
+
+const SignUpButton = styled.TouchableOpacity`
+  border-radius: 25
+  border-width: 1px
+  border-color: white
+  padding: 10px
+  background-color: gray
+  align-self: center
+  margin-top: 50px
+`
+
+const SignUpText = styled.Text`
+  color: snow
 `
 
 const SignInScreen = ({ navigation }) => {
@@ -64,7 +79,6 @@ const SignInScreen = ({ navigation }) => {
         } catch (error) {
           console.log(error)
         }
-        console.log('reached and of asyncstorage.setItem')
         setLoggingIn(false)
         navigation.dispatch(SwitchActions.jumpTo({ routeName: 'App' }))
       }
@@ -77,12 +91,16 @@ const SignInScreen = ({ navigation }) => {
     }
   }
 
+  const handleSignUp = () => {
+    navigation.navigate('Signup')
+  }
+
   return (
     <SignInScreenView>
       <Formik
         initialValues={{ username: '', password: '' }}
         validate={values => {
-          let errors = {}
+          const errors = {}
           if (!values.username) {
             errors.username = 'Required'
           }
@@ -90,16 +108,14 @@ const SignInScreen = ({ navigation }) => {
             errors.password = 'Required'
           }
         }}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values) => {
           handleLogin(values.username, values.password)
         }}
       >
         {({
           values,
-          errors,
           handleChange,
           handleSubmit,
-          isSubmitting,
         }) => (
           <FormView>
             <ApoHeader>
@@ -133,6 +149,11 @@ const SignInScreen = ({ navigation }) => {
           </FormView>
         )}
       </Formik>
+      <SignUpButton onPress={handleSignUp}>
+        <SignUpText>
+          Sign up
+        </SignUpText>
+      </SignUpButton>
     </SignInScreenView>
   )
 }
@@ -140,6 +161,7 @@ const SignInScreen = ({ navigation }) => {
 SignInScreen.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
   }).isRequired,
 }
 

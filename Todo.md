@@ -2,8 +2,7 @@ TODOs:
 
 Tärkeät:
 Käyttäjätoiminto -> loginscreen, auth backendiin, logout draweriin
-StartScreen
-EntryOptionsPopUp ei sulkeudu kun ei valintoja, highlightit jää päälle
+Kansioista poistuminen ei toimi entryn lisäämisen jälkeen
 
 Jos aikaa jää:
 ImageModalin menu

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { ActivityIndicator,
   AsyncStorage,
 } from 'react-native'
+import { useApolloClient } from '@apollo/react-hooks'
 import styled from 'styled-components'
 
 const ActivityIndicatorView = styled.View`
@@ -10,9 +11,19 @@ const ActivityIndicatorView = styled.View`
 `
 
 const AuthLoadingScreen = ({ navigation }) => {
+  const client = useApolloClient()
   useEffect(() => {
     const fetchToken = async () => {
       const userToken = await AsyncStorage.getItem('userToken')
+      client.writeData({
+        data: {
+          currentEntry: null,
+          currentImages: [],
+          selectedImages: [],
+          selectedEntries: [],
+          selectedFolders: [],
+        },
+      })
       navigation.navigate(userToken ? 'App' : 'SignIn')
       console.log(userToken)
     }
