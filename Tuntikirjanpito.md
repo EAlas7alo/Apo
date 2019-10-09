@@ -52,4 +52,5 @@
 | 6.10  | 2    | auth jtk
 | 7.10  | 2    | auth jtk
 | 8.10  | 2    | auth ja signinscreen
-| yht   | 169  | | 
+| 9.10  | 2    | authia, bugifixejä, rekisteröintiskreeni
+| yht   | 171  | | 
