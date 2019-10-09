@@ -20,6 +20,26 @@ const GET_CURRENT_FOLDER = gql`
   }
 `
 
+const GET_FOLDER = gql`
+  query getFolder($id: ID!) {
+    getFolder(id: $id) {
+      id
+      isMainFolder
+      itemOrder
+      entries {
+        title
+        content
+        images
+        id
+      }
+      folders {
+        name
+        id
+      }
+    }
+  }
+`
+
 const SET_CURRENT_FOLDER = gql`
   mutation setCurrentFolder($id: ID) {
     setCurrentFolder(id: $id) @client
@@ -76,6 +96,7 @@ const DELETE_MANY_ITEMS = gql`
 
 export {
   GET_CURRENT_FOLDER,
+  GET_FOLDER,
   SET_CURRENT_FOLDER,
   GET_SELECTED_ENTRIES,
   SET_SELECTED_ENTRIES,

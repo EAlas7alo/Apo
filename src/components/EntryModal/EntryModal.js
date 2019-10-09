@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { View, Keyboard, StyleSheet, Dimensions } from 'react-native'
+import { View, Keyboard, StyleSheet, Dimensions, BackHandler } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import SnackBar from 'react-native-snackbar-component'
-import { AndroidBackHandler } from 'react-navigation-backhandler'
 import gql from 'graphql-tag'
+import { withNavigationFocus } from 'react-navigation'
 import AddEntryForm from './AddEntryForm'
 import imagePicker from '../../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from '../HeaderButtons'
@@ -44,7 +44,7 @@ const actions = [
     position: 2,
     color: 'white',
   },
-];
+]
 
 
 const ADD_IMAGE = gql`
@@ -53,7 +53,7 @@ const ADD_IMAGE = gql`
   }
 `
 
-const EntryModal = ({ navigation }) => {
+const EntryModal = ({ navigation, isFocused }) => {
   const entry = navigation.getParam('entry', null)
   const isNewEntry = !entry
 
@@ -67,6 +67,7 @@ const EntryModal = ({ navigation }) => {
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImage, setModalImage] = useState(null)
   const [showSnackBar, setShowSnackBar] = useState(false)
+  const [fabActive, setFabActive] = useState(false)
 
   const [createEntry] = useMutation(CREATE_ENTRY, {
     update(cache, { data: { createEntry } }) {
@@ -160,6 +161,7 @@ const EntryModal = ({ navigation }) => {
     } else if (name === 'take_picture') {
       navigation.navigate('CameraScreen', { headerVisible: null, saveImage })
     }
+    setFabActive(false)
   }
 
   const onPressImage = (image) => {
@@ -168,20 +170,28 @@ const EntryModal = ({ navigation }) => {
   }
 
   const onExit = () => {
+    console.log('onexit')
+    if (fabActive) return true
     if (title === '' && textContent === '' && currentImages.length === 0) {
-      navigation.goBack()
-    } else {
-      handleSubmit()
+      return false
     }
+    handleSubmit()
+    return true
   }
-
   useEffect(() => {
     navigation.setParams({ onExit, handleDeleteConfirm, title, textContent, isNewEntry })
-  }, [title, textContent, currentImages, entry])
+  }, [title, textContent, currentImages, entry, currentFolder])
+
+  useEffect(() => {
+    if (isFocused) {
+      BackHandler.addEventListener('hardwareBackPress', onExit)
+    } else {
+      BackHandler.removeEventListener('hardwareBackPress', onExit)
+    }
+  }, [isFocused, title, textContent, currentImages])
 
   return (
     <View style={styles.modal}>
-      <AndroidBackHandler onBackPress={onExit} />
       <AddEntryForm
         id={!isNewEntry ? entry.id : null}
         onPressImage={onPressImage}
@@ -199,6 +209,7 @@ const EntryModal = ({ navigation }) => {
         onPressItem={(name) => {
           onPressItem(name)
         }}
+        onPressMain={() => { setFabActive(!fabActive) }}
       />
       <ImageModal
         image={modalImage}
@@ -214,16 +225,18 @@ const EntryModal = ({ navigation }) => {
         actionText="confirm"
       />
     </View>
-  );
-};
+  )
+}
 
 EntryModal.navigationOptions = ({ navigation }) => {
   const { params } = navigation.state
   if (!params) {
-    return null
+    return {
+      title: 'View entry',
+    }
   }
   return {
-    title: 'New entry',
+    title: 'View entry',
     headerLeft: (
       <MaterialHeaderButtons>
         <Item title="save" onPress={params.onExit} iconName="md-checkmark" />
@@ -254,7 +267,8 @@ EntryModal.propTypes = {
     getParam: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
   }).isRequired,
+  isFocused: PropTypes.bool.isRequired,
 }
 
 
-export default EntryModal
+export default withNavigationFocus(EntryModal)

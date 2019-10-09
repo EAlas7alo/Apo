@@ -5,8 +5,10 @@ import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { onError } from 'apollo-link-error'
+import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { AsyncStorage } from 'react-native'
+import { createStackNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { resolvers, typeDefs } from './src/resolvers/resolvers'
 import JournalEntriesScreen from './src/screens/JournalEntriesScreen';
@@ -15,6 +17,9 @@ import ReminderModal from './src/components/ReminderModal/ReminderModal'
 import CameraScreen from './src/screens/CameraScreen'
 import ReminderScreen from './src/screens/ReminderScreen';
 import Drawer from './src/components/Drawer';
+import SignInScreen from './src/components/SignInScreen/SignInScreen';
+import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
+import RegistrationScreen from './src/components/RegistrationScreen/RegistrationScreen';
 
 const EntryStack = createStackNavigator(
   {
@@ -82,12 +87,40 @@ const DrawerStack = createDrawerNavigator(
   },
 )
 
+const AuthStack = createStackNavigator(
+  {
+    AuthLoading: {
+      screen: AuthLoadingScreen,
+    },
+    SignIn: {
+      screen: SignInScreen,
+    },
+    Signup: {
+      screen: RegistrationScreen,
+    },
+  },
+  {
+    initialRouteName: 'AuthLoading',
+    headerMode: 'none',
+  },
+)
+
+const MainNavigator = createSwitchNavigator(
+  {
+    App: DrawerStack,
+    Auth: AuthStack,
+  },
+  {
+    initialRouteName: 'Auth',
+  },
+)
+
 const serverIP = SERVER_IP
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    console.log(graphQLErrors)
     graphQLErrors.map(({ message, locations, path }) => {
+      // eslint-disable-next-line no-console
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
       )
@@ -100,8 +133,20 @@ const httpLink = createHttpLink({
   uri: serverIP,
 })
 
+const authLink = setContext(async (_, { headers }) => {
+  const token = await AsyncStorage.getItem('userToken');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  }
+});
+
+
 const link = ApolloLink.from([
   errorLink,
+  authLink,
   httpLink,
 ])
 
@@ -115,17 +160,7 @@ const client = new ApolloClient({
   queryDeduplication: true,
 })
 
-cache.writeData({
-  data: {
-    currentEntry: null,
-    currentImages: [],
-    selectedImages: [],
-    selectedEntries: [],
-    selectedFolders: [],
-  },
-})
-
-const AppContainer = createAppContainer(DrawerStack);
+const AppContainer = createAppContainer(MainNavigator);
 
 const App = () => {
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { View, Text, DatePickerAndroid, TimePickerAndroid, Image } from 'react-native'
+import { View, DatePickerAndroid, TimePickerAndroid, BackHandler } from 'react-native'
 import { Formik } from 'formik'
 import styled from 'styled-components'
 import { useMutation } from '@apollo/react-hooks'
@@ -49,8 +49,10 @@ const SaveButton = styled.TouchableHighlight`
   flex-direction: row
   justify-content: center
   padding: 5px
-  margin-top: 20px
+  margin-top: 15px
   border-radius: 10
+  justify-content: center
+  align-items: center
 `
 
 const SaveText = styled(MyAppText)`
@@ -71,22 +73,25 @@ const ReminderForm = ({ navigation }) => {
     refetchQueries: [{ query: ACTIVE_REMINDERS }, { query: ALL_REMINDERS }],
   })
 
+
+  BackHandler.addEventListener('hardwareBackPress', async () => {
+    navigation.goBack()
+    return true
+  })
+
   const handleTitleChange = (name, text) => {
     setReminderTitle(text)
-    console.log('set textinput value to', text)
   }
 
   const handleDateChange = async () => {
     try {
       const { action: dateAction, year, month, day } = await DatePickerAndroid.open({
-        // Use `new Date()` for current date.
-        // May 25 2020. Month 0 is January.
       })
 
       const { action: timeAction, hour, minute } = await TimePickerAndroid.open({
         hour: 0,
         minute: 0,
-        is24Hour: true, // Will display '2 PM'
+        is24Hour: true,
       })
 
       if (dateAction !== DatePickerAndroid.dismissedAction &&
@@ -129,10 +134,6 @@ const ReminderForm = ({ navigation }) => {
             </DateButton>
             <DateText text={date.toString()} />
           </DateSelectionView>
-
-          <OptionsView>
-            <OptionsHeader text="Options" />
-          </OptionsView>
 
           <SaveButton
             onPress={handleReminderCreation}

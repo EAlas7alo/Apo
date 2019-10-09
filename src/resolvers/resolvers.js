@@ -123,6 +123,15 @@ export const resolvers = {
       })
       return null
     },
+    clearSelectedImages: (_, __, { cache }) => {
+      cache.writeData({
+        data:
+          {
+            selectedImages: [],
+          },
+      })
+      return null
+    },
     setCurrentFolder: async (_, args, { client, cache }) => {
       const { data: { getFolder } } = await client.query({
         query: gql`
