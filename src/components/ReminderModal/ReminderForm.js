@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { View, DatePickerAndroid, TimePickerAndroid, BackHandler } from 'react-native'
+import { View, DatePickerAndroid, TimePickerAndroid } from 'react-native'
 import { Formik } from 'formik'
 import styled from 'styled-components'
 import { useMutation } from '@apollo/react-hooks'
@@ -28,10 +28,6 @@ const DateText = styled(MyAppText)`
   padding: 5px
 `
 
-const OptionsHeader = styled(MyAppText)`
-  font-size: 20
-`
-
 const DateSelectionView = styled.View`
   flex-direction: row
   padding: 10px
@@ -39,13 +35,7 @@ const DateSelectionView = styled.View`
   justify-content: center
 `
 
-const OptionsView = styled.View`
-  border-color: white
-  border-width: 1px
-  padding: 5px
-  border-radius: 10
-`
-const SaveButton = styled.TouchableHighlight`
+const SaveButton = styled.TouchableOpacity`
   flex-direction: row
   justify-content: center
   padding: 5px
@@ -71,12 +61,6 @@ const ReminderForm = ({ navigation }) => {
 
   const [createReminder] = useMutation(CREATE_REMINDER, {
     refetchQueries: [{ query: ACTIVE_REMINDERS }, { query: ALL_REMINDERS }],
-  })
-
-
-  BackHandler.addEventListener('hardwareBackPress', async () => {
-    navigation.goBack()
-    return true
   })
 
   const handleTitleChange = (name, text) => {
