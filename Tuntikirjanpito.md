@@ -54,4 +54,5 @@
 | 8.10  | 2    | auth ja signinscreen
 | 9.10  | 2    | authia, bugifixejä, rekisteröintiskreeni
 | 11.10 | 2    | signupscreen, bugifixejä
-| yht   | 173  | | 
+| 12.10 | 2    | herokun testailua
+| yht   | 175  | | 
