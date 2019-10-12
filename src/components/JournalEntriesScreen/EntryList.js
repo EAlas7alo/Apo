@@ -22,7 +22,8 @@ const EntryList = ({ navigation, fabActive, isFocused }) => {
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES)
   const [setSelectedEntries] = useMutation(SET_SELECTED_ENTRIES)
   const [setSelectedFolders] = useMutation(SET_SELECTED_FOLDERS)
-
+  console.log(loading)
+  console.log(currentFolder)
   const isMainFolder = loading ? true : currentFolder.isMainFolder
 
   const handleBackPress = async () => {

@@ -108,8 +108,9 @@ const SignInScreen = ({ navigation }) => {
             errors.password = 'Required'
           }
         }}
-        onSubmit={(values) => {
+        onSubmit={(values, { resetForm }) => {
           handleLogin(values.username, values.password)
+          resetForm()
         }}
       >
         {({

@@ -133,6 +133,8 @@ const httpLink = createHttpLink({
   uri: serverIP,
 })
 
+console.log(serverIP)
+
 const authLink = setContext(async (_, { headers }) => {
   const token = await AsyncStorage.getItem('userToken');
   return {

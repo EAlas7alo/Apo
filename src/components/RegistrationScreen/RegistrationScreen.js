@@ -44,7 +44,9 @@ const SignupText = styled.Text`
   color: snow
 `
 
-const ErrorText = styled.text`
+const ErrorText = styled.Text`
+  background-color: black
+  align-self: center
   color: red
 `
 
@@ -69,14 +71,15 @@ const RegistrationScreen = ({ navigation }) => {
         },
       })
       await AsyncStorage.setItem('userToken', value)
+      setLoading(false)
       navigation.dispatch(SwitchActions.jumpTo({ routeName: 'App' }))
     } catch (error) {
-      setInfoField('There was an error creating your account')
+      setInfoField('Username minimun length is 3 characters')
+      setLoading(false)
       setTimeout(() => {
         setInfoField('')
       }, 5000)
     }
-    setLoading(false)
   }
 
   return (

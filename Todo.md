@@ -1,10 +1,10 @@
 TODOs:
 
 Tärkeät:
-Käyttäjätoiminto -> loginscreen, auth backendiin, logout draweriin
-Kansioista poistuminen ei toimi entryn lisäämisen jälkeen
+
 
 Jos aikaa jää:
+Siirto folderiin
 ImageModalin menu
 Entryscreenin esikatselunäkymään raja näytetylle sisällölle
 Itemien järjestyksen muutos
