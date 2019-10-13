@@ -7,8 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import { ALL_REMINDERS, TOGGLE_RESOLVED_STATUS, DELETE_REMINDER, ACTIVE_REMINDERS } from '../queries/queries'
 import MyAppText from '../components/TextComponents/MyAppText'
 import { Container } from '../components/StyledComponents'
-import ListReminder from '../components/ReminderScreen/ListReminder';
-import CreateFolderModal from '../components/JournalEntriesScreen/CreateFolderModal';
+import ListReminder from '../components/ReminderScreen/ListReminder'
 
 const Header = styled(MyAppText)`
   font-size: 20
@@ -84,7 +83,7 @@ const ReminderScreen = ({ navigation }) => {
           selectedValue={filter}
           style={{ color: 'white' }}
           mode="dropdown"
-          onValueChange={(itemValue, itemIndex) => {
+          onValueChange={(itemValue) => {
             setFilter(itemValue)
           }}
         >

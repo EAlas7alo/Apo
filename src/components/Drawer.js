@@ -57,8 +57,12 @@ const Drawer = (props) => {
   return (
     <DrawerView>
       <DrawerHeader>
-        Menu {'\n'}
-        Logged in as {me.username}
+        Menu
+        {' '}
+        {'\n'}
+        Logged in as
+        {' '}
+        {me.username}
       </DrawerHeader>
       <MenuItemsView>
         <DrawerNavigatorItems

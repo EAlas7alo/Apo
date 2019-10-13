@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { View, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { ApoText } from '../StyledComponents'
 

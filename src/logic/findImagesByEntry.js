@@ -6,7 +6,6 @@ const findImagesByEntry = async (id) => {
     if (!entryDirectory.exists) {
       return []
     }
-    console.log('entryDirectory:', entryDirectory)
     const images = await FileSystem.readDirectoryAsync(entryDirectory.uri)
     return images.map(image => {
       return entryDirectory.uri.concat('/', image)

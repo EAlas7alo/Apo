@@ -78,8 +78,8 @@ const ReminderForm = ({ navigation }) => {
         is24Hour: true,
       })
 
-      if (dateAction !== DatePickerAndroid.dismissedAction &&
-          timeAction !== TimePickerAndroid.dismissedAction) {
+      if (dateAction !== DatePickerAndroid.dismissedAction
+          && timeAction !== TimePickerAndroid.dismissedAction) {
         setDate(new Date(year, month, day, hour, minute))
       }
     } catch ({ code, message }) {

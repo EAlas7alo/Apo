@@ -6,7 +6,7 @@ import { Formik } from 'formik'
 import { SwitchActions } from 'react-navigation'
 import styled from 'styled-components'
 import { Container } from '../StyledComponents'
-import { LOGIN } from './queries'
+import LOGIN from './queries'
 
 const SignInScreenView = styled(Container)`
 
@@ -65,12 +65,10 @@ const SignUpText = styled.Text`
 `
 
 const SignInScreen = ({ navigation }) => {
-  const [loggingIn, setLoggingIn] = useState(false)
   const [login] = useMutation(LOGIN)
   const [infoField, setInfoField] = useState('')
 
   const handleLogin = async (username, password) => {
-    setLoggingIn(true)
     try {
       const { data: { login: { value } } } = await login({ variables: { username, password } })
       if (value) {
@@ -79,11 +77,9 @@ const SignInScreen = ({ navigation }) => {
         } catch (error) {
           console.log(error)
         }
-        setLoggingIn(false)
         navigation.dispatch(SwitchActions.jumpTo({ routeName: 'App' }))
       }
     } catch (error) {
-      setLoggingIn(false)
       setInfoField('Wrong username or password')
       setTimeout(() => {
         setInfoField('')

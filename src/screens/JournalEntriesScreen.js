@@ -57,6 +57,7 @@ const JournalEntriesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [fabActive, setFabActive] = useState(false)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES)
+
   const onPressItem = async (name) => {
     if (name === 'add_entry') {
       await setCurrentImages({ variables: { images: [] } })

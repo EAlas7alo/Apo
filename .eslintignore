@@ -4,6 +4,8 @@ assets/
 .git/
 node_modules/**/*
 .expo/*
+.expo-shared
+.idea
 npm-debug.*
 *.jks
 *.p12

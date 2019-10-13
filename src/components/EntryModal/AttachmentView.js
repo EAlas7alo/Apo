@@ -58,6 +58,7 @@ const AttachmentView = (props) => {
         highlighted={highlighted}
       >
         <AnimatedListImage
+          // eslint-disable-next-line react/destructuring-assignment
           source={{ uri: props.item }}
           highlighted={highlighted}
           style={{
