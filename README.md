@@ -12,9 +12,11 @@ Entries shown in a feed
 
 Entries may contain images or photos
 
+Reminders
+
 Folder structure for organizing entries
 
-Data stored on a server. 
+Data stored on server. 
 
 Authentication
 
@@ -22,5 +24,5 @@ Authentication
 
 
 ## Implementation
-Front React Native (Android), back Node.js.
+Front React Native with Expo (Android), back Node.js.
 Backend found in https://github.com/EAlas7alo/Apo-backend
