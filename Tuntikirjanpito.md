@@ -55,4 +55,5 @@
 | 9.10  | 2    | authia, bugifixejä, rekisteröintiskreeni
 | 11.10 | 2    | signupscreen, bugifixejä
 | 12.10 | 2    | herokun testailua
-| yht   | 175  | | 
+| 13.10 | 3    | NewUserModal, refaktorointia
+| yht   | 178  | | 
