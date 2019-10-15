@@ -42,7 +42,7 @@ const AddEntryForm = ({ handleChange, title, textContent, onPressImage, id }) =>
   return (
     <Formik
       initialValues={{ title: '', url: '', textContent: '' }}
-      onSubmit={(values) => {
+      onSubmit={() => {
       }}
     >
       <View style={styles.container}>

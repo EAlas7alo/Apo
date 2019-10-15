@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components/native'
 import { TouchableWithoutFeedback, Image, Dimensions, Animated } from 'react-native';
 import MyAppText from '../TextComponents/MyAppText';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const StyledModal = styled.Modal`
   flex: 1
@@ -46,7 +45,7 @@ const ImageModal = ({ visible, setVisible, image, onRequestClose }) => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [menuVisible, setMenuVisible] = useState(true)
   const animation = useRef(new Animated.Value(0)).current
-  console.log(visible)
+
   const menuTop = animation.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -100],
@@ -76,7 +75,6 @@ const ImageModal = ({ visible, setVisible, image, onRequestClose }) => {
   }, [image])
 
   const handleClose = () => {
-    console.log('xd')
     setVisible()
   }
 

@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { useMutation } from '@apollo/react-hooks'
 import MyAppText from '../TextComponents/MyAppText'
 import { Button, ButtonText } from '../StyledComponents'
-import { TOGGLE_RESOLVED_STATUS, ALL_REMINDERS } from '../../queries/queries';
 
 const ReminderText = styled(MyAppText)`
   padding-left: 20px

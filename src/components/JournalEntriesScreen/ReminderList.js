@@ -39,7 +39,6 @@ const ReminderList = () => {
   if (loading) return null
 
   const handleMarkAsResolved = async (id) => {
-    console.log(id)
     markAsResolved({ variables: { id } })
   }
 

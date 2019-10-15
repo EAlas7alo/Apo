@@ -1,5 +1,4 @@
 import { AsyncStorage } from 'react-native'
-import React from 'react'
 
 
 const apoAsyncStorage = async (id, base64) => {

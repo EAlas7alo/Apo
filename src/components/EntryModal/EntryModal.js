@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { View, Keyboard, StyleSheet, Dimensions, BackHandler } from 'react-native'
+import { Keyboard, Dimensions, BackHandler } from 'react-native'
 import { FloatingAction } from 'react-native-floating-action'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import SnackBar from 'react-native-snackbar-component'
-import gql from 'graphql-tag'
 import { withNavigationFocus } from 'react-navigation'
+import styled from 'styled-components'
 import AddEntryForm from './AddEntryForm'
 import imagePicker from '../../logic/imagePicker'
 import { MaterialHeaderButtons, Item } from '../HeaderButtons'
@@ -13,21 +13,14 @@ import { CREATE_ENTRY, EDIT_ENTRY_CONTENT, DELETE_ENTRY, GET_ENTRY, GET_CURRENT_
 import { imageIcon, mainButtonIcon, checkmarkIcon, cameraIcon } from '../../constants/Icons'
 import ImageModal from './ImageModal';
 import saveImageToDisk from '../../logic/saveImageToDisk';
-import { GET_CURRENT_FOLDER_ID } from './queries'
+import { GET_CURRENT_FOLDER_ID, ADD_IMAGE } from './queries'
 import { GET_CURRENT_FOLDER } from '../JournalEntriesScreen/queries';
 
-const styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  },
-  navBar: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height * 0.05,
-    backgroundColor: 'snow',
-  },
-})
+const EntryModalView = styled.View`
+  flex: 1
+  width: ${Dimensions.get('window').width}
+  height: ${Dimensions.get('window').height}
+`
 
 const actions = [
   {
@@ -45,13 +38,6 @@ const actions = [
     color: 'white',
   },
 ]
-
-
-const ADD_IMAGE = gql`
-  mutation addImage($image: String!) {
-    addImage(image: $image) @client
-  }
-`
 
 const EntryModal = ({ navigation, isFocused }) => {
   const entry = navigation.getParam('entry', null)
@@ -170,7 +156,6 @@ const EntryModal = ({ navigation, isFocused }) => {
   }
 
   const onExit = () => {
-    console.log('onexit')
     if (fabActive) return true
     if (title === '' && textContent === '' && currentImages.length === 0) {
       return false
@@ -178,6 +163,7 @@ const EntryModal = ({ navigation, isFocused }) => {
     handleSubmit()
     return true
   }
+
   useEffect(() => {
     navigation.setParams({ onExit, handleDeleteConfirm, title, textContent, isNewEntry })
   }, [title, textContent, currentImages, entry, currentFolder])
@@ -191,7 +177,7 @@ const EntryModal = ({ navigation, isFocused }) => {
   }, [isFocused, title, textContent, currentImages])
 
   return (
-    <View style={styles.modal}>
+    <EntryModalView>
       <AddEntryForm
         id={!isNewEntry ? entry.id : null}
         onPressImage={onPressImage}
@@ -224,7 +210,7 @@ const EntryModal = ({ navigation, isFocused }) => {
         actionHandler={() => { handleDeletion() }}
         actionText="confirm"
       />
-    </View>
+    </EntryModalView>
   )
 }
 

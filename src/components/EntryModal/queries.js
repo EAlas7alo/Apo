@@ -21,4 +21,10 @@ const GET_CURRENT_FOLDER_ENTRIES = gql`
   }
 `
 
-export { GET_CURRENT_FOLDER_ID, GET_CURRENT_FOLDER_ENTRIES }
+const ADD_IMAGE = gql`
+  mutation addImage($image: String!) {
+    addImage(image: $image) @client
+  }
+`
+
+export { GET_CURRENT_FOLDER_ID, GET_CURRENT_FOLDER_ENTRIES, ADD_IMAGE }

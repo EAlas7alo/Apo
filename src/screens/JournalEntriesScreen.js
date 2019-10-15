@@ -3,16 +3,15 @@ import PropTypes from 'prop-types'
 import {
   TouchableOpacity,
 } from 'react-native'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import { FloatingAction } from 'react-native-floating-action'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { SET_CURRENT_IMAGES, GET_CURRENT_IMAGES } from '../queries/queries';
+import { SET_CURRENT_IMAGES } from '../queries/queries';
 import { addIcon, filingIcon, reminderIcon, folderIcon } from '../constants/Icons';
 import ReminderList from '../components/JournalEntriesScreen/ReminderList';
 import { Container } from '../components/StyledComponents'
 import CreateFolderModal from '../components/JournalEntriesScreen/CreateFolderModal'
-import { GET_MAIN_FOLDER } from '../queries/Folders'
 import EntryList from '../components/JournalEntriesScreen/EntryList'
 
 
@@ -57,7 +56,6 @@ const EntriesView = styled.View`
 const JournalEntriesScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false)
   const [fabActive, setFabActive] = useState(false)
-  const { data: { mainFolder }, loading } = useQuery(GET_MAIN_FOLDER)
   const [setCurrentImages] = useMutation(SET_CURRENT_IMAGES)
 
   const onPressItem = async (name) => {
@@ -80,8 +78,6 @@ const JournalEntriesScreen = ({ navigation }) => {
     navigation.setParams({ toggleDrawer })
   }, [])
 
-  // Change item order in this screen
-  if (loading) return null
   return (
     <Container>
       <RemindersView>
@@ -102,7 +98,6 @@ const JournalEntriesScreen = ({ navigation }) => {
       <CreateFolderModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        mainFolder={mainFolder}
       />
     </Container>
   )

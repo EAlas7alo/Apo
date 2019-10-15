@@ -1,5 +1,5 @@
 import React from 'react'
-import { SERVER_IP } from 'react-native-dotenv'
+import { SERVER_IP_DEV, SERVER_IP_PROD } from 'react-native-dotenv'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link'
@@ -115,10 +115,12 @@ const MainNavigator = createSwitchNavigator(
   },
 )
 
-const serverIP = SERVER_IP
+// eslint-disable-next-line no-undef
+const serverIP = __DEV__ ? SERVER_IP_DEV : SERVER_IP_PROD
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
+    // eslint-disable-next-line array-callback-return
     graphQLErrors.map(({ message, locations, path }) => {
       // eslint-disable-next-line no-console
       console.log(
@@ -126,6 +128,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       )
     })
   }
+  // eslint-disable-next-line no-console
   if (networkError) console.log(`[Network error]: ${networkError}`)
 })
 

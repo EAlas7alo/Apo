@@ -25,7 +25,6 @@ const AuthLoadingScreen = ({ navigation }) => {
         },
       })
       navigation.navigate(userToken ? 'App' : 'SignIn')
-      console.log(userToken)
     }
     fetchToken()
   }, [])
