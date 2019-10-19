@@ -94,6 +94,8 @@ const JournalEntriesScreen = ({ navigation }) => {
           onPressItem(name)
         }}
         onPressMain={() => { setFabActive(!fabActive) }}
+        onPressBackDrop={() => { setFabActive(!fabActive) }}
+        onClose={() => { setFabActive(!fabActive) }}
       />
       <CreateFolderModal
         modalVisible={modalVisible}

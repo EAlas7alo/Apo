@@ -174,7 +174,7 @@ const EntryModal = ({ navigation, isFocused }) => {
     } else {
       BackHandler.removeEventListener('hardwareBackPress', onExit)
     }
-  }, [isFocused, title, textContent, currentImages])
+  }, [isFocused, title, textContent, currentImages, fabActive])
 
   return (
     <EntryModalView>
@@ -196,6 +196,7 @@ const EntryModal = ({ navigation, isFocused }) => {
           onPressItem(name)
         }}
         onPressMain={() => { setFabActive(!fabActive) }}
+        onPressBackDrop={() => { setFabActive(!fabActive) }}
       />
       <ImageModal
         image={modalImage}
