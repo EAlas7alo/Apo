@@ -22,9 +22,9 @@ User accounts
 
 ## Instructions
 
-The app is available on Expo https://expo.io/@satori/Apo
-Scan the QR code with the Expo App. The app does not work on iOS.
-Tested only on Nokia 8
+The app is available on Expo https://expo.io/@satori/Apo  
+Scan the QR code with the Expo App. The app does not work on iOS.  
+Tested only on Nokia 8  
 
 Test account with a couple of entries, folders and reminders: admin, sekret
 
