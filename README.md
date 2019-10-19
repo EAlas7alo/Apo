@@ -16,10 +16,21 @@ Reminders
 
 Folder structure for organizing entries
 
-Data stored on server. 
+Data stored on server (images locally only)
 
-Authentication
+User accounts
 
+## Instructions
+
+The app is available on Expo https://expo.io/@satori/Apo
+Scan the QR code with the Expo App. The app does not work on iOS.
+Tested only on Nokia 8
+
+Test account with a couple of entries, folders and reminders: admin, sekret
+
+Tips:
+Long press on an entry or a folder triggers multiselection mode. Works for images when editing entry also.
+Entries are updated when exiting the modal
 
 
 
