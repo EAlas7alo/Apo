@@ -56,4 +56,5 @@
 | 11.10 | 2    | signupscreen, bugifixejä
 | 12.10 | 2    | herokun testailua
 | 13.10 | 3    | NewUserModal, refaktorointia
-| yht   | 178  | | 
+| 19.10 | 3    | uppaus expoon, bugifixejä
+| yht   | 181  | | 
