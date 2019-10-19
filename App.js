@@ -116,8 +116,9 @@ const MainNavigator = createSwitchNavigator(
 )
 
 // eslint-disable-next-line no-undef
+console.log('xD')
 const serverIP = __DEV__ ? SERVER_IP_DEV : SERVER_IP_PROD
-
+console.log('xd')
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     // eslint-disable-next-line array-callback-return
