@@ -28,8 +28,8 @@ Tested only on Nokia 8
 
 Test account with a couple of entries, folders and reminders: admin, sekret
 
-Tips:
-Long press on an entry or a folder triggers multiselection mode. Works for images when editing entry also.
+Tips:  
+Long press on an entry or a folder triggers multiselection mode. Works for images when editing entry also.  
 Entries are updated when exiting the modal
 
 
