@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation } from '@apollo/react-hooks'
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, BackHandler } from 'react-native'
 import { Formik } from 'formik'
-import { SwitchActions } from 'react-navigation'
+import { SwitchActions, withNavigationFocus } from 'react-navigation'
 import styled from 'styled-components'
 import { Container } from '../StyledComponents'
 import LOGIN from './queries'
@@ -64,7 +64,7 @@ const SignUpText = styled.Text`
   color: snow
 `
 
-const SignInScreen = ({ navigation }) => {
+const SignInScreen = ({ navigation, isFocused }) => {
   const [login] = useMutation(LOGIN)
   const [infoField, setInfoField] = useState('')
 
@@ -86,6 +86,19 @@ const SignInScreen = ({ navigation }) => {
       }, 5000)
     }
   }
+
+  const handleBackPress = () => {
+    return true
+  }
+
+  useEffect(() => {
+    console.log('isfocused:', isFocused)
+    if (!isFocused) {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
+    } else {
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+    }
+  }, [isFocused])
 
   const handleSignUp = () => {
     navigation.navigate('Signup')
@@ -160,6 +173,7 @@ SignInScreen.propTypes = {
     dispatch: PropTypes.func.isRequired,
     navigate: PropTypes.func.isRequired,
   }).isRequired,
+  isFocused: PropTypes.bool.isRequired,
 }
 
-export default SignInScreen
+export default withNavigationFocus(SignInScreen)
