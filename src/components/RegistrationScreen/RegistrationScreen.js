@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { ActivityIndicator, AsyncStorage } from 'react-native'
+import { ActivityIndicator, AsyncStorage, BackHandler } from 'react-native'
 import { Formik } from 'formik'
-import { SwitchActions } from 'react-navigation'
+import { SwitchActions, withNavigationFocus } from 'react-navigation'
 import { useMutation } from '@apollo/react-hooks'
 import styled from 'styled-components'
 import { Container } from '../StyledComponents'
@@ -50,7 +50,7 @@ const ErrorText = styled.Text`
   color: red
 `
 
-const RegistrationScreen = ({ navigation }) => {
+const RegistrationScreen = ({ navigation, isFocused }) => {
   const [createUser] = useMutation(CREATE_USER)
   const [loading, setLoading] = useState(false)
   const [login] = useMutation(LOGIN)
@@ -81,6 +81,18 @@ const RegistrationScreen = ({ navigation }) => {
       }, 5000)
     }
   }
+
+  const handleBackPress = () => {
+    navigation.goBack()
+  }
+
+  useEffect(() => {
+    if (!isFocused) {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
+    } else {
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+    }
+  }, [isFocused])
 
   return (
     <RegisterScreenView>
@@ -149,7 +161,8 @@ const RegistrationScreen = ({ navigation }) => {
 RegistrationScreen.propTypes = {
   navigation: PropTypes.shape({
     dispatch: PropTypes.func.isRequired,
+    goBack: PropTypes.func.isRequired,
   }).isRequired,
 }
 
-export default RegistrationScreen
+export default withNavigationFocus(RegistrationScreen)

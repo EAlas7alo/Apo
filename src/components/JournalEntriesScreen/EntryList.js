@@ -11,7 +11,6 @@ import { SET_CURRENT_ENTRY, SET_CURRENT_IMAGES } from '../../queries/queries'
 import { GET_CURRENT_FOLDER, SET_CURRENT_FOLDER, SET_SELECTED_ENTRIES, SET_SELECTED_FOLDERS, GET_SELECTED_ENTRIES, GET_SELECTED_FOLDERS } from './queries'
 import EntryOptionsPopUp from './EntryOptionsPopUp'
 
-
 const ModalText = styled.Text`
   color: black
   align-self: center
@@ -71,7 +70,7 @@ const EntryList = ({ navigation, fabActive, isFocused }) => {
     } else {
       BackHandler.addEventListener('hardwareBackPress', handleBackPress)
     }
-  }, [isFocused, loading, isMainFolder, fabActive])
+  }, [isFocused, loading, isMainFolder, fabActive, folderStack])
 
   useEffect(() => {
     if (!loading
